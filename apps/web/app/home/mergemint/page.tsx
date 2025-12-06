@@ -120,6 +120,22 @@ export default async function MergeMintHubPage() {
               </CardHeader>
             </Card>
           ) : null}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>See a sample dashboard</CardTitle>
+              <CardDescription>
+                Preview what MergeMint will display once your GitHub sync and evaluations run.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href={'/home/mergemint/demo'}>
+                <Button variant={'secondary'} size={'sm'}>
+                  Open sample stats
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </PageBody>
     </>

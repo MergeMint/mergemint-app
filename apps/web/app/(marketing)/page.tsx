@@ -23,19 +23,20 @@ function Home() {
         <Hero
           pill={
             <Pill label={'New'}>
-              <span>The leading SaaS Starter Kit for ambitious developers</span>
+              <span>MergeMint · AI scoring for merged PRs</span>
             </Pill>
           }
           title={
             <>
-              <span>The ultimate SaaS Starter</span>
-              <span>for your next project</span>
+              <span>Reward contributors automatically</span>
+              <span>with AI-evaluated pull requests</span>
             </>
           }
           subtitle={
             <span>
-              Build and Ship a SaaS faster than ever before with the next-gen
-              SaaS Starter Kit. Ship your SaaS in days, not months.
+              Connect your GitHub org, sync merged PRs and linked issues, let an
+              LLM score severity × component multipliers, and keep your bug
+              bounty leaderboard up to date—no spreadsheets required.
             </span>
           }
           cta={<MainCallToActionButton />}
@@ -61,48 +62,45 @@ function Home() {
           <FeatureShowcase
             heading={
               <>
-                <b className="font-semibold dark:text-white">
-                  The ultimate SaaS Starter Kit
-                </b>
-                .{' '}
+                <b className="font-semibold dark:text-white">Built for PMs and eng leads</b>.{' '}
                 <span className="text-muted-foreground font-normal">
-                  Unleash your creativity and build your SaaS faster than ever
-                  with Makerkit.
+                  MergeMint automates GitHub ingest, AI evaluations, and scoring rules so you can
+                  focus on reviewing impact instead of collecting evidence.
                 </span>
               </>
             }
             icon={
               <FeatureShowcaseIconContainer>
                 <LayoutDashboard className="h-5" />
-                <span>All-in-one solution</span>
+                <span>PR intelligence</span>
               </FeatureShowcaseIconContainer>
             }
           >
             <FeatureGrid>
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
-                label={'Beautiful Dashboard'}
-                description={`Makerkit provides a beautiful dashboard to manage your SaaS business.`}
+                label={'GitHub ingestion'}
+                description={`Sync merged PRs, linked issues, and file lists per org with Supabase-backed storage and RLS.`}
               />
 
               <FeatureCard
                 className={
                   'relative col-span-2 w-full overflow-hidden lg:col-span-1'
                 }
-                label={'Authentication'}
-                description={`Makerkit provides a variety of providers to allow your users to sign in.`}
+                label={'AI evaluations'}
+                description={`LLM classifies component + severity, checks eligibility, and outputs a structured score per PR.`}
               />
 
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden lg:col-span-1'}
-                label={'Multi Tenancy'}
-                description={`Multi tenant memberships for your SaaS business.`}
+                label={'Configurable scoring'}
+                description={`Admins define components, multipliers, severity base points, and prompt templates per org.`}
               />
 
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
-                label={'Billing'}
-                description={`Makerkit supports multiple payment gateways to charge your customers.`}
+                label={'Leaderboards & insights'}
+                description={`Developers see their scores and history; PMs get per-component activity and eligibility visibility.`}
               />
             </FeatureGrid>
           </FeatureShowcase>
