@@ -7,5 +7,6 @@ export async function i18nResolver(language: string, namespace: string) {
     `../../public/locales/${language}/${namespace}.json`
   );
 
-  return data as Record<string, string>;
+  // Next.js dynamic import wraps JSON under `default`
+  return (data.default ?? data) as Record<string, string>;
 }

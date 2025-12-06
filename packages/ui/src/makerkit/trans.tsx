@@ -2,10 +2,10 @@
 
 import { useTranslation } from 'react-i18next';
 
-export function Trans({ 
-  i18nKey, 
-  defaults, 
-  ...props 
+export function Trans({
+  i18nKey,
+  defaults,
+  ...props
 }: {
   i18nKey?: string;
   defaults?: string;
@@ -13,17 +13,20 @@ export function Trans({
 }) {
   try {
     const { t, ready } = useTranslation();
-    
+
     if (!i18nKey) {
       return defaults || null;
     }
-    
+
     if (!ready) {
       return defaults || i18nKey;
     }
-    
-    const translated = t(i18nKey, defaults);
-    
+
+    const translated = t(
+      i18nKey,
+      defaults ? { defaultValue: defaults } : undefined,
+    );
+
     return <>{translated}</>;
   } catch (error) {
     // Fallback if i18n is not initialized

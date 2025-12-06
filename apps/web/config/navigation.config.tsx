@@ -1,4 +1,4 @@
-import { Home, User } from 'lucide-react';
+import { Home, Trophy, User } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -16,6 +16,11 @@ const routes = [
         path: pathsConfig.app.home,
         Icon: <Home className={iconClasses} />,
         end: true,
+      },
+      {
+        label: 'MergeMint',
+        path: pathsConfig.app.mergemint,
+        Icon: <Trophy className={iconClasses} />,
       },
     ],
   },
