@@ -1,10 +1,11 @@
 'use client';
 
+import { use, useMemo } from 'react';
 import type { InitOptions, i18n } from 'i18next';
 
 import { initializeI18nClient } from './i18n.client';
 
-let i18nInstance: i18n;
+const i18nInstancesCache = new Map<string, Promise<i18n>>();
 
 type Resolver = (
   lang: string,
@@ -19,29 +20,20 @@ export function I18nProvider({
   settings: InitOptions;
   resolver: Resolver;
 }>) {
-  useI18nClient(settings, resolver);
+  const cacheKey = useMemo(
+    () => `${settings.lng}-${JSON.stringify(settings.ns)}`,
+    [settings.lng, settings.ns],
+  );
+
+  const i18nPromise = useMemo(() => {
+    if (!i18nInstancesCache.has(cacheKey)) {
+      i18nInstancesCache.set(cacheKey, initializeI18nClient(settings, resolver));
+    }
+    return i18nInstancesCache.get(cacheKey)!;
+  }, [cacheKey, settings, resolver]);
+
+  // Use React's use() hook to suspend until i18n is ready
+  use(i18nPromise);
 
   return children;
-}
-
-/**
- * @name useI18nClient
- * @description A hook that initializes the i18n client.
- * @param settings
- * @param resolver
- */
-function useI18nClient(settings: InitOptions, resolver: Resolver) {
-  if (
-    !i18nInstance ||
-    i18nInstance.language !== settings.lng ||
-    i18nInstance.options.ns?.length !== settings.ns?.length
-  ) {
-    throw loadI18nInstance(settings, resolver);
-  }
-
-  return i18nInstance;
-}
-
-async function loadI18nInstance(settings: InitOptions, resolver: Resolver) {
-  i18nInstance = await initializeI18nClient(settings, resolver);
 }

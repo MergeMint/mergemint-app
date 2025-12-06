@@ -22,23 +22,30 @@ export async function initializeI18nClient(
   const loadedNamespaces: string[] = [];
 
   await i18next
+    .use(initReactI18next)
+    .use(LanguageDetector)
     .use(
       resourcesToBackend(async (language, namespace, callback) => {
-        const data = await resolver(language, namespace);
+        try {
+          console.log(`Loading i18n: ${language}/${namespace}`);
+          const data = await resolver(language, namespace);
+          console.log(`Loaded i18n: ${language}/${namespace}`, Object.keys(data).length, 'keys');
 
-        if (!loadedLanguages.includes(language)) {
-          loadedLanguages.push(language);
+          if (!loadedLanguages.includes(language)) {
+            loadedLanguages.push(language);
+          }
+
+          if (!loadedNamespaces.includes(namespace)) {
+            loadedNamespaces.push(namespace);
+          }
+
+          return callback(null, data);
+        } catch (error) {
+          console.error(`Error loading translation: ${language}/${namespace}`, error);
+          return callback(error as Error, {});
         }
-
-        if (!loadedNamespaces.includes(namespace)) {
-          loadedNamespaces.push(namespace);
-        }
-
-        return callback(null, data);
       }),
     )
-    .use(LanguageDetector)
-    .use(initReactI18next)
     .init(
       {
         ...settings,
@@ -50,32 +57,20 @@ export async function initializeI18nClient(
         interpolation: {
           escapeValue: false,
         },
+        react: {
+          useSuspense: false,
+        },
       },
       (err) => {
         if (err) {
           console.error('Error initializing i18n client', err);
+        } else {
+          console.log('i18n client initialized successfully');
         }
       },
     );
 
-  // to avoid infinite loops, we return the i18next instance after a certain number of iterations
-  // even if the languages and namespaces are not loaded
-  if (iteration >= MAX_ITERATIONS) {
-    console.debug(`Max iterations reached: ${MAX_ITERATIONS}`);
-
-    return i18next;
-  }
-
-  // keep component from rendering if no languages or namespaces are loaded
-  if (loadedLanguages.length === 0 || loadedNamespaces.length === 0) {
-    iteration++;
-
-    console.debug(
-      `Keeping component from rendering if no languages or namespaces are loaded. Iteration: ${iteration}. Will stop after ${MAX_ITERATIONS} iterations.`,
-    );
-
-    throw new Error('No languages or namespaces loaded');
-  }
+  console.log(`i18n initialized with ${loadedLanguages.length} languages and ${loadedNamespaces.length} namespaces`);
 
   return i18next;
 }
