@@ -1,0 +1,49 @@
+{
+  "name": "next-supabase-saas-kit-turbo-lite",
+  "version": "0.2.2",
+  "private": true,
+  "sideEffects": false,
+  "engines": {
+    "node": ">=v18.18.0"
+  },
+  "author": {
+    "url": "https://makerkit.dev",
+    "name": "MakerKit"
+  },
+  "scripts": {
+    "preinstall": "pnpm run --filter scripts requirements",
+    "postinstall": "manypkg fix",
+    "build": "turbo build --cache-dir=.turbo",
+    "clean": "git clean -xdf node_modules dist .next",
+    "clean:workspaces": "turbo clean",
+    "dev": "cross-env FORCE_COLOR=1 turbo dev --parallel",
+    "format": "turbo format --cache-dir=.turbo --continue -- --cache --cache-location='node_modules/.cache/.prettiercache' --ignore-path='../../.gitignore'",
+    "format:fix": "turbo format --cache-dir=.turbo --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache' --ignore-path='../../.gitignore'",
+    "lint": "turbo lint --cache-dir=.turbo --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
+    "lint:fix": "turbo lint --cache-dir=.turbo --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg fix",
+    "typecheck": "turbo typecheck --cache-dir=.turbo",
+    "test": "turbo test --cache-dir=.turbo",
+    "update": "pnpm update -r",
+    "syncpack:list": "pnpm dlx syncpack list-mismatches",
+    "syncpack:fix": "pnpm dlx syncpack fix-mismatches",
+    "supabase:web:start": "pnpm --filter web supabase:start",
+    "supabase:web:stop": "pnpm --filter web supabase:stop",
+    "supabase:web:typegen": "pnpm --filter web supabase:typegen",
+    "supabase:web:reset": "pnpm --filter web supabase:reset"
+  },
+  "prettier": "@kit/prettier-config",
+  "packageManager": "pnpm@10.18.2",
+  "pnpm": {
+    "overrides": {
+      "react-is": "19.0.0"
+    }
+  },
+  "devDependencies": {
+    "@manypkg/cli": "^0.25.1",
+    "@turbo/gen": "^2.5.8",
+    "cross-env": "^10.1.0",
+    "prettier": "^3.6.2",
+    "turbo": "2.5.8",
+    "typescript": "^5.9.3"
+  }
+}

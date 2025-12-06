@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+  - packages/**
+  - tooling/*
+
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - supabase

@@ -1,0 +1,49 @@
+{
+  "name": "@kit/auth",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./sign-in": "./src/sign-in.ts",
+    "./sign-up": "./src/sign-up.ts",
+    "./password-reset": "./src/password-reset.ts",
+    "./shared": "./src/shared.ts",
+    "./mfa": "./src/mfa.ts",
+    "./captcha/client": "./src/captcha/client/index.ts",
+    "./captcha/server": "./src/captcha/server/index.ts",
+    "./resend-email-link": "./src/components/resend-auth-link-form.tsx"
+  },
+  "devDependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@kit/eslint-config": "workspace:*",
+    "@kit/prettier-config": "workspace:*",
+    "@kit/shared": "workspace:*",
+    "@kit/supabase": "workspace:*",
+    "@kit/tsconfig": "workspace:*",
+    "@kit/ui": "workspace:*",
+    "@marsidev/react-turnstile": "^1.3.1",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@supabase/supabase-js": "2.75.0",
+    "@tanstack/react-query": "5.90.2",
+    "@types/react": "19.2.7",
+    "lucide-react": "^0.545.0",
+    "next": "15.5.7",
+    "react-hook-form": "^7.65.0",
+    "react-i18next": "^16.0.0",
+    "sonner": "^2.0.7",
+    "zod": "^3.25.32"
+  },
+  "prettier": "@kit/prettier-config",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  }
+}
