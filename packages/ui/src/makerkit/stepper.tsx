@@ -6,22 +6,17 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '../lib/utils';
 import { If } from './if';
-import { Trans } from './trans';
 
 type Variant = 'numbers' | 'default' | 'dots';
 
 const classNameBuilder = getClassNameBuilder();
 
 /**
- * Renders a stepper component with multiple steps.
- *
- * @param {Object} props - The props object containing the following properties:
- *   - steps {string[]} - An array of strings representing the step labels.
- *   - currentStep {number} - The index of the currently active step.
- *   - variant {string} (optional) - The variant of the stepper component (default: 'default').
- **/
+ * Stepper component with optional per-step descriptions.
+ */
 export function Stepper(props: {
   steps: string[];
+  description?: string[];
   currentStep: number;
   variant?: Variant;
 }) {
@@ -41,12 +36,13 @@ export function Stepper(props: {
       const isNumberVariant = variant === 'numbers';
       const isDotsVariant = variant === 'dots';
 
-      const labelClassName = cn({
-        ['px-1.5 py-2 text-xs']: !isNumberVariant,
+      const labelClassName = cn('leading-none', {
+        ['px-1.5 py-2 text-xs font-semibold']: !isNumberVariant,
         ['hidden']: isDotsVariant,
       });
 
       const { label, number } = getStepLabel(labelOrKey, index);
+      const description = props.description?.[index];
 
       return (
         <Fragment key={index}>
@@ -55,6 +51,11 @@ export function Stepper(props: {
               {number}
               <If condition={!isNumberVariant}>. {label}</If>
             </span>
+            <If condition={Boolean(description && isNumberVariant)}>
+              <span className="text-muted-foreground hidden text-xs sm:flex">
+                {description}
+              </span>
+            </If>
           </div>
 
           <If condition={isNumberVariant}>
@@ -65,15 +66,14 @@ export function Stepper(props: {
         </Fragment>
       );
     });
-  }, [props.steps, props.currentStep, variant]);
+  }, [props.steps, props.currentStep, variant, props.description]);
 
-  // If there are no steps, don't render anything.
   if (props.steps.length < 2) {
     return null;
   }
 
   const containerClassName = cn('w-full', {
-    ['flex justify-between']: variant === 'numbers',
+    ['flex flex-col gap-1 md:flex-row md:items-start md:justify-between']: variant === 'numbers',
     ['flex space-x-0.5']: variant === 'default',
     ['flex gap-x-4 self-center']: variant === 'dots',
   });
@@ -91,7 +91,7 @@ function getClassNameBuilder() {
       variant: {
         default: `flex h-[2.5px] w-full flex-col transition-all duration-500`,
         numbers:
-          'flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold',
+          'flex h-9 w-full items-start gap-2 rounded-lg border px-3 py-2 text-sm font-medium',
         dots: 'bg-muted h-2.5 w-2.5 rounded-full transition-colors',
       },
       selected: {
@@ -135,7 +135,7 @@ function getClassNameBuilder() {
       {
         variant: 'numbers',
         selected: true,
-        className: 'border-primary bg-primary text-primary-foreground',
+        className: 'border-primary bg-primary/10 text-primary',
       },
       {
         variant: 'numbers',
@@ -198,20 +198,18 @@ function StepDivider({
       <span className={spanClassName}>{children}</span>
 
       <div
-        className={
-          'divider h-[1px] w-full bg-gray-200 transition-colors' +
-          ' dark:bg-border hidden group-last:hidden sm:flex'
-        }
+        className={cn('h-[3px] w-full rounded-full transition-colors', {
+          ['bg-primary']: selected || complete,
+          ['bg-muted']: !selected && !complete,
+        })}
       />
     </div>
   );
 }
 
 function getStepLabel(labelOrKey: string, index: number) {
-  const number = (index + 1).toString();
-
   return {
-    number,
-    label: <Trans i18nKey={labelOrKey} defaults={labelOrKey} />,
+    label: labelOrKey,
+    number: index + 1,
   };
 }

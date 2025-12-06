@@ -3,34 +3,6 @@
 create extension if not exists "uuid-ossp";
 create extension if not exists "pgcrypto";
 
--- Helper membership functions
-create or replace function kit.is_org_member(org uuid) returns boolean
-    language sql
-    security definer
-    set search_path = public as
-$$
-select exists(
-    select 1
-    from public.organization_members om
-    where om.org_id = org
-      and om.user_id = auth.uid()
-);
-$$;
-
-create or replace function kit.is_org_admin(org uuid) returns boolean
-    language sql
-    security definer
-    set search_path = public as
-$$
-select exists(
-    select 1
-    from public.organization_members om
-    where om.org_id = org
-      and om.user_id = auth.uid()
-      and om.role = 'admin'
-);
-$$;
-
 -- Profiles
 create table if not exists public.profiles (
     id uuid primary key references auth.users on delete cascade,
@@ -70,6 +42,34 @@ create table if not exists public.organization_members (
     unique (org_id, user_id)
 );
 create index if not exists organization_members_org_idx on public.organization_members (org_id);
+
+-- Helper membership functions (placed after organization_members exists)
+create or replace function kit.is_org_member(org uuid) returns boolean
+    language sql
+    security definer
+    set search_path = public as
+$$
+select exists(
+    select 1
+    from public.organization_members om
+    where om.org_id = org
+      and om.user_id = auth.uid()
+);
+$$;
+
+create or replace function kit.is_org_admin(org uuid) returns boolean
+    language sql
+    security definer
+    set search_path = public as
+$$
+select exists(
+    select 1
+    from public.organization_members om
+    where om.org_id = org
+      and om.user_id = auth.uid()
+      and om.role = 'admin'
+);
+$$;
 
 alter table public.organizations enable row level security;
 alter table public.organization_members enable row level security;
@@ -651,7 +651,7 @@ begin
         limit 1;
     end if;
 
-    prompt := $$
+    prompt := $prompt$
 You are an expert engineering manager scoring a merged pull request for a bug bounty program.
 
 Goals:
@@ -684,7 +684,7 @@ Output JSON (no prose):
   "eligibility_notes": "brief notes",
   "review_notes": "optional extra review feedback"
 }
-$$;
+$prompt$;
 
     if default_rule_set is not null then
         insert into public.prompt_templates (

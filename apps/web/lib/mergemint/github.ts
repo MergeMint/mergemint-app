@@ -58,6 +58,12 @@ export type GithubPullRequestFile = {
   patch?: string;
 };
 
+export type GithubConnectionInfo = {
+  installation_type?: 'app' | 'token';
+  github_installation_id?: number | null;
+  github_org_name?: string | null;
+};
+
 export class GithubClient {
   constructor(private readonly token: string) {}
 
@@ -91,6 +97,17 @@ export class GithubClient {
     return this.request<GithubRepository[]>(`/orgs/${org}/repos`, {
       query: { per_page: 100, sort: 'updated' },
     });
+  }
+
+  /**
+   * For GitHub App installation tokens.
+   */
+  async listInstallationRepos() {
+    const res = await this.request<{ repositories: GithubRepository[] }>(
+      `/installation/repositories`,
+      { query: { per_page: 100 } },
+    );
+    return res.repositories;
   }
 
   listIssues(owner: string, repo: string, since?: string) {
@@ -154,6 +171,92 @@ export function getGithubTokenForOrg(orgId: string, slug?: string) {
   }
 
   return token;
+}
+
+function toBase64Url(input: string) {
+  return Buffer.from(input).toString('base64url');
+}
+
+function getGithubAppJwt() {
+  const appId = process.env.GITHUB_APP_ID;
+  const privateKeyRaw = process.env.GITHUB_APP_PRIVATE_KEY;
+
+  if (!appId || !privateKeyRaw) {
+    throw new Error('Missing GITHUB_APP_ID or GITHUB_APP_PRIVATE_KEY for GitHub App flow.');
+  }
+
+  const privateKey = privateKeyRaw.replace(/\\n/g, '\n');
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iat: now - 60,
+    exp: now + 600,
+    iss: appId,
+  };
+
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const unsigned = `${toBase64Url(JSON.stringify(header))}.${toBase64Url(JSON.stringify(payload))}`;
+
+  const signer = crypto.createSign('RSA-SHA256');
+  signer.update(unsigned);
+  const signature = signer.sign(privateKey, 'base64url');
+
+  return `${unsigned}.${signature}`;
+}
+
+export async function getInstallationAccessToken(installationId: number | string) {
+  const jwt = getGithubAppJwt();
+  const res = await fetch(
+    `https://api.github.com/app/installations/${installationId}/access_tokens`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'MergeMint-MVP',
+      },
+      cache: 'no-store',
+    },
+  );
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(
+      `Failed to create installation token: ${res.status} ${res.statusText} - ${text}`,
+    );
+  }
+
+  return (await res.json()) as { token: string; expires_at: string };
+}
+
+/**
+ * Resolve a GitHub API token for an org, preferring App installations and falling
+ * back to environment-provided tokens for local development.
+ */
+export async function resolveGithubTokenForOrg(
+  orgId: string,
+  orgSlug?: string,
+  connection?: GithubConnectionInfo | null,
+) {
+  if (
+    connection?.installation_type === 'app' &&
+    connection.github_installation_id !== null &&
+    connection.github_installation_id !== undefined
+  ) {
+    const token = await getInstallationAccessToken(connection.github_installation_id);
+    return { token: token.token, source: 'installation' as const };
+  }
+
+  const token = getGithubTokenForOrg(orgId, orgSlug ?? connection?.github_org_name ?? undefined);
+  return { token, source: 'env' as const };
+}
+
+export async function getGithubClientForOrg(
+  orgId: string,
+  orgSlug?: string,
+  connection?: GithubConnectionInfo | null,
+) {
+  const { token } = await resolveGithubTokenForOrg(orgId, orgSlug, connection);
+  return new GithubClient(token);
 }
 
 export function hashTokenPreview(token: string) {

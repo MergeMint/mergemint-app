@@ -13,6 +13,7 @@ const PathsSchema = z.object({
     home: z.string().min(1),
     profileSettings: z.string().min(1),
     mergemint: z.string().min(1),
+    onboarding: z.string().min(1),
   }),
 });
 
@@ -29,6 +30,7 @@ const pathsConfig = PathsSchema.parse({
     home: '/home',
     profileSettings: '/home/settings',
     mergemint: '/home/mergemint',
+    onboarding: '/home/onboarding',
   },
 } satisfies z.infer<typeof PathsSchema>);
 

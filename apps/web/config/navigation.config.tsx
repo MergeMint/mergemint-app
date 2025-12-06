@@ -22,6 +22,11 @@ const routes = [
         path: pathsConfig.app.mergemint,
         Icon: <Trophy className={iconClasses} />,
       },
+      {
+        label: 'Onboarding',
+        path: pathsConfig.app.onboarding,
+        Icon: <Trophy className={iconClasses} />,
+      },
     ],
   },
   {
