@@ -28,7 +28,8 @@ export default async function HomePage() {
   }
 
   const orgId = membership.org_id;
-  const orgName = membership.organizations?.name ?? 'Your Organization';
+  const org = membership.organizations as unknown as { name: string; slug: string } | null;
+  const orgName = org?.name ?? 'Your Organization';
 
   return (
     <>

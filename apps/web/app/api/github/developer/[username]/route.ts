@@ -172,14 +172,14 @@ export async function GET(
       const date = new Date(e.pull_requests?.merged_at_gh ?? e.created_at);
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
-      const weekKey = weekStart.toISOString().split('T')[0];
+      const weekKey = weekStart.toISOString().split('T')[0]!;
       if (!acc[weekKey]) {
         acc[weekKey] = { score: 0, prs: 0, eligible: 0 };
       }
-      acc[weekKey].prs += 1;
+      acc[weekKey]!.prs += 1;
       if (e.is_eligible) {
-        acc[weekKey].score += e.final_score ?? 0;
-        acc[weekKey].eligible += 1;
+        acc[weekKey]!.score += e.final_score ?? 0;
+        acc[weekKey]!.eligible += 1;
       }
       return acc;
     }, {});

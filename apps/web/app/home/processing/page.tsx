@@ -43,8 +43,9 @@ export default async function ProcessingPage({
     }
 
     orgId = membership.org_id;
-    orgSlug = membership.organizations?.slug ?? '';
-    orgName = membership.organizations?.name ?? '';
+    const memberOrg = membership.organizations as unknown as { name: string; slug: string } | null;
+    orgSlug = memberOrg?.slug ?? '';
+    orgName = memberOrg?.name ?? '';
   } else {
     const { data: org } = await admin
       .from('organizations')
@@ -86,7 +87,7 @@ export default async function ProcessingPage({
   return (
     <div className="container mx-auto max-w-6xl py-8 px-4">
       <ProcessingClient
-        orgId={orgId}
+        orgId={orgId!}
         orgSlug={orgSlug}
         orgName={orgName}
         components={components ?? []}

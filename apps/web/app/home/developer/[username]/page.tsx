@@ -51,7 +51,7 @@ export default async function DeveloperPage({
       />
 
       <PageBody>
-        <DeveloperAnalytics username={params.username} orgId={orgId} />
+        <DeveloperAnalytics username={params.username} orgId={orgId!} />
       </PageBody>
     </>
   );

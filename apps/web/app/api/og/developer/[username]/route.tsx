@@ -134,15 +134,16 @@ export async function GET(
     const badges = calculateDeveloperBadges(titleStats);
 
     // Rarity colors
+    const defaultColors = { from: '#6b7280', to: '#4b5563', accent: '#9ca3af' };
     const rarityGradients: Record<string, { from: string; to: string; accent: string }> = {
-      common: { from: '#6b7280', to: '#4b5563', accent: '#9ca3af' },
+      common: defaultColors,
       uncommon: { from: '#22c55e', to: '#16a34a', accent: '#4ade80' },
       rare: { from: '#3b82f6', to: '#2563eb', accent: '#60a5fa' },
       epic: { from: '#a855f7', to: '#9333ea', accent: '#c084fc' },
       legendary: { from: '#f59e0b', to: '#d97706', accent: '#fbbf24' },
     };
 
-    const colors = rarityGradients[title.rarity] ?? rarityGradients.common;
+    const colors = rarityGradients[title.rarity] ?? defaultColors;
 
     return new ImageResponse(
       (

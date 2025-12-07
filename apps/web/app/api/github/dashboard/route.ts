@@ -197,14 +197,14 @@ export async function GET(request: Request) {
 
     // Daily scores for trend
     const dailyData = evals.reduce((acc: Record<string, { score: number; eligible: number; total: number }>, e: any) => {
-      const date = new Date(e.pull_requests?.merged_at_gh ?? e.created_at).toISOString().split('T')[0];
+      const date = new Date(e.pull_requests?.merged_at_gh ?? e.created_at).toISOString().split('T')[0]!;
       if (!acc[date]) {
         acc[date] = { score: 0, eligible: 0, total: 0 };
       }
-      acc[date].total += 1;
+      acc[date]!.total += 1;
       if (e.is_eligible) {
-        acc[date].score += e.final_score ?? 0;
-        acc[date].eligible += 1;
+        acc[date]!.score += e.final_score ?? 0;
+        acc[date]!.eligible += 1;
       }
       return acc;
     }, {});
@@ -224,14 +224,14 @@ export async function GET(request: Request) {
       const date = new Date(e.pull_requests?.merged_at_gh ?? e.created_at);
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
-      const weekKey = weekStart.toISOString().split('T')[0];
+      const weekKey = weekStart.toISOString().split('T')[0]!;
       if (!acc[weekKey]) {
         acc[weekKey] = { total: 0, eligible: 0, score: 0 };
       }
-      acc[weekKey].total += 1;
+      acc[weekKey]!.total += 1;
       if (e.is_eligible) {
-        acc[weekKey].eligible += 1;
-        acc[weekKey].score += e.final_score ?? 0;
+        acc[weekKey]!.eligible += 1;
+        acc[weekKey]!.score += e.final_score ?? 0;
       }
       return acc;
     }, {});
@@ -354,10 +354,10 @@ export async function GET(request: Request) {
       const date = new Date(e.pull_requests?.merged_at_gh ?? e.created_at);
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
-      const weekKey = weekStart.toISOString().split('T')[0];
+      const weekKey = weekStart.toISOString().split('T')[0]!;
       const author = e.pull_requests?.github_identities?.github_login;
       if (author && contributorsByWeek[weekKey]) {
-        contributorsByWeek[weekKey].add(author);
+        contributorsByWeek[weekKey]!.add(author);
       }
     });
 

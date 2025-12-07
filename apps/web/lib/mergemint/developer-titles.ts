@@ -223,99 +223,99 @@ export function calculateDeveloperTitle(stats: DeveloperStats): DeveloperTitle {
   
   // The Legend - Top 3 with high scores
   if (rank <= 3 && totalScore >= 500 && eligibilityRate >= 70) {
-    return TITLES.LEGEND;
+    return TITLES.LEGEND!;
   }
 
   // The Firefighter - High critical bug ratio
   if (criticalRatio >= 0.4 && (p0Count + p1Count) >= 5 && totalScore >= 200) {
-    return TITLES.FIREFIGHTER;
+    return TITLES.FIREFIGHTER!;
   }
 
   // === EPIC TITLES ===
 
   // Renaissance Dev - Works on 5+ components with good distribution
   if (componentCount >= 5 && topComponentPercentage <= 40 && totalPrs >= 10) {
-    return TITLES.RENAISSANCE;
+    return TITLES.RENAISSANCE!;
   }
 
   // The Sniper - Few PRs but very high average score
   if (totalPrs <= 5 && avgScore >= 80 && eligibilityRate >= 80) {
-    return TITLES.SNIPER;
+    return TITLES.SNIPER!;
   }
 
   // The Perfectionist - Near-perfect eligibility
   if (eligibilityRate >= 95 && totalPrs >= 5) {
-    return TITLES.PERFECTIONIST;
+    return TITLES.PERFECTIONIST!;
   }
 
   // The Machine - High volume contributor
   if (totalPrs >= 20 && rankPercentile >= 0.9) {
-    return TITLES.MACHINE;
+    return TITLES.MACHINE!;
   }
 
   // === RARE TITLES ===
 
   // Bug Hunter - Significant P0/P1 work
   if (criticalRatio >= 0.25 && (p0Count + p1Count) >= 3) {
-    return TITLES.BUG_HUNTER;
+    return TITLES.BUG_HUNTER!;
   }
 
   // The Surgeon - Small precise changes with high impact
   if (totalPrs > 0 && (totalAdditions + totalDeletions) / totalPrs <= 100 && avgScore >= 50) {
-    return TITLES.SURGEON;
+    return TITLES.SURGEON!;
   }
 
   // The Cleaner - High deletion ratio (refactoring focus)
   if (deletionRatio >= 0.6 && totalDeletions >= 500) {
-    return TITLES.CLEANER;
+    return TITLES.CLEANER!;
   }
 
   // The Architect - Large-scale contributions
   if (totalAdditions >= 5000 && totalPrs >= 5) {
-    return TITLES.ARCHITECT;
+    return TITLES.ARCHITECT!;
   }
 
   // Domain Specialist - Deep focus on one component
   if (topComponentPercentage >= 70 && totalPrs >= 5) {
-    return TITLES.SPECIALIST;
+    return TITLES.SPECIALIST!;
   }
 
   // The Streaker - Long activity streaks
   if (streak >= 7) {
-    return TITLES.STREAKER;
+    return TITLES.STREAKER!;
   }
 
   // === UNCOMMON TITLES ===
 
   // Rising Star - Good rank percentile
   if (rankPercentile >= 0.7 && totalPrs >= 3) {
-    return TITLES.RISING_STAR;
+    return TITLES.RISING_STAR!;
   }
 
   // Jack of All Trades - Works across multiple components
   if (componentCount >= 3 && topComponentPercentage <= 50) {
-    return TITLES.JACK_OF_TRADES;
+    return TITLES.JACK_OF_TRADES!;
   }
 
   // Quality Guardian - High eligibility rate
   if (eligibilityRate >= 80 && totalPrs >= 3) {
-    return TITLES.QUALITY_GUARDIAN;
+    return TITLES.QUALITY_GUARDIAN!;
   }
 
   // Steady Hand - Consistent contributor
   if (totalPrs >= 5 && eligibilityRate >= 50) {
-    return TITLES.STEADY_HAND;
+    return TITLES.STEADY_HAND!;
   }
 
   // === COMMON TITLES ===
 
   // Newcomer - Low activity
   if (totalPrs <= 2) {
-    return TITLES.NEWCOMER;
+    return TITLES.NEWCOMER!;
   }
 
   // Default
-  return TITLES.CONTRIBUTOR;
+  return TITLES.CONTRIBUTOR!;
 }
 
 /**
@@ -417,6 +417,6 @@ export function getTitleFlavorText(title: DeveloperTitle): string {
     "A valued contributor to the team.",
   ];
 
-  return texts[Math.floor(Math.random() * texts.length)] ?? texts[0];
+  return texts[Math.floor(Math.random() * texts.length)] ?? texts[0]!;
 }
 
