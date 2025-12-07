@@ -76,7 +76,7 @@ ${evaluation.impact_summary}
 </details>
 
 ---
-*Analyzed by [MergeMint](https://mergemint.app) 🤖*`;
+*Analyzed by [MergeMint](https://mergemint.dev) 🤖*`;
 }
 
 export async function POST(request: Request) {

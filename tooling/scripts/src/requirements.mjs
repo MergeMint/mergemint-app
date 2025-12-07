@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 
-// check requirements to run Makerkit
+// check requirements to run MergeMint
 void checkRequirements();
 
 function checkRequirements() {
@@ -10,7 +10,7 @@ function checkRequirements() {
 }
 
 /**
- * Checks if the current pnpm version is compatible with Makerkit.
+ * Checks if the current pnpm version is compatible with MergeMint.
  * If the current pnpm version is not compatible, it exits the script with an error message.
  */
 function checkPnpmVersion() {
@@ -21,7 +21,7 @@ function checkPnpmVersion() {
   if (!currentPnpmVersion) {
     console.error(
       `\x1b[31m%s\x1b[0m`,
-      `You are running Makerkit from a directory that does not have pnpm installed. Please install pnpm and run "pnpm install" in your project directory.`,
+      `You are running MergeMint from a directory that does not have pnpm installed. Please install pnpm and run "pnpm install" in your project directory.`,
     );
 
     process.exit(1);
@@ -30,7 +30,7 @@ function checkPnpmVersion() {
   if (major < 9) {
     console.error(
       `\x1b[31m%s\x1b[0m`,
-      `You are running pnpm ${currentPnpmVersion}. Makerkit requires pnpm ${requiredPnpmVersion}.`,
+      `You are running pnpm ${currentPnpmVersion}. MergeMint requires pnpm ${requiredPnpmVersion}.`,
     );
 
     process.exit(1);
@@ -40,7 +40,7 @@ function checkPnpmVersion() {
   if (minor < 12) {
     console.warn(
       `\x1b[33m%s\x1b[0m`,
-      `You are running pnpm ${currentPnpmVersion}. Makerkit recommends using pnpm 9.12.0 or higher.`,
+      `You are running pnpm ${currentPnpmVersion}. MergeMint recommends using pnpm 9.12.0 or higher.`,
     );
   } else {
     console.log(
@@ -51,7 +51,7 @@ function checkPnpmVersion() {
 }
 
 /**
- * Checks if the current Node version is compatible with Makerkit.
+ * Checks if the current Node version is compatible with MergeMint.
  * If the current Node version is not compatible, it exits the script with an error message.
  */
 function checkNodeVersion() {
@@ -62,7 +62,7 @@ function checkNodeVersion() {
   if (major < 18 || (major === 18 && minor < 18)) {
     console.error(
       `\x1b[31m%s\x1b[0m`,
-      `You are running Node ${currentNodeVersion}. Makerkit requires Node ${requiredNodeVersion}.`,
+      `You are running Node ${currentNodeVersion}. MergeMint requires Node ${requiredNodeVersion}.`,
     );
 
     process.exit(1);
@@ -84,7 +84,7 @@ function checkPathNotOneDrive() {
   if (path.includes('OneDrive')) {
     console.error(
       `\x1b[31m%s\x1b[0m`,
-      `You are running Makerkit from OneDrive. Please move your project to a local folder.`,
+      `You are running MergeMint from OneDrive. Please move your project to a local folder.`,
     );
 
     process.exit(1);

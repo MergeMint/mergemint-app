@@ -9,7 +9,7 @@ test.describe('Password Reset Flow', () => {
   test.describe.configure({ mode: 'serial' });
 
   test('will reset the password and sign in with new one', async ({ page }) => {
-    const email = `${emailAddress}@makerkit.dev`;
+    const email = `${emailAddress}@mergemint.dev`;
     const auth = new AuthPageObject(page);
 
     await page.goto('/auth/sign-up');

@@ -1,6 +1,6 @@
 # A string used to distinguish different Supabase projects on the same host. Defaults to the working
 # directory name when running `supabase init`.
-project_id = "next-supabase-saas-kit-turbo-lite"
+project_id = "mergemint-app"
 
 [api]
 # Port to use for the API URL.
@@ -72,7 +72,7 @@ redirect_uri = ""
 url = ""
 
 [auth.email.template.invite]
-subject = "You are invited to Makerkit"
+subject = "You are invited to MergeMint"
 content_path = "./supabase/templates/invite-user.html"
 
 [auth.email.template.confirmation]
@@ -88,7 +88,7 @@ subject = "Confirm your email change"
 content_path = "./supabase/templates/change-email-address.html"
 
 [auth.email.template.magic_link]
-subject = "Sign in to Makerkit"
+subject = "Sign in to MergeMint"
 content_path = "./supabase/templates/magic-link.html"
 
 [analytics]

@@ -9,26 +9,8 @@ import {
   DropdownMenuTrigger,
 } from '@kit/ui/dropdown-menu';
 import { NavigationMenu, NavigationMenuList } from '@kit/ui/navigation-menu';
-import { Trans } from '@kit/ui/trans';
 
 import { SiteNavigationItem } from './site-navigation-item';
-
-/**
- * Add your navigation links here
- *
- * @example
- *
- * {
- *   FAQ: {
- *     label: 'marketing:faq',
- *     path: '/faq',
- *   },
- *   Pricing: {
- *     label: 'marketing:pricing',
- *     path: '/pricing',
- *   },
- * }
- */
 
 const links: Record<
   string,
@@ -37,19 +19,29 @@ const links: Record<
     path: string;
   }
 > = {
-  /*
-    FAQ: {
-      label: 'marketing:faq',
-      path: '/faq',
-    },
-     */
+  Features: {
+    label: 'Features',
+    path: '/features',
+  },
+  HowItWorks: {
+    label: 'How It Works',
+    path: '/how-it-works',
+  },
+  Pricing: {
+    label: 'Pricing',
+    path: '/pricing',
+  },
+  FAQ: {
+    label: 'FAQ',
+    path: '/faq',
+  },
 };
 
 export function SiteNavigation() {
   const NavItems = Object.values(links).map((item) => {
     return (
       <SiteNavigationItem key={item.path} path={item.path}>
-        <Trans i18nKey={item.label} />
+        {item.label}
       </SiteNavigationItem>
     );
   });
@@ -85,7 +77,7 @@ function MobileDropdown() {
           return (
             <DropdownMenuItem key={item.path} asChild>
               <Link className={className} href={item.path}>
-                <Trans i18nKey={item.label} />
+                {item.label}
               </Link>
             </DropdownMenuItem>
           );

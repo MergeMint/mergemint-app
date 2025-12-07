@@ -32,6 +32,7 @@
     "@radix-ui/react-tooltip": "1.2.8",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
+    "framer-motion": "^12.23.25",
     "input-otp": "1.4.2",
     "lucide-react": "^0.545.0",
     "react-top-loading-bar": "3.0.2",
@@ -124,7 +125,8 @@
     "./multi-step-form": "./src/makerkit/multi-step-form.tsx",
     "./app-breadcrumbs": "./src/makerkit/app-breadcrumbs.tsx",
     "./empty-state": "./src/makerkit/empty-state.tsx",
-    "./marketing": "./src/makerkit/marketing/index.tsx"
+    "./marketing": "./src/makerkit/marketing/index.tsx",
+    "./magicui": "./src/magicui/index.tsx"
   },
   "typesVersions": {
     "*": {

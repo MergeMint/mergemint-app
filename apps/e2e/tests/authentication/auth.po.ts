@@ -64,7 +64,7 @@ export class AuthPageObject {
   createRandomEmail() {
     const value = Math.random() * 10000000000;
 
-    return `${value.toFixed(0)}@makerkit.dev`;
+    return `${value.toFixed(0)}@mergemint.dev`;
   }
 
   async signUpFlow(path: string) {

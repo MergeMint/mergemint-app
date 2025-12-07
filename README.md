@@ -1,343 +1,391 @@
-![Makerkit - Next.js Supabase SaaS Starter Kit \[Lite version\]](apps/web/public/images/makerkit.webp)
+<p align="center">
+  <img src="mergemint logo.png" alt="MergeMint Logo" width="400">
+</p>
 
-# NEW! Next.js Supabase SaaS Starter Kit (Lite)
+<p align="center">
+  <strong>AI-powered PR scoring for bug bounties and developer recognition</strong>
+</p>
 
-Start building your SaaS faster with our Next.js 15 + Supabase starter kit.
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#how-it-works">How It Works</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#contributing">Contributing</a>
+</p>
 
-👉 **Looking for a full-featured SaaS Starter Kit?** [Check out the complete version](https://makerkit.dev)
+<p align="center">
+  <img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-blue.svg" alt="License">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
+  <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg" alt="Node Version">
+</p>
 
-⭐️ **Why Developers Trust Makerkit:**
-- Production-grade architecture decisions
-- Comprehensive TypeScript setup
-- Modern stack: Next.js 15, Supabase, TailwindCSS v4
-- Quality Code tooling: ESLint v9, Prettier, strict TypeScript, etc.
-- Regular updates and active maintenance
+---
 
-PS: the documentation for this kit is still being updated, so please check back later for more details.
+## What is MergeMint?
 
-## What's Included
+MergeMint is an open-source platform that automatically evaluates and scores pull requests using AI. Connect your GitHub organization, and MergeMint will:
 
-### Core Architecture
-- 🏗️ Next.js 15 + Turborepo monorepo setup
-- 🎨 Shadcn UI components with TailwindCSS v4
-- 🔐 Supabase authentication & basic DB
-- 🌐 i18n translations (client + server)
-- ✨ Full TypeScript + ESLint v9 + Prettier configuration
+- 🤖 **Analyze every merged PR** using Claude AI
+- 🎯 **Classify components and severity** based on your configuration
+- 🏆 **Calculate scores** with customizable multipliers
+- 📊 **Power leaderboards** for developer recognition
+- 💬 **Post comments** with evaluation details directly on PRs
 
-### Key Features
-- 👤 User authentication flow
-- ⚙️ User profile & settings
-- 📱 Responsive marketing pages
-- 🔒 Protected routes
-- 🎯 Basic test setup with Playwright
+Perfect for running internal bug bounty programs, performance reviews, or recognizing open source contributors.
 
-### Technologies
+## Features
 
-This starter kit provides core foundations:
+### Core Platform
 
-🛠️ **Technology Stack**:
-- [Next.js 15](https://nextjs.org/): A React-based framework for server-side rendering and static site generation.
-- [Tailwind CSS](https://tailwindcss.com/): A utility-first CSS framework for rapidly building custom designs.
-- [Supabase](https://supabase.com/): A realtime database for web and mobile applications.
-- [i18next](https://www.i18next.com/): A popular internationalization framework for JavaScript.
-- [Turborepo](https://turborepo.org/): A monorepo tool for managing multiple packages and applications.
-- [Shadcn UI](https://shadcn.com/): A collection of components built using Tailwind CSS.
-- [Zod](https://github.com/colinhacks/zod): A TypeScript-first schema validation library.
-- [React Query](https://tanstack.com/query/v4): A powerful data fetching and caching library for React.
-- [Prettier](https://prettier.io/): An opinionated code formatter for JavaScript, TypeScript, and CSS.
-- [Eslint](https://eslint.org/): A powerful linting tool for JavaScript and TypeScript.
-- [Playwright](https://playwright.dev/): A framework for end-to-end testing of web applications.
+- **AI-Powered Evaluation** — Claude analyzes PR diffs, linked issues, and commit messages
+- **Configurable Scoring** — Define components, multipliers, and severity levels
+- **Real-time Dashboards** — Track team velocity, quality metrics, and contributor trends
+- **Leaderboards** — Weekly MVP, top PRs, cumulative scores with gamification
+- **PR Comments** — Instant feedback posted directly on merged PRs
+- **Developer Profiles** — Individual pages showing score history and contribution patterns
 
-This kit is a trimmed down version of the [full version of this SaaS Starter Kit](https://makerkit.dev). It is a good way to evaluate small part of the full kit, or to simply use it as a base for your own project.
+### GitHub Integration
 
-## Comparing Lite vs Full Version
+- **Webhook-driven** — Instant processing when PRs are merged
+- **Diff Analysis** — Full access to code changes and file lists
+- **Issue Linking** — Detects linked issues from PR descriptions
+- **Backfill Support** — Process historical PRs on demand
 
-The lite kit is perfect for:
-- Evaluating our code architecture and patterns
-- Building basic SaaS prototypes
-- Learning our tech stack approach
-- Building a basic SaaS tool
+### Self-Hosting
 
-The [full version](https://makerkit.dev) adds production features:
-- 💳 Complete billing and subscription system
-- 👥 Team accounts and management
-- 📧 Mailers and Email Templates (Nodemailer, Resend, etc.)
-- 📊 Analytics (GA, Posthog, Umami, etc.)
-- 🔦 Monitoring providers (Sentry, Baselime, etc.)
-- 🔐 Production database schema
-- ✅ Comprehensive test suite
-- 🔔 Realtime Notifications
-- 📝 Blogging system
-- 💡 Documentation system
-- ‍💻 Super Admin panel
-- 🕒 Daily updates and improvements
-- 🐛 Priority bug fixes
-- 🤝 Support
-- ⭐️ Used by 1000+ developers
-- 💪 Active community members
-- 🏢 Powers startups to enterprises
+- **Open Source** — CC BY-NC 4.0 licensed, free for non-commercial use
+- **Supabase Backend** — PostgreSQL with Row Level Security
+- **Docker Ready** — Easy deployment on any infrastructure
+- **Your API Keys** — Use your own Anthropic credentials
 
-[View complete feature comparison →](https://makerkit.dev/#pricing)
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 18.x or later (preferably the latest LTS version)
-- Docker
-- PNPM
+- Node.js 18.x or later (LTS recommended)
+- Docker (for Supabase local development)
+- PNPM package manager
+- Anthropic API key (for Claude)
 
-Please make sure you have a Docker daemon running on your machine. This is required for the Supabase CLI to work.
-
-### Installation
-
-#### 1. Clone this repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/makerkit/next-supabase-saas-kit-lite.git
+git clone https://github.com/MergeMint/mergemint-app.git
+cd mergemint-app
 ```
 
-#### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-#### 3. Start Supabase
+### 3. Start Supabase
 
-Please make sure you have a Docker daemon running on your machine.
-
-Then run the following command to start Supabase:
+Make sure Docker is running, then:
 
 ```bash
 pnpm run supabase:web:start
 ```
 
-Once the Supabase server is running, please access the Supabase Dashboard using the port in the output of the previous command. Normally, you find it at [http://localhost:54323](http://localhost:54323).
+Access the Supabase Dashboard at [http://localhost:54323](http://localhost:54323).
 
-You will also find all the Supabase services printed in the terminal after the command is executed.
+### 4. Configure Environment Variables
 
-##### Stopping Supabase
-
-To stop the Supabase server, run the following command:
+Copy the example environment file and configure your settings:
 
 ```bash
-pnpm run supabase:web:stop
+cp apps/web/.env.example apps/web/.env.local
 ```
 
-##### Resetting Supabase
+Required variables:
 
-To reset the Supabase server, run the following command:
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SITE_URL` | Your app URL (e.g., `http://localhost:3000`) |
+| `NEXT_PUBLIC_PRODUCT_NAME` | `MergeMint` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase URL (default: `http://127.0.0.1:54321`) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key (from console) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key |
+| `ANTHROPIC_API_KEY` | Your Anthropic API key for Claude |
+| `GITHUB_APP_ID` | GitHub App ID |
+| `GITHUB_APP_PRIVATE_KEY` | GitHub App private key (base64 encoded) |
 
-```bash
-pnpm run supabase:web:reset
-```
-
-##### More Supabase Commands
-
-For more Supabase commands, see the [Supabase CLI documentation](https://supabase.com/docs/guides/cli).
-
-```
-# Create new migration
-pnpm --filter web supabase migration new <name>
-
-# Link to Supabase project
-pnpm --filter web supabase link
-
-# Push migrations
-pnpm --filter web supabase db push
-```
-
-#### 4. Start the Next.js application
+### 5. Start the Development Server
 
 ```bash
 pnpm run dev
 ```
 
-The application will be available at http://localhost:3000.
+Open [http://localhost:3000](http://localhost:3000) to see MergeMint.
 
-#### 5. Code Health (linting, formatting, etc.)
+### 6. Set Up GitHub App
 
-To format your code, run the following command:
+1. Go to GitHub Settings → Developer settings → GitHub Apps
+2. Create a new GitHub App with these permissions:
+   - **Repository permissions:**
+     - Contents: Read
+     - Pull requests: Read & Write
+     - Issues: Read & Write
+   - **Subscribe to events:**
+     - Pull request
+3. Generate a private key and add it to your `.env.local`
+4. Install the app on your organization
 
-```bash
-pnpm run format:fix
+## How It Works
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   GitHub    │───▶│  Webhook    │───▶│   Claude    │───▶│  Database   │
+│  PR Merged  │    │  Received   │    │  Analysis   │    │   + Score   │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                                                │
+                   ┌─────────────┐    ┌─────────────┐           │
+                   │ PR Comment  │◀───│ Leaderboard │◀──────────┘
+                   │   Posted    │    │   Updated   │
+                   └─────────────┘    └─────────────┘
 ```
 
-To lint your code, run the following command:
+1. **Developer merges a PR** — Business as usual
+2. **GitHub sends webhook** — MergeMint receives PR details
+3. **Fetch diff** — MergeMint retrieves the full code diff
+4. **AI evaluation** — Claude analyzes changes, classifies component/severity
+5. **Score calculation** — Base points × multiplier = final score
+6. **Store & notify** — Save to database, post PR comment, update leaderboards
 
-```bash
-pnpm run lint
+### Scoring Formula
+
+```
+Final Score = Severity Base Points × Component Multiplier
 ```
 
-To validate your TypeScript code, run the following command:
+Example:
+- P1 severity (High) = 50 base points
+- Auth component = 1.5× multiplier
+- **Final Score = 50 × 1.5 = 75 points**
 
-```bash
-pnpm run typecheck
+### Eligibility Criteria
+
+PRs must pass these checks to earn points:
+
+| Check | Description |
+|-------|-------------|
+| Issue Linked | PR fixes a reported issue or bug |
+| Implementation | Code changes align with PR description |
+| Documentation | PR has meaningful description |
+| Tests | Includes tests or change is trivial |
+
+## Configuration
+
+### Components
+
+Define the components of your product with multipliers:
+
+```sql
+INSERT INTO repo_components (repo_id, key, name, multiplier, description)
+VALUES
+  (repo_id, 'AUTH', 'Authentication', 1.5, 'Login, sessions, tokens'),
+  (repo_id, 'PAYMENTS', 'Payments', 2.0, 'Billing, subscriptions'),
+  (repo_id, 'API', 'API', 1.2, 'REST endpoints, GraphQL'),
+  (repo_id, 'UI', 'User Interface', 1.0, 'Frontend components');
 ```
 
-Turborepo will cache the results of these commands, so you can run them as many times as you want without any performance impact.
+### Severity Levels
+
+Configure severity levels with base points:
+
+```sql
+INSERT INTO severity_levels (org_id, key, name, base_points, sort_order)
+VALUES
+  (org_id, 'P0', 'Critical', 100, 1),
+  (org_id, 'P1', 'High', 50, 2),
+  (org_id, 'P2', 'Medium', 25, 3),
+  (org_id, 'P3', 'Low', 10, 4);
+```
+
+### AI Model
+
+MergeMint uses Claude by default. Configure the model in `scoring_rule_sets`:
+
+```sql
+UPDATE scoring_rule_sets 
+SET model_name = 'claude-haiku-4-5-20251001'
+WHERE org_id = your_org_id AND is_default = true;
+```
 
 ## Project Structure
 
-The project is organized into the following folders:
-
 ```
-apps/
-├── web/                  # Next.js application
-│   ├── app/             # App Router pages
-│   │   ├── (marketing)/ # Public marketing pages
-│   │   ├── auth/        # Authentication pages
-│   │   └── home/        # Protected app pages
-│   ├── supabase/        # Database & migrations
-│   └── config/          # App configuration
-│
-packages/
-├── ui/                  # Shared UI components
-└── features/           # Core feature packages
-    ├── auth/           # Authentication logic
-    └── ...
+mergemint/
+├── apps/
+│   ├── web/                    # Next.js application
+│   │   ├── app/
+│   │   │   ├── (marketing)/    # Public landing pages
+│   │   │   ├── api/            # API routes (webhooks, etc.)
+│   │   │   ├── auth/           # Authentication pages
+│   │   │   └── home/           # Protected dashboard pages
+│   │   ├── lib/mergemint/      # Core business logic
+│   │   ├── supabase/           # Database migrations
+│   │   └── config/             # App configuration
+│   └── e2e/                    # Playwright tests
+├── packages/
+│   ├── ui/                     # Shared UI components (shadcn)
+│   ├── features/               # Feature packages
+│   │   ├── auth/               # Authentication logic
+│   │   └── accounts/           # Account management
+│   ├── supabase/               # Supabase utilities
+│   └── shared/                 # Shared utilities
+└── tooling/                    # ESLint, Prettier configs
 ```
 
-For more information about this project structure, see the article [Next.js App Router: Project Structure](https://makerkit.dev/blog/tutorials/nextjs-app-router-project-structure).
+## Contributing
 
-### Environment Variables
+We love contributions! MergeMint is built by the community, for the community.
 
-You can configure the application by setting environment variables in the `.env.local` file.
+### Ways to Contribute
 
-Here are the available variables:
+- 🐛 **Report bugs** — Open an issue with reproduction steps
+- 💡 **Suggest features** — Start a discussion with your idea
+- 📖 **Improve docs** — Fix typos, add examples, clarify explanations
+- 🔧 **Submit PRs** — Bug fixes, features, performance improvements
 
-| Variable Name | Description | Default Value |
-| --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | The URL of your SaaS application | `http://localhost:3000` |
-| `NEXT_PUBLIC_PRODUCT_NAME` | The name of your SaaS product | `Makerkit` |
-| `NEXT_PUBLIC_SITE_TITLE` | The title of your SaaS product | `Makerkit - The easiest way to build and manage your SaaS` |
-| `NEXT_PUBLIC_SITE_DESCRIPTION` | The description of your SaaS product | `Makerkit is the easiest way to build and manage your SaaS. It provides you with the tools you need to build your SaaS, without the hassle of building it from scratch.` |
-| `NEXT_PUBLIC_DEFAULT_THEME_MODE` | The default theme mode of your SaaS product | `light` |
-| `NEXT_PUBLIC_THEME_COLOR` | The default theme color of your SaaS product | `#ffffff` |
-| `NEXT_PUBLIC_THEME_COLOR_DARK` | The default theme color of your SaaS product in dark mode | `#0a0a0a` |
-| `NEXT_PUBLIC_SUPABASE_URL` | The URL of your Supabase project | `http://127.0.0.1:54321` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | The anon key of your Supabase project | ''
-| `SUPABASE_SERVICE_ROLE_KEY` | The service role key of your Supabase project | ''
+### Development Workflow
 
-## Architecture
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Run tests: `pnpm run test`
+5. Lint & format: `pnpm run lint && pnpm run format:fix`
+6. Commit: `git commit -m 'feat: add amazing feature'`
+7. Push: `git push origin feature/amazing-feature`
+8. Open a Pull Request
 
-This starter kit uses a monorepo architecture.
+### Commit Convention
 
-1. The `apps/web` directory is the Next.js application.
-2. The `packages` directory contains all the packages used by the application.
-3. The `packages/features` directory contains all the features of the application.
-4. The `packages/ui` directory contains all the UI components.
+We use [Conventional Commits](https://www.conventionalcommits.org/):
 
-For more information about the architecture, please refer to the [Makerkit blog post about Next.js Project Structure](https://makerkit.dev/blog/tutorials/nextjs-app-router-project-structure).
+- `feat:` — New features
+- `fix:` — Bug fixes
+- `docs:` — Documentation changes
+- `style:` — Code style (formatting, etc.)
+- `refactor:` — Code refactoring
+- `test:` — Adding or updating tests
+- `chore:` — Maintenance tasks
 
-### Marketing Pages
+### Code Quality
 
-Marketing pages are located in the `apps/web/app/(marketing)` directory. These pages are used to showcase the features of the SaaS and provide information about the product.
-
-### Authentication
-
-Authenticated is backed by Supabase. The `apps/web/app/auth` directory contains the authentication pages, however, the logic is into its own package `@kit/auth` located in `packages/features/auth`.
-
-This package can be used across multiple applications.
-
-### Gated Pages
-
-Gated pages are located in the `apps/web/app/home` directory. Here is where you can build your SaaS pages that are gated by authentication.
-
-### Database
-
-The Supabase database is located in the `apps/web/supabase` directory. In this directory you will find the database schema, migrations, and seed data.
-
-#### Creating a new migration
-To create a new migration, run the following command:
+Before submitting a PR, ensure:
 
 ```bash
-pnpm --filter web supabase migration new --name <migration-name>
+# Type checking
+pnpm run typecheck
+
+# Linting
+pnpm run lint
+
+# Formatting
+pnpm run format:fix
+
+# Tests (if applicable)
+pnpm run test
 ```
 
-This command will create a new migration file in the `apps/web/supabase/migrations` directory. 
+### Local Development Tips
 
-#### Applying a migration
-
-Once you have created a migration, you can apply it to the database by running the following command:
-
+**Reset database:**
 ```bash
 pnpm run supabase:web:reset
 ```
 
-This command will apply the migration to the database and update the schema. It will also reset the database using the provided seed data.
+**Create a migration:**
+```bash
+pnpm --filter web supabase migration new <name>
+```
 
-#### Linking the Supabase database
+**View Supabase logs:**
+```bash
+pnpm --filter web supabase logs
+```
 
-Linking the local Supabase database to the Supabase project is done by running the following command:
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | [Next.js 15](https://nextjs.org/) (App Router) |
+| Database | [Supabase](https://supabase.com/) (PostgreSQL) |
+| AI | [Anthropic Claude](https://anthropic.com/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| UI Components | [shadcn/ui](https://ui.shadcn.com/) |
+| Monorepo | [Turborepo](https://turbo.build/) |
+| Package Manager | [PNPM](https://pnpm.io/) |
+| Testing | [Playwright](https://playwright.dev/) |
+| Validation | [Zod](https://zod.dev/) |
+| Data Fetching | [React Query](https://tanstack.com/query) |
+
+## Deployment
+
+### Vercel (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/MergeMint/mergemint-app)
+
+### Docker
 
 ```bash
-pnpm --filter web supabase db link
+docker build -t mergemint .
+docker run -p 3000:3000 mergemint
 ```
 
-This command will link the local Supabase database to the Supabase project.
+### Self-Hosted Supabase
 
-#### Pushing the migration to the Supabase project
+For production, we recommend using [Supabase Cloud](https://supabase.com/) or self-hosting Supabase with their [self-hosting guide](https://supabase.com/docs/guides/self-hosting).
 
-After you have made changes to the migration, you can push the migration to the Supabase project by running the following command:
+## Roadmap
 
-```bash
-pnpm --filter web supabase db push
-```
+- [ ] GitLab integration
+- [ ] Slack notifications
+- [ ] Discord bot
+- [ ] Custom AI prompts
+- [ ] Team-level analytics
+- [ ] Payout integrations
+- [ ] Mobile app
 
-This command will push the migration to the Supabase project. You can now apply the migration to the Supabase database.
-
-## Going to Production
-
-#### 1. Create a Supabase project
-
-To deploy your application to production, you will need to create a Supabase project.
-
-#### 2. Push the migration to the Supabase project
-
-After you have made changes to the migration, you can push the migration to the Supabase project by running the following command:
-
-```bash
-pnpm --filter web supabase db push
-```
-
-This command will push the migration to the Supabase project.
-
-#### 3. Set the Supabase Callback URL
-
-When working with a remote Supabase project, you will need to set the Supabase Callback URL.
-
-Please set the callback URL in the Supabase project settings to the following URL:
-
-`<url>/auth/callback`
-
-Where `<url>` is the URL of your application.
-
-#### 4. Deploy to Vercel or any other hosting provider
-
-You can deploy your application to any hosting provider that supports Next.js.
-
-#### 5. Deploy to Cloudflare
-
-The configuration should work as is, but you need to set the runtime to `edge` in the root layout file (`apps/web/app/layout.tsx`).
-
-```tsx
-export const runtime = 'edge';
-```
-
-Remember to enable Node.js compatibility in the Cloudflare dashboard.
-
-## Contributing
-
-Contributions for bug fixed are welcome! However, please open an issue first to discuss your ideas before making a pull request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+See the [open issues](https://github.com/MergeMint/mergemint-app/issues) for a full list of proposed features.
 
 ## Support
 
-No support is provided for this kit. Feel free to open an issue if you have any questions or need help, but there is no guaranteed response time, nor guarantee a fix.
+- 📖 **Documentation** — [docs.mergemint.dev](https://docs.mergemint.dev)
+- 💬 **Discussions** — [GitHub Discussions](https://github.com/MergeMint/mergemint-app/discussions)
+- 🐛 **Bug Reports** — [GitHub Issues](https://github.com/MergeMint/mergemint-app/issues)
+- 🐦 **Twitter** — [@mergemint](https://twitter.com/mergemint)
 
-For dedicated support, priority fixes, and advanced features, [check out our full version](https://makerkit.dev).
+## License
+
+MergeMint is licensed under [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](LICENSE).
+
+**You are free to:**
+- Share — copy and redistribute the material
+- Adapt — remix, transform, and build upon the material
+
+**Under these terms:**
+- **Attribution** — Give appropriate credit and link to the license
+- **NonCommercial** — You may not use the material for commercial purposes
+
+For commercial licensing, please contact: hello@mergemint.dev
+
+---
+
+<p align="center">
+  <strong>Created by Jay Derinbogaz</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/cderinbogaz">GitHub</a> •
+  <a href="https://linkedin.com/in/ceyhunderinbogaz">LinkedIn</a>
+</p>
+
+<p align="center">
+  <a href="https://mergemint.dev">Website</a> •
+  <a href="https://github.com/MergeMint/mergemint-app">GitHub</a> •
+  <a href="https://twitter.com/mergemint">Twitter</a>
+</p>

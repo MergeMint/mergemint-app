@@ -11,7 +11,7 @@
  * We will revoke all default privileges from public schema on functions to prevent public access to them
  * -------------------------------------------------------
  */
--- Create a private Makerkit schema
+-- Create a private MergeMint schema
 create schema if not exists kit;
 
 create extension if not exists "unaccent" schema kit;
@@ -82,7 +82,7 @@ grant usage on schema public to service_role;
 /*
  * -------------------------------------------------------
  * Section: Accounts
- * We create the schema for the accounts. Accounts are the top level entity in the Supabase MakerKit. They can be team or personal accounts.
+ * We create the schema for the accounts. Accounts are the top level entity in MergeMint. They can be team or personal accounts.
  * -------------------------------------------------------
  */
 -- Accounts table
@@ -101,7 +101,7 @@ create table if not exists
     primary key (id)
 );
 
-comment on table public.accounts is 'Accounts are the top level entity in the Supabase MakerKit';
+comment on table public.accounts is 'Accounts are the top level entity in MergeMint';
 
 comment on column public.accounts.name is 'The name of the account';
 
