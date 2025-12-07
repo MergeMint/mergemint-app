@@ -637,7 +637,7 @@ begin
         'Default Rule Set',
         'Base evaluation rules seeded automatically for new organizations.',
         true,
-        'gpt-4o-mini',
+        'claude-haiku-4-5-20251001',
         auth.uid()
     )
     on conflict do nothing

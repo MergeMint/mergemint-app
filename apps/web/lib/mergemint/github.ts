@@ -15,6 +15,8 @@ export type GithubRepository = {
   name: string;
   full_name: string;
   default_branch?: string;
+  pushed_at?: string;
+  updated_at?: string;
   owner: GithubUser;
 };
 
@@ -149,6 +151,126 @@ export class GithubClient {
       { query: { per_page: 100 } },
     );
   }
+
+  /**
+   * Fetch merged PRs from a repo with pagination.
+   * Fetches PRs that were updated since the given date and filters to merged only.
+   */
+  async listMergedPulls(
+    owner: string,
+    repo: string,
+    since: string,
+    page = 1,
+    perPage = 100,
+  ): Promise<GithubPullRequest[]> {
+    const prs = await this.request<GithubPullRequest[]>(
+      `/repos/${owner}/${repo}/pulls`,
+      {
+        query: {
+          state: 'closed',
+          sort: 'updated',
+          direction: 'desc',
+          per_page: perPage,
+          page,
+          since,
+        },
+      },
+    );
+    // Filter to only merged PRs within our date range
+    const sinceDate = new Date(since);
+    return prs.filter(
+      (pr) => pr.merged_at && new Date(pr.merged_at) >= sinceDate,
+    );
+  }
+
+  /**
+   * Fetch all merged PRs from the last N months with pagination.
+   */
+  async fetchAllMergedPRs(
+    owner: string,
+    repo: string,
+    months: number,
+  ): Promise<GithubPullRequest[]> {
+    const sinceDate = new Date();
+    sinceDate.setMonth(sinceDate.getMonth() - months);
+    const since = sinceDate.toISOString();
+
+    const allPRs: GithubPullRequest[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const prs = await this.listMergedPulls(owner, repo, since, page);
+      if (prs.length === 0) {
+        hasMore = false;
+      } else {
+        allPRs.push(...prs);
+        // If we got less than 100, we're at the end
+        if (prs.length < 100) {
+          hasMore = false;
+        }
+        page++;
+      }
+      // Safety limit to avoid infinite loops
+      if (page > 20) {
+        hasMore = false;
+      }
+    }
+
+    return allPRs;
+  }
+
+  /**
+   * Get PR diff/patch content
+   */
+  async getPullRequestDiff(owner: string, repo: string, number: number): Promise<string> {
+    const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${number}`;
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        Accept: 'application/vnd.github.v3.diff',
+        'User-Agent': 'MergeMint-MVP',
+      },
+      cache: 'no-store',
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch PR diff: ${res.status} ${res.statusText}`);
+    }
+
+    return res.text();
+  }
+
+  /**
+   * Get detailed PR info including body and linked issues
+   */
+  async getPullRequest(owner: string, repo: string, number: number): Promise<GithubPullRequest> {
+    return this.request<GithubPullRequest>(`/repos/${owner}/${repo}/pulls/${number}`);
+  }
+
+  /**
+   * Post a comment on a PR (PRs are issues in GitHub API)
+   */
+  async postPRComment(owner: string, repo: string, prNumber: number, body: string): Promise<{ id: number; html_url: string }> {
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${prNumber}/comments`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'MergeMint-MVP',
+      },
+      body: JSON.stringify({ body }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Failed to post PR comment: ${res.status} ${res.statusText} - ${text}`);
+    }
+
+    return res.json();
+  }
 }
 
 /**
@@ -246,6 +368,7 @@ export async function resolveGithubTokenForOrg(
     return { token: token.token, source: 'installation' as const };
   }
 
+  // Fallback to personal access token (local/dev)
   const token = getGithubTokenForOrg(orgId, orgSlug ?? connection?.github_org_name ?? undefined);
   return { token, source: 'env' as const };
 }

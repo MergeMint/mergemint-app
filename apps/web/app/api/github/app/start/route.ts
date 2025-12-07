@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 export async function GET(request: NextRequest) {
   if (!appSlug) {
@@ -23,10 +24,12 @@ export async function GET(request: NextRequest) {
     }),
   ).toString('base64url');
 
+  const callback = new URL('/api/github/app/callback', siteUrl);
   const installUrl = new URL(
     `https://github.com/apps/${appSlug}/installations/new`,
   );
   installUrl.searchParams.set('state', state);
+  installUrl.searchParams.set('redirect_url', callback.toString());
 
   return NextResponse.redirect(installUrl.toString(), { status: 302 });
 }
