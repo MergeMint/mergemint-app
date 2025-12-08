@@ -43,12 +43,15 @@ async function HowItWorksPage() {
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl mb-6">
             From merge to score
             <span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-              in seconds
+              in seconds, not hours
             </span>
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-4">
             MergeMint automates the entire flow from PR merge to developer recognition. 
             Here&apos;s exactly how it works.
+          </p>
+          <p className="mx-auto max-w-2xl text-sm text-muted-foreground/80">
+            No more manual spreadsheets like we used to do at TextCortex AI. Just automatic, AI-powered evaluation.
           </p>
         </div>
       </section>

@@ -96,7 +96,7 @@ export function PasswordResetRequestContainer(params: {
                       <Input
                         required
                         type="email"
-                        placeholder={t('emailPlaceholder')}
+                        placeholder={t('auth:emailPlaceholder')}
                         {...field}
                       />
                     </FormControl>

@@ -9,7 +9,7 @@ import {
   type DeveloperStats,
 } from '~/lib/mergemint/developer-titles';
 
-export const runtime = 'edge';
+// Note: Using Node.js runtime for Cloudflare compatibility
 
 export async function GET(
   request: Request,
@@ -306,4 +306,3 @@ export async function GET(
     return new Response('Failed to generate image', { status: 500 });
   }
 }
-

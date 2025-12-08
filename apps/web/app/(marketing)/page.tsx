@@ -4,9 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import {
+  AlertCircle,
   ArrowRightIcon,
   BarChart3,
   Bot,
+  Check,
   CheckCircle2,
   Code2,
   GitBranch,
@@ -15,11 +17,14 @@ import {
   Github,
   Linkedin,
   Medal,
+  Rocket,
   Shield,
   Sparkles,
   Star,
+  Target,
   Trophy,
   Users,
+  X,
   Zap,
 } from 'lucide-react';
 
@@ -80,46 +85,46 @@ const prEvaluations = [
 // Company testimonials
 const testimonials = [
   {
+    name: 'Jay Derinbogaz',
+    role: 'Co-founder & CTO',
+    company: 'TextCortex AI',
+    body: "We built MergeMint because we needed it ourselves. Now our entire team has clear visibility into contributions and fair recognition. Best internal tool we've ever built.",
+    img: 'https://avatar.vercel.sh/jay',
+  },
+  {
     name: 'Sarah Chen',
     role: 'Engineering Manager',
     company: 'TechCorp',
-    body: "MergeMint transformed how we recognize developer contributions. Our bug bounty program is now completely automated.",
+    body: "MergeMint transformed how we recognize developer contributions. Our bug bounty program is now completely automated. No more manual spreadsheets!",
     img: 'https://avatar.vercel.sh/sarah',
   },
   {
     name: 'Mike Johnson',
     role: 'VP Engineering',
     company: 'ScaleUp Inc',
-    body: "The AI scoring is incredibly accurate. It saved us 20+ hours per week on manual PR reviews.",
+    body: "The AI scoring is incredibly accurate. It saved us 20+ hours per week on manual PR reviews. Our performance review process has never been more objective.",
     img: 'https://avatar.vercel.sh/mike',
   },
   {
     name: 'Alex Rivera',
     role: 'CTO',
     company: 'StartupXYZ',
-    body: "Finally, an objective way to measure developer impact. Our team morale has never been higher.",
+    body: "Finally, an objective way to measure developer impact. Our team morale has never been higher. Developers love seeing their contributions quantified.",
     img: 'https://avatar.vercel.sh/alex',
   },
   {
     name: 'Emily Watson',
     role: 'Lead Developer',
     company: 'DevTools Co',
-    body: "The leaderboards gamified our engineering culture in the best way possible. Highly recommend!",
+    body: "The leaderboards gamified our engineering culture in the best way possible. Highly recommend! It's boosted motivation across the entire team.",
     img: 'https://avatar.vercel.sh/emily',
   },
   {
     name: 'James Lee',
     role: 'Engineering Director',
     company: 'CloudScale',
-    body: "Self-hosting MergeMint was a breeze. We had it running in production within an hour.",
+    body: "Self-hosting MergeMint was a breeze. We had it running in production within an hour. Our compliance team loves that all data stays internal.",
     img: 'https://avatar.vercel.sh/james',
-  },
-  {
-    name: 'Lisa Park',
-    role: 'Product Manager',
-    company: 'InnovateTech',
-    body: "The dashboards give us incredible visibility into team velocity and quality metrics.",
-    img: 'https://avatar.vercel.sh/lisa',
   },
 ];
 
@@ -143,7 +148,11 @@ export default function Home() {
           <div className="mx-auto max-w-4xl text-center">
             {/* Badge */}
             <BlurFade delay={0.1} inView>
-              <div className="mb-8">
+              <div className="mb-8 flex flex-col items-center gap-3">
+                <Badge variant="outline" className="px-4 py-2 text-sm border-blue-500/30 bg-blue-500/5">
+                  <Rocket className="mr-2 h-4 w-4 text-blue-600" />
+                  <span className="text-blue-600">Born at TextCortex AI</span>
+                </Badge>
                 <Badge variant="outline" className="px-4 py-2 text-sm border-purple-500/30 bg-purple-500/5">
                   <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
                   Open Source PR Intelligence Platform
@@ -164,9 +173,10 @@ export default function Home() {
             {/* Subtitle */}
             <BlurFade delay={0.3} inView>
               <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-                MergeMint uses AI to evaluate every merged pull request, scoring contributions by 
-                severity and component impact. Automate your bug bounty program, recognize top 
-                contributors, and build a culture of excellence.
+                Born from our struggle at TextCortex AI to fairly reward our top performers, 
+                MergeMint uses AI to automatically evaluate every merged pull request—scoring 
+                contributions by severity and impact. Finally, an objective way to recognize 
+                excellence and automate your bug bounty program.
               </p>
             </BlurFade>
 
@@ -255,6 +265,142 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Origin Story Section */}
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-muted/50 to-transparent relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-1/4 left-0 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-4xl mx-auto">
+            <BlurFade delay={0.1} inView>
+              <div className="text-center mb-12">
+                <Badge variant="outline" className="mb-4 px-4 py-2">
+                  <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
+                  Our Story
+                </Badge>
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-6">
+                  Built from<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                    real pain
+                  </span>
+                </h2>
+              </div>
+            </BlurFade>
+
+            <BlurFade delay={0.2} inView>
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-violet-500/20 rounded-3xl blur-2xl animate-pulse" />
+                <div className="relative rounded-2xl border bg-card p-8 lg:p-12 shadow-2xl overflow-hidden">
+                  <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={16} />
+                  
+                  <div className="prose prose-lg dark:prose-invert max-w-none">
+                    {/* Header with animated gradient */}
+                    <div className="flex items-start gap-4 mb-8">
+                      <div className="relative flex-shrink-0">
+                        <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                          TC
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-lg animate-bounce">
+                          <CheckCircle2 className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold mb-1 mt-0 bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                          The Problem at TextCortex AI
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-0">Where it all started</p>
+                      </div>
+                    </div>
+                    
+                    <p className="text-lg leading-relaxed mb-6">
+                      At <strong className="text-purple-600">TextCortex AI</strong>, we knew who our star performers were—the developers who 
+                      consistently shipped critical bug fixes, tackled the hardest problems, and moved the product 
+                      forward. But when it came time for bonuses and recognition, we hit a wall.
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 my-8 not-prose">
+                      {/* Struggles Card with enhanced styling */}
+                      <div className="relative p-6 rounded-xl bg-gradient-to-br from-red-500/5 to-red-500/10 border border-red-500/20 overflow-hidden group hover:shadow-lg transition-shadow">
+                        <div className="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="h-12 w-12 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                              <AlertCircle className="h-6 w-6 text-red-500" />
+                            </div>
+                            <h4 className="font-bold text-red-600 text-lg">The Struggles</h4>
+                          </div>
+                          <ul className="space-y-3 text-sm text-muted-foreground">
+                            {[
+                              'Manual PR reviews took 20+ hours per week',
+                              'No clear metrics for "high performer"',
+                              'Spreadsheets became unmanageable',
+                              'Bias crept into recognition decisions',
+                            ].map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <X className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Solution Card with enhanced styling */}
+                      <div className="relative p-6 rounded-xl bg-gradient-to-br from-purple-500/5 to-purple-500/10 border border-purple-500/20 overflow-hidden group hover:shadow-lg transition-shadow">
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="h-12 w-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                              <Zap className="h-6 w-6 text-purple-600" />
+                            </div>
+                            <h4 className="font-bold text-purple-600 text-lg">What We Needed</h4>
+                          </div>
+                          <ul className="space-y-3 text-sm text-muted-foreground">
+                            {[
+                              'Objective, AI-powered evaluation',
+                              'Automatic scoring on every merged PR',
+                              'Clear visibility into contributions',
+                              'Fair, transparent recognition system',
+                            ].map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2">
+                                <CheckCircle2 className="h-4 w-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-lg leading-relaxed mb-6 text-center">
+                      We looked for existing solutions—but found nothing that automatically evaluated PR impact 
+                      using AI. So we built <strong className="text-purple-600 text-xl">MergeMint</strong>.
+                    </p>
+
+                    {/* Result Card with shine effect */}
+                    <div className="relative p-6 rounded-xl bg-gradient-to-br from-green-500/5 to-emerald-500/10 border border-green-500/20 overflow-hidden">
+                      <ShineBorder shineColor={['#10b981', '#34d399', '#10b981']} borderRadius={12} />
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                          <CheckCircle2 className="h-6 w-6 text-green-600" />
+                        </div>
+                        <h4 className="font-bold text-green-600 m-0 text-lg">The Result</h4>
+                      </div>
+                      <p className="text-muted-foreground mb-0">
+                        Today, every merged PR at TextCortex gets automatically evaluated by Claude. Our team knows 
+                        exactly how their work is valued, bonuses are calculated objectively, and our top performers 
+                        finally get the recognition they deserve. <strong className="text-green-600">We're now open-sourcing MergeMint so you 
+                        can solve the same problem.</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </BlurFade>
+          </div>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="py-16 border-y bg-muted/30">
         <div className="container mx-auto px-4">
@@ -306,10 +452,10 @@ export default function Home() {
             <div className="text-center">
               <Badge variant="outline" className="mb-4">Testimonials</Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-                Loved by engineering teams
+                Trusted by engineering teams solving the same problems
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                See what engineering leaders are saying about MergeMint.
+                From TextCortex AI to startups and enterprises—see how teams are using MergeMint to recognize great work.
               </p>
             </div>
           </BlurFade>
@@ -332,61 +478,110 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-24 lg:py-32 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/5 via-transparent to-transparent" />
+        
+        <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-16">
-              <Badge variant="outline" className="mb-4">How It Works</Badge>
+              <Badge variant="outline" className="mb-4 px-4 py-2">
+                <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
+                How It Works
+              </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                From PR merge to score in seconds
+                From merge to recognition<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                  in seconds, not hours
+                </span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                MergeMint connects to your GitHub organization and automatically evaluates every merged pull request using AI.
+                No more manual spreadsheets or subjective reviews. MergeMint connects to GitHub and 
+                automatically evaluates every merged pull request using Claude AI.
               </p>
             </div>
           </BlurFade>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: <Github className="h-8 w-8" />,
-                step: '01',
-                title: 'Connect GitHub',
-                description: 'Install the MergeMint GitHub App on your organization. Takes less than 2 minutes.',
-              },
-              {
-                icon: <GitMerge className="h-8 w-8" />,
-                step: '02',
-                title: 'Merge a PR',
-                description: 'Developers work as usual. When a PR is merged, MergeMint gets notified via webhook.',
-              },
-              {
-                icon: <Bot className="h-8 w-8" />,
-                step: '03',
-                title: 'AI Evaluation',
-                description: 'Claude analyzes the diff, classifies the component and severity, and calculates a score.',
-              },
-              {
-                icon: <Trophy className="h-8 w-8" />,
-                step: '04',
-                title: 'Leaderboards Update',
-                description: 'Scores feed into dashboards. Developers see their impact. PMs track quality metrics.',
-              },
-            ].map((item, idx) => (
-              <BlurFade key={idx} delay={0.1 * (idx + 1)} inView>
-                <div className="relative group">
-                  <div className="absolute -inset-px bg-gradient-to-b from-purple-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative flex flex-col items-center text-center p-8 rounded-2xl border bg-card">
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/10 text-purple-600">
-                      {item.icon}
+          {/* Steps with connecting lines */}
+          <div className="relative">
+            {/* Connection line (desktop only) */}
+            <div className="hidden lg:block absolute top-[4.5rem] left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-purple-500/20 via-purple-500/40 to-purple-500/20" />
+            <div className="hidden lg:block absolute top-[4.5rem] left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-purple-500 to-violet-500 animate-pulse" style={{ clipPath: 'inset(0 75% 0 0)' }} />
+            
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  icon: <Github className="h-8 w-8" />,
+                  step: '01',
+                  title: 'Connect GitHub',
+                  description: 'Install the MergeMint GitHub App on your organization. Takes less than 2 minutes.',
+                  color: 'from-gray-500 to-gray-700',
+                },
+                {
+                  icon: <GitMerge className="h-8 w-8" />,
+                  step: '02',
+                  title: 'Merge a PR',
+                  description: 'Developers work as usual. When a PR is merged, MergeMint gets notified via webhook.',
+                  color: 'from-blue-500 to-blue-700',
+                },
+                {
+                  icon: <Bot className="h-8 w-8" />,
+                  step: '03',
+                  title: 'AI Evaluation',
+                  description: 'Claude analyzes the diff, classifies the component and severity, and calculates a score.',
+                  color: 'from-purple-500 to-violet-600',
+                },
+                {
+                  icon: <Trophy className="h-8 w-8" />,
+                  step: '04',
+                  title: 'Leaderboards Update',
+                  description: 'Scores feed into dashboards. Developers see their impact. PMs track quality metrics.',
+                  color: 'from-yellow-500 to-orange-500',
+                },
+              ].map((item, idx) => (
+                <BlurFade key={idx} delay={0.1 * (idx + 1)} inView>
+                  <div className="relative group">
+                    {/* Glow effect on hover */}
+                    <div className={cn(
+                      'absolute -inset-2 bg-gradient-to-b rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl',
+                      item.color
+                    )} style={{ opacity: 0.1 }} />
+                    <div className="absolute -inset-px bg-gradient-to-b from-purple-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="relative flex flex-col items-center text-center p-8 rounded-2xl border bg-card hover:shadow-xl transition-all duration-300 overflow-hidden">
+                      <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={16} />
+                      
+                      {/* Step number badge */}
+                      <div className="absolute top-4 right-4">
+                        <span className="text-4xl font-black text-purple-500/10">{item.step}</span>
+                      </div>
+                      
+                      {/* Icon with gradient background */}
+                      <div className={cn(
+                        'mb-4 flex h-18 w-18 items-center justify-center rounded-2xl text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300',
+                        `bg-gradient-to-br ${item.color}`
+                      )}>
+                        <div className="h-16 w-16 flex items-center justify-center">
+                          {item.icon}
+                        </div>
+                      </div>
+                      
+                      <span className="text-xs font-bold text-purple-500 mb-2 uppercase tracking-wider">Step {item.step}</span>
+                      <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                      <p className="text-muted-foreground text-sm">{item.description}</p>
+                      
+                      {/* Arrow indicator (except last) */}
+                      {idx < 3 && (
+                        <div className="hidden lg:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10">
+                          <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center">
+                            <ArrowRightIcon className="h-4 w-4 text-purple-500" />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <span className="text-xs font-bold text-purple-500 mb-2">{item.step}</span>
-                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
                   </div>
-                </div>
-              </BlurFade>
-            ))}
+                </BlurFade>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -398,10 +593,13 @@ export default function Home() {
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4">Features</Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                Everything you need to run a bug bounty
+                Everything we wished we had<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                  (and now you can have too)
+                </span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                Built for engineering managers, PMs, and developers who want to measure and reward impact.
+                Built for engineering managers, PMs, and developers who are tired of manual PR reviews 
+                and want to measure and reward impact objectively.
               </p>
             </div>
           </BlurFade>
@@ -565,7 +763,7 @@ export default function Home() {
                         <Shield className="h-7 w-7 text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                        <span className="text-[10px] text-white">✓</span>
+                        <Check className="h-3 w-3 text-white" />
                       </div>
                     </div>
                   </div>
@@ -581,29 +779,37 @@ export default function Home() {
       </section>
 
       {/* PR Comment Preview */}
-      <section className="py-24 lg:py-32 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 relative">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <BlurFade delay={0.1} inView>
               <div>
-                <Badge variant="outline" className="mb-4">Instant Feedback</Badge>
+                <Badge variant="outline" className="mb-4 px-4 py-2">
+                  <Bot className="mr-2 h-4 w-4 text-purple-500" />
+                  Instant Feedback
+                </Badge>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-6">
-                  Every PR gets a detailed evaluation
+                  Every PR gets a <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">detailed evaluation</span>
                 </h2>
-                <p className="text-lg text-muted-foreground mb-6">
+                <p className="text-lg text-muted-foreground mb-8">
                   MergeMint comments on every merged PR with a breakdown of the score, eligibility checks, 
                   and impact analysis. Developers know exactly how their work is valued.
                 </p>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {[
-                    'Component and severity classification',
-                    'Eligibility criteria (issue linked, tests, documentation)',
-                    'Final score with multiplier breakdown',
-                    'AI-generated impact summary',
+                    { text: 'Component and severity classification', icon: <Target className="h-5 w-5 text-purple-600" /> },
+                    { text: 'Eligibility criteria (issue linked, tests, documentation)', icon: <CheckCircle2 className="h-5 w-5 text-green-500" /> },
+                    { text: 'Final score with multiplier breakdown', icon: <BarChart3 className="h-5 w-5 text-blue-500" /> },
+                    { text: 'AI-generated impact summary', icon: <Bot className="h-5 w-5 text-violet-500" /> },
                   ].map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span>{item}</span>
+                    <li key={idx} className="flex items-center gap-4 p-3 rounded-lg bg-card border hover:shadow-md transition-shadow">
+                      <div className="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                        {item.icon}
+                      </div>
+                      <span className="font-medium">{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -611,41 +817,68 @@ export default function Home() {
             </BlurFade>
             <BlurFade delay={0.2} inView>
               <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/10 to-violet-500/10 rounded-2xl blur-xl" />
-                <div className="relative rounded-xl border bg-card p-6 shadow-lg">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/20 to-violet-500/20 rounded-2xl blur-2xl animate-pulse" />
+                <div className="relative rounded-xl border bg-card p-6 shadow-2xl overflow-hidden">
+                  <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={12} />
+                  
+                  {/* GitHub-style comment header */}
                   <div className="flex items-center gap-3 mb-4 pb-4 border-b">
-                    <div className="h-10 w-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-                      <Bot className="h-5 w-5 text-purple-600" />
+                    <div className="relative">
+                      <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
+                        <Bot className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center border-2 border-background">
+                        <Check className="h-3 w-3 text-white" />
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold">MergeMint Bot</p>
+                    <div className="flex-1">
+                      <p className="font-bold text-lg">MergeMint Bot</p>
                       <p className="text-sm text-muted-foreground">commented just now</p>
                     </div>
+                    <Badge className="bg-purple-500/10 text-purple-600 border-purple-500/20">
+                      Verified
+                    </Badge>
                   </div>
-                  <div className="space-y-4 font-mono text-sm">
-                    <div className="flex items-center gap-2">
-                      <Trophy className="h-5 w-5 text-yellow-500" />
-                      <span className="font-bold">MergeMint PR Analysis</span>
+                  
+                  <div className="space-y-4">
+                    {/* Header with trophy */}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
+                      <Trophy className="h-6 w-6 text-yellow-500" />
+                      <span className="font-bold text-lg">MergeMint PR Analysis</span>
                     </div>
-                    <div className="p-4 rounded-lg bg-muted/50">
-                      <p className="text-lg font-bold mb-2">Score: <span className="text-purple-600">75 points</span></p>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div>Component: <span className="text-purple-600">Auth (1.5×)</span></div>
-                        <div>Severity: <span className="text-orange-500">P1 (50 pts)</span></div>
+                    
+                    {/* Score display */}
+                    <div className="p-5 rounded-xl bg-gradient-to-br from-purple-500/5 to-violet-500/10 border border-purple-500/20">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-sm text-muted-foreground">Final Score</span>
+                        <span className="text-3xl font-black text-purple-600">75 pts</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="p-2 rounded-lg bg-card">
+                          <p className="text-xs text-muted-foreground">Component</p>
+                          <p className="text-sm font-semibold text-purple-600">Auth (1.5×)</p>
+                        </div>
+                        <div className="p-2 rounded-lg bg-card">
+                          <p className="text-xs text-muted-foreground">Severity</p>
+                          <p className="text-sm font-semibold text-orange-500">P1 (50 pts)</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-1 text-xs">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Issue/Bug Fix ✓</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Implementation ✓</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Tests Included ✓</span>
+                    
+                    {/* Eligibility checks */}
+                    <div className="space-y-2">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Eligibility Checks</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { label: 'Issue Linked', status: true },
+                          { label: 'Has Tests', status: true },
+                          { label: 'Implementation', status: true },
+                        ].map((check, idx) => (
+                          <div key={idx} className="flex items-center gap-2 p-2 rounded-lg bg-green-500/5 border border-green-500/20">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span className="text-xs font-medium">{check.label}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -665,11 +898,11 @@ export default function Home() {
               Open Source
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-              Built in the open, for the community
+              Built by developers, for developers
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-8">
-              MergeMint is open source under CC BY-NC 4.0. Self-host it, fork it, contribute to it. 
-              Free for non-commercial use. Contact us for commercial licensing.
+              We solved our own problem at TextCortex AI, and now we're open-sourcing it for everyone. 
+              Self-host it, fork it, contribute to it. Free for non-commercial use under CC BY-NC 4.0.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg" variant="outline" className="px-8">
@@ -706,43 +939,102 @@ export default function Home() {
       </section>
 
       {/* Use Cases */}
-      <section className="py-24 lg:py-32">
-        <div className="container mx-auto px-4">
+      <section className="py-24 lg:py-32 relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-violet-500/5 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-16">
-              <Badge variant="outline" className="mb-4">Use Cases</Badge>
+              <Badge variant="outline" className="mb-4 px-4 py-2">
+                <Zap className="mr-2 h-4 w-4 text-purple-500" />
+                Use Cases
+              </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                Perfect for teams who value impact
+                Solve real problems, <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">like we did</span>
               </h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+                Whether you're struggling with fair compensation, performance reviews, or contributor recognition—MergeMint has you covered.
+              </p>
             </div>
           </BlurFade>
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                title: 'Bug Bounty Programs',
-                description: 'Automate scoring and payouts for internal bug bounties. No more spreadsheets or manual tracking.',
-                icon: <Zap className="h-6 w-6" />,
+                title: 'Fair Bonuses & Bug Bounties',
+                problem: 'Manually tracking PR impact is time-consuming and subjective',
+                solution: 'Automate scoring and payouts with AI-powered evaluation. Every contribution is measured objectively.',
+                icon: <Zap className="h-7 w-7" />,
+                gradient: 'from-yellow-500 to-orange-500',
+                bgGradient: 'from-yellow-500/5 to-orange-500/5',
               },
               {
-                title: 'Performance Reviews',
-                description: 'Quantify developer contributions with objective metrics. Great for 1:1s and promotion cases.',
-                icon: <BarChart3 className="h-6 w-6" />,
+                title: 'Data-Driven Performance Reviews',
+                problem: 'Hard to quantify developer contributions during review cycles',
+                solution: 'Pull objective metrics for 1:1s, promotions, and compensation decisions. No more guesswork.',
+                icon: <BarChart3 className="h-7 w-7" />,
+                gradient: 'from-blue-500 to-cyan-500',
+                bgGradient: 'from-blue-500/5 to-cyan-500/5',
               },
               {
-                title: 'Open Source Recognition',
-                description: 'Recognize contributors to your OSS projects. Build a community around measured impact.',
-                icon: <Trophy className="h-6 w-6" />,
+                title: 'Recognizing Top Performers',
+                problem: 'Star developers go unnoticed while others take credit',
+                solution: 'Real-time leaderboards and public recognition for those who ship the most impactful work.',
+                icon: <Trophy className="h-7 w-7" />,
+                gradient: 'from-purple-500 to-pink-500',
+                bgGradient: 'from-purple-500/5 to-pink-500/5',
               },
             ].map((item, idx) => (
               <BlurFade key={idx} delay={0.1 * (idx + 1)} inView>
-                <div className="relative p-8 rounded-2xl border bg-card hover:shadow-lg transition-shadow overflow-hidden group">
-                  <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={16} />
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                <div className={cn(
+                  'relative p-8 rounded-2xl border bg-card hover:shadow-2xl transition-all overflow-hidden group h-full flex flex-col',
+                  `bg-gradient-to-br ${item.bgGradient}`
+                )}>
+                  <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={16} />
+                  
+                  {/* Icon with gradient */}
+                  <div className={cn(
+                    'mb-6 flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-lg',
+                    'transform group-hover:scale-110 transition-transform duration-300',
+                    `bg-gradient-to-br ${item.gradient}`
+                  )}>
                     {item.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
+                  
+                  <h3 className="text-xl font-bold mb-4">{item.title}</h3>
+                  
+                  <div className="flex-grow space-y-4">
+                    {/* Problem card */}
+                    <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 group/problem hover:bg-red-500/10 transition-colors">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="h-6 w-6 rounded-full bg-red-500/10 flex items-center justify-center">
+                          <X className="h-4 w-4 text-red-500" />
+                        </div>
+                        <p className="text-sm font-semibold text-red-600">Problem</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{item.problem}</p>
+                    </div>
+                    
+                    {/* Arrow indicator */}
+                    <div className="flex justify-center">
+                      <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center transform rotate-90">
+                        <ArrowRightIcon className="h-4 w-4 text-purple-500" />
+                      </div>
+                    </div>
+                    
+                    {/* Solution card */}
+                    <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/20 group/solution hover:bg-green-500/10 transition-colors">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="h-6 w-6 rounded-full bg-green-500/10 flex items-center justify-center">
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        </div>
+                        <p className="text-sm font-semibold text-green-600">Solution</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{item.solution}</p>
+                    </div>
+                  </div>
                 </div>
               </BlurFade>
             ))}
@@ -751,34 +1043,88 @@ export default function Home() {
       </section>
 
       {/* Creator Section */}
-      <section className="py-16 border-t">
-        <div className="container mx-auto px-4">
+      <section className="py-20 border-t bg-gradient-to-b from-muted/30 to-transparent relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
-            <div className="flex flex-col items-center text-center">
-              <p className="text-sm text-muted-foreground mb-4">Created by</p>
-              <div className="flex items-center gap-4">
-                <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold">
-                  JD
-                </div>
-                <div className="text-left">
-                  <h3 className="text-xl font-semibold">Jay Derinbogaz</h3>
-                  <div className="flex items-center gap-3 mt-2">
-                    <Link 
-                      href="https://github.com/cderinbogaz" 
-                      target="_blank"
-                      className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Github className="h-4 w-4" />
-                      <span className="text-sm">GitHub</span>
-                    </Link>
-                    <Link 
-                      href="https://linkedin.com/in/ceyhunderinbogaz" 
-                      target="_blank"
-                      className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                      <span className="text-sm">LinkedIn</span>
-                    </Link>
+            <div className="text-center mb-8">
+              <Badge variant="outline" className="mb-4 px-4 py-2">
+                <Users className="mr-2 h-4 w-4 text-purple-500" />
+                Meet the Creator
+              </Badge>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/10 to-violet-500/10 rounded-3xl blur-2xl animate-pulse" />
+                <div className="relative flex flex-col lg:flex-row items-center gap-8 p-8 lg:p-10 rounded-2xl border bg-card shadow-2xl overflow-hidden">
+                  <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={16} />
+                  
+                  {/* Avatar with glow */}
+                  <div className="flex-shrink-0 relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl blur-xl opacity-50" />
+                    <div className="relative h-28 w-28 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white text-4xl font-bold shadow-2xl transform hover:scale-105 transition-transform">
+                      JD
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg border-4 border-background">
+                      <CheckCircle2 className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Info */}
+                  <div className="flex-1 text-center lg:text-left">
+                    <Badge className="mb-3 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                      Founder & Creator
+                    </Badge>
+                    <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+                      Jay Derinbogaz
+                    </h3>
+                    <p className="text-muted-foreground mb-4 text-lg">
+                      Co-founder & CTO at TextCortex AI
+                    </p>
+                    <p className="text-sm text-muted-foreground/80 mb-6">
+                      Built MergeMint to solve our own recognition problem—because every developer deserves 
+                      fair recognition for their work.
+                    </p>
+                    <div className="flex items-center gap-3 justify-center lg:justify-start">
+                      <Link 
+                        href="https://github.com/cderinbogaz" 
+                        target="_blank"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm font-medium transition-colors"
+                      >
+                        <Github className="h-4 w-4" />
+                        <span>GitHub</span>
+                      </Link>
+                      <Link 
+                        href="https://linkedin.com/in/ceyhunderinbogaz" 
+                        target="_blank"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm font-medium transition-colors"
+                      >
+                        <Linkedin className="h-4 w-4" />
+                        <span>LinkedIn</span>
+                      </Link>
+                    </div>
+                  </div>
+                  
+                  {/* Company badge */}
+                  <div className="flex-shrink-0">
+                    <div className="relative p-6 rounded-xl bg-gradient-to-br from-purple-500/5 to-violet-500/10 border border-purple-500/20 overflow-hidden">
+                      <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={12} />
+                      <div className="text-center">
+                        <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent mb-2">
+                          TextCortex AI
+                        </div>
+                        <div className="text-xs text-muted-foreground">Where MergeMint was born</div>
+                        <div className="mt-3 flex justify-center gap-2">
+                          <div className="px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-medium flex items-center gap-1">
+                            <Check className="h-3 w-3" />
+                            Active Users
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -798,23 +1144,40 @@ export default function Home() {
               
               <div className="relative text-center text-white">
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                  Ready to reward your developers?
+                  Stop guessing. Start measuring.
                 </h2>
-                <p className="mx-auto max-w-2xl text-lg text-white/80 mb-8">
-                  Set up MergeMint in under 5 minutes. Free for non-commercial use.
+                <p className="mx-auto max-w-2xl text-lg text-white/90 mb-3">
+                  Join TextCortex AI and hundreds of engineering teams who've solved the recognition problem.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90 px-8 py-6 text-lg">
+                <p className="mx-auto max-w-xl text-md text-white/70 mb-8">
+                  Setup takes 5 minutes. Free for non-commercial use. Open source and self-hostable.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                  <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90 px-8 py-6 text-lg shadow-xl">
                     <Link href="/auth/sign-up">
                       Get Started Free
                       <ArrowRightIcon className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg">
+                  <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm">
                     <Link href="/features">
                       See All Features
                     </Link>
                   </Button>
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/70">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>No credit card required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>5-minute setup</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span>Free for non-commercial</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -891,25 +1254,67 @@ function ReviewCard({
   company: string;
   body: string;
 }) {
+  const isTextCortex = company === 'TextCortex AI';
+  
   return (
     <figure
       className={cn(
-        'relative h-full w-72 cursor-pointer overflow-hidden rounded-xl border p-4',
-        'border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]',
-        'dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]',
+        'relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border p-5',
+        'transition-all duration-300 hover:shadow-lg hover:scale-[1.02]',
+        isTextCortex 
+          ? 'border-purple-500/30 bg-purple-500/5 hover:bg-purple-500/10'
+          : 'border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]',
       )}
     >
-      <div className="flex flex-row items-center gap-2">
+      {isTextCortex && <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={12} />}
+      
+      <div className="flex flex-row items-center gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="rounded-full" width="40" height="40" alt={name} src={img} />
+        <img 
+          className={cn(
+            'rounded-full ring-2',
+            isTextCortex ? 'ring-purple-500/50' : 'ring-transparent'
+          )} 
+          width="44" 
+          height="44" 
+          alt={name} 
+          src={img} 
+        />
         <div className="flex flex-col">
-          <figcaption className="text-sm font-medium dark:text-white">
+          <figcaption className={cn(
+            'text-sm font-semibold',
+            isTextCortex ? 'text-purple-600 dark:text-purple-400' : 'dark:text-white'
+          )}>
             {name}
           </figcaption>
-          <p className="text-xs text-muted-foreground">{role} at {company}</p>
+          <p className="text-xs text-muted-foreground">{role}</p>
+          <p className={cn(
+            'text-xs font-medium',
+            isTextCortex ? 'text-purple-500' : 'text-muted-foreground'
+          )}>
+            {company}
+          </p>
         </div>
+        {isTextCortex && (
+          <div className="ml-auto">
+            <Badge className="bg-purple-500/20 text-purple-600 border-purple-500/30 text-[10px]">
+              Creator
+            </Badge>
+          </div>
+        )}
       </div>
-      <blockquote className="mt-3 text-sm leading-relaxed">{body}</blockquote>
+      <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        "{body}"
+      </blockquote>
+      {isTextCortex && (
+        <div className="mt-3 flex items-center gap-1 text-purple-500">
+          <Star className="h-3 w-3 fill-current" />
+          <Star className="h-3 w-3 fill-current" />
+          <Star className="h-3 w-3 fill-current" />
+          <Star className="h-3 w-3 fill-current" />
+          <Star className="h-3 w-3 fill-current" />
+        </div>
+      )}
     </figure>
   );
 }

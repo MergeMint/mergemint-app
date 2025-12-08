@@ -36,6 +36,13 @@
   "pnpm": {
     "overrides": {
       "react-is": "19.0.0"
+    },
+    "packageExtensions": {
+      "@hookform/resolvers@*": {
+        "peerDependencies": {
+          "zod": "^3.25.0 || ^4.0.0"
+        }
+      }
     }
   },
   "devDependencies": {

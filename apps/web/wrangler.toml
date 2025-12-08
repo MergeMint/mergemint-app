@@ -1,0 +1,39 @@
+#:schema node_modules/wrangler/config-schema.json
+
+name = "mergemint"
+main = ".open-next/worker.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Production routes (default environment)
+routes = [
+  { pattern = "mergemint.dev/*", zone_name = "mergemint.dev" },
+  { pattern = "www.mergemint.dev/*", zone_name = "mergemint.dev" }
+]
+
+# Static assets configuration
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+
+# Build configuration
+[build]
+command = "NEXT_PUBLIC_CI=true pnpm opennextjs-cloudflare build"
+
+# ============================================================
+# Staging Environment
+# ============================================================
+[env.staging]
+name = "mergemint-staging"
+routes = [
+  { pattern = "staging.mergemint.dev/*", zone_name = "mergemint.dev" }
+]
+
+# ============================================================
+# Production Environment (explicit, same as default)
+# ============================================================
+[env.production]
+name = "mergemint"
+routes = [
+  { pattern = "mergemint.dev/*", zone_name = "mergemint.dev" },
+  { pattern = "www.mergemint.dev/*", zone_name = "mergemint.dev" }
+]
+

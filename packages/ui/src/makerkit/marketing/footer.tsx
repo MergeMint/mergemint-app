@@ -45,7 +45,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </div>
 
                 <div className="text-muted-foreground flex text-xs">
-                  <p>{copyright}</p>
+                  <div>{copyright}</div>
                 </div>
               </div>
             </div>

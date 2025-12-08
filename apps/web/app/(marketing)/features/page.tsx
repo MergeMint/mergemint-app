@@ -55,9 +55,12 @@ async function FeaturesPage() {
               measure developer impact
             </span>
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-8">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-4">
             MergeMint combines AI evaluation, configurable scoring, and beautiful dashboards 
             to turn every merged PR into actionable insights.
+          </p>
+          <p className="mx-auto max-w-2xl text-sm text-muted-foreground/80">
+            Built at TextCortex AI to solve our own recognition problem. Now open source for everyone.
           </p>
         </div>
       </section>

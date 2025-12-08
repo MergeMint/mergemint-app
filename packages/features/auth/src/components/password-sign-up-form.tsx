@@ -72,7 +72,7 @@ export function PasswordSignUpForm({
                   data-test={'email-input'}
                   required
                   type="email"
-                  placeholder={t('emailPlaceholder')}
+                  placeholder={t('auth:emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
