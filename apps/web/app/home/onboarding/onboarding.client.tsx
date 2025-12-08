@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { toast } from 'sonner';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
+import { Card, CardContent } from '@kit/ui/card';
 import { MagicCard } from '@kit/ui/magicui';
 import { Popover, PopoverContent, PopoverTrigger } from '@kit/ui/popover';
 import {
@@ -16,14 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@kit/ui/dialog';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@kit/ui/table';
 import {
   Select,
   SelectContent,
@@ -62,6 +55,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@kit/ui/dropdown-menu';
+import { cn } from '@kit/ui/utils';
 
 type RepoOption = {
   id?: number | string;
@@ -89,23 +83,6 @@ const steps = [
   { label: 'Review', icon: GitPullRequest },
 ];
 
-const demoRepos: RepoOption[] = [
-  {
-    name: 'acme/chat-platform',
-    description: 'Main product API and web app',
-    selected: true,
-  },
-  {
-    name: 'acme/knowledge-bases',
-    description: 'Docs ingestion + embeddings pipeline',
-    selected: false,
-  },
-  {
-    name: 'acme/agents-runtime',
-    description: 'Automation agents and tool runners',
-    selected: false,
-  },
-];
 
 export function OnboardingClient({
   orgs,
@@ -116,29 +93,29 @@ export function OnboardingClient({
   githubAppSlug?: string;
   connectedOrgs?: Record<string, number>; // orgId -> installationId
 }) {
+  const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [repos, setRepos] = useState<RepoOption[]>([]);
   const [components, setComponents] = useState<ComponentOption[]>([]);
-  const [orgOptions, setOrgOptions] = useState(orgs ?? []);
+  const [orgOptions] = useState(orgs ?? []);
   const [orgId, setOrgId] = useState(orgs[0]?.org_id ?? '');
   const [orgSlug, setOrgSlug] = useState(orgs[0]?.organizations?.slug ?? '');
   const [loadingRepos, setLoadingRepos] = useState(false);
-  const [_loadingComponents, setLoadingComponents] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  // Only fetch repos if GitHub is already connected for this org
+  const isConnected = !!connectedOrgs[orgId];
 
   useEffect(() => {
-    if (orgId) {
-      fetchRepos(orgId, orgSlug ?? '', setRepos, setLoadingRepos, setStatus);
-    } else {
-      // No orgs yet; keep sample data visible.
-      setRepos(demoRepos);
+    if (orgId && isConnected) {
+      fetchRepos(orgId, orgSlug ?? '', setRepos, setLoadingRepos);
     }
-  }, [orgId, orgSlug]);
+  }, [orgId, orgSlug, isConnected]);
 
   // Load existing components when entering step 2
   useEffect(() => {
     if (currentStep === 2 && orgId && components.length === 0) {
-      loadComponents(orgId, setComponents, setLoadingComponents);
+      loadComponents(orgId, setComponents);
     }
   }, [currentStep, orgId, components.length]);
 
@@ -154,88 +131,204 @@ export function OnboardingClient({
     );
   }
 
-  return (
-    <div className={'space-y-6'}>
-      <div className="inline-flex flex-wrap gap-2 rounded-lg border bg-muted/50 p-1">
-        {steps.map((step, index) => {
-          const Icon = step.icon;
-          const active = currentStep === index;
-          return (
-            <Button
-              key={step.label}
-              variant={active ? 'default' : 'ghost'}
-              size="sm"
-              className="gap-2"
-              onClick={() => setCurrentStep(index)}
-            >
-              <Icon className="h-4 w-4" />
-              <span className="text-sm">{step.label}</span>
-            </Button>
-          );
-        })}
-      </div>
+  // Check if current step is complete
+  const canProceed = () => {
+    switch (currentStep) {
+      case 0:
+        return isConnected;
+      case 1:
+        return repos.some((r) => r.selected);
+      case 2:
+        return components.filter((c) => c.repo_full_name && c.name).length > 0;
+      case 3:
+        return true;
+      default:
+        return false;
+    }
+  };
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {(() => {
-              const activeStep = steps[currentStep] ?? steps[0];
-              if (!activeStep) return null;
-              const Icon = activeStep.icon;
-              return <Icon className="h-4 w-4" />;
-            })()}
-            {(steps[currentStep] ?? steps[0])?.label ?? ''}
-          </CardTitle>
-          <CardDescription>{getStepDescription(currentStep)}</CardDescription>
-        </CardHeader>
-        <CardContent className={'space-y-4'}>
-          {status ? (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {status}
+  const handleNext = async () => {
+    if (!canProceed()) {
+      const messages: Record<number, string> = {
+        0: 'Please connect your GitHub account first',
+        1: 'Select at least one repository to continue',
+        2: 'Add at least one component to continue',
+      };
+      toast.error(messages[currentStep] || 'Please complete this step first');
+      return;
+    }
+
+    // Save repos when moving from step 1 to step 2
+    if (currentStep === 1) {
+      const selectedRepos = repos.filter((r) => r.selected);
+      if (selectedRepos.length) {
+        setSaving(true);
+        try {
+          const res = await fetch('/api/github/save-repos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orgId,
+              repos: selectedRepos.map((r) => ({
+                github_repo_id: r.id ?? null,
+                name: r.name,
+                full_name: r.full_name ?? r.name,
+                default_branch: r.default_branch,
+                is_active: true,
+              })),
+            }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || 'Failed to save repos');
+          }
+        } catch (err) {
+          toast.error('Failed to save repositories', {
+            description: (err as Error).message,
+          });
+          setSaving(false);
+          return;
+        }
+        setSaving(false);
+      }
+    }
+
+    if (currentStep === steps.length - 1) {
+      await persistSelections(orgId, repos, components, setSaving);
+    } else {
+      setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Stepper header */}
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#8B5CF6"
+        gradientTo="#EC4899"
+        gradientOpacity={0.15}
+      >
+        <div className="relative px-6 py-6 overflow-hidden">
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 via-purple-600/5 to-pink-600/10" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-violet-500/20 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">
+                <Github className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold tracking-tight">
+                  Connect Your Repositories
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {getStepDescription(currentStep)}
+                </p>
+              </div>
             </div>
-          ) : null}
-          {currentStep === 0 ? (
-            <AuthStep 
-              orgId={orgId} 
-              orgSlug={orgSlug} 
-              githubAppSlug={githubAppSlug}
-              isConnected={!!connectedOrgs[orgId]}
-              installationId={connectedOrgs[orgId]}
-            />
-          ) : null}
-          {currentStep === 1 ? (
-            <RepoStep
-              repos={repos}
-              onToggle={toggleRepo(setRepos)}
-              loading={loadingRepos}
-              onReload={() => fetchRepos(orgId, orgSlug, setRepos, setLoadingRepos, setStatus)}
-              orgs={orgOptions}
-              currentOrg={orgId}
-              onOrgChange={(id, slug) => {
-                setOrgId(id);
-                setOrgSlug(slug ?? '');
-                fetchRepos(id, slug ?? '', setRepos, setLoadingRepos, setStatus);
-              }}
-            />
-          ) : null}
-          {currentStep === 2 ? (
-            <ComponentStep
-              orgId={orgId}
-              components={components}
-              onChangeImportance={changeImportance(setComponents)}
-              repos={repos.filter((r) => r.selected)}
-              onAddComponent={(repoName) => addComponent(setComponents, repoName)}
-              onUpdateComponent={(repoName, idx, patch) =>
-                updateComponent(setComponents, repoName, idx, patch)
-              }
-              onDeleteComponent={(repoName, idx) =>
-                deleteComponent(setComponents, repoName, idx)
-              }
-            />
-          ) : null}
-          {currentStep === 3 ? (
-            <ReviewStep repos={repos} components={components} />
-          ) : null}
+
+            {/* Step indicators */}
+            <div className="flex items-center gap-2 mt-6">
+              {steps.map((step, idx) => {
+                const Icon = step.icon;
+                const isActive = currentStep === idx;
+                const isComplete = currentStep > idx;
+
+                return (
+                  <div key={step.label} className="flex items-center gap-2 flex-1">
+                    <div
+                      className={cn(
+                        'flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300',
+                        isActive && 'bg-violet-500/10 dark:bg-violet-500/20',
+                        isComplete && 'bg-green-500/10 dark:bg-green-500/20',
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          'flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition-all duration-300',
+                          isActive && 'bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25',
+                          isComplete && 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25',
+                          !isActive && !isComplete && 'bg-muted text-muted-foreground'
+                        )}
+                      >
+                        {isComplete ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
+                      </div>
+                      <span className={cn(
+                        'text-sm font-medium hidden sm:inline transition-colors duration-300',
+                        isActive ? 'text-foreground' : 'text-muted-foreground'
+                      )}>
+                        {step.label}
+                      </span>
+                    </div>
+                    {idx < steps.length - 1 && (
+                      <div className={cn(
+                        'h-0.5 flex-1 rounded-full transition-colors duration-300',
+                        isComplete ? 'bg-green-500/50' : 'bg-border'
+                      )} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </MagicCard>
+
+      {/* Content area */}
+      <Card>
+        <CardContent className="pt-6 min-h-[300px]">
+          {currentStep === 0 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <AuthStep
+                orgId={orgId}
+                orgSlug={orgSlug}
+                githubAppSlug={githubAppSlug}
+                isConnected={isConnected}
+                installationId={connectedOrgs[orgId]}
+              />
+            </div>
+          )}
+          {currentStep === 1 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <RepoStep
+                repos={repos}
+                onToggle={toggleRepo(setRepos)}
+                loading={loadingRepos}
+                onReload={() => fetchRepos(orgId, orgSlug, setRepos, setLoadingRepos)}
+                orgs={orgOptions}
+                currentOrg={orgId}
+                onOrgChange={(id, slug) => {
+                  setOrgId(id);
+                  setOrgSlug(slug ?? '');
+                  fetchRepos(id, slug ?? '', setRepos, setLoadingRepos);
+                }}
+              />
+            </div>
+          )}
+          {currentStep === 2 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <ComponentStep
+                orgId={orgId}
+                components={components}
+                onChangeImportance={changeImportance(setComponents)}
+                repos={repos.filter((r) => r.selected)}
+                onAddComponent={(repoName) => addComponent(setComponents, repoName)}
+                onUpdateComponent={(repoName, idx, patch) =>
+                  updateComponent(setComponents, repoName, idx, patch)
+                }
+                onDeleteComponent={(repoName, idx) =>
+                  deleteComponent(setComponents, repoName, idx)
+                }
+              />
+            </div>
+          )}
+          {currentStep === 3 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <ReviewStep repos={repos} components={components} />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -245,88 +338,31 @@ export function OnboardingClient({
       {/* Fixed footer navigation */}
       <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-        <Button
-          variant={'ghost'}
-          disabled={currentStep === 0}
-          onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
-        >
-          Back
-        </Button>
-          
-          {/* Step indicator */}
-          <div className="flex items-center gap-2">
-            {steps.map((_, idx) => (
-              <div
-                key={idx}
-                className={`h-2 w-2 rounded-full transition-colors ${
-                  idx === currentStep
-                    ? 'bg-primary'
-                    : idx < currentStep
-                      ? 'bg-primary/50'
-                      : 'bg-muted-foreground/30'
-                }`}
-              />
-            ))}
-          </div>
-
-        <div className={'flex gap-2'}>
           <Button
-            onClick={async () => {
-              if (currentStep === 1 && !repos.some((r) => r.selected)) {
-                setStatus('Select at least one repository to continue.');
-                return;
-              }
-              if (
-                currentStep === 2 &&
-                components.filter((c) => c.repo_full_name && c.name).length === 0
-              ) {
-                setStatus('Add at least one component.');
-                return;
-              }
-              setStatus(null);
-              
-              // Save repos when moving from step 1 to step 2
-              if (currentStep === 1) {
-                const selectedRepos = repos.filter((r) => r.selected);
-                if (selectedRepos.length) {
-                  setStatus('Saving repositories...');
-                  try {
-                    const res = await fetch('/api/github/save-repos', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        orgId,
-                        repos: selectedRepos.map((r) => ({
-                          github_repo_id: r.id ?? null,
-                          name: r.name,
-                          full_name: r.full_name ?? r.name,
-                          default_branch: r.default_branch,
-                          is_active: true,
-                        })),
-                      }),
-                    });
-                    if (!res.ok) {
-                      const err = await res.json();
-                      throw new Error(err.error || 'Failed to save repos');
-                    }
-                    setStatus(null);
-                  } catch (err) {
-                    setStatus((err as Error).message);
-                    return;
-                  }
-                }
-              }
-              
-              if (currentStep === steps.length - 1) {
-                await persistSelections(orgId, repos, components, setStatus);
-              } else {
-                setCurrentStep((s) => Math.min(steps.length - 1, s + 1));
-              }
-            }}
+            variant="ghost"
+            disabled={currentStep === 0 || saving}
+            onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
+            className="gap-2 rounded-xl"
           >
-            {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
+            Back
           </Button>
-          </div>
+
+          <Button
+            onClick={handleNext}
+            disabled={!canProceed() || saving}
+            className="gap-2 min-w-[140px] rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {saving ? (
+              'Saving...'
+            ) : currentStep === steps.length - 1 ? (
+              <>
+                Finish
+                <Sparkles className="h-4 w-4" />
+              </>
+            ) : (
+              'Next'
+            )}
+          </Button>
         </div>
       </div>
     </div>
@@ -361,72 +397,97 @@ function AuthStep({
   isConnected?: boolean;
   installationId?: number;
 }) {
+  const { theme } = useTheme();
   const appSlug = githubAppSlug ?? process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
-  const installUrl = useMemo(() => {
-    if (typeof window === 'undefined') return null;
-    if (!orgId) return null;
+  const [installUrl, setInstallUrl] = useState<string | null>(null);
+
+  // Compute install URL on client only (after mount)
+  useEffect(() => {
+    if (!orgId) return;
     const url = new URL('/api/github/app/start', window.location.origin);
     url.searchParams.set('orgId', orgId);
     if (orgSlug) url.searchParams.set('orgSlug', orgSlug);
     url.searchParams.set('returnTo', '/home/onboarding');
-    return url.toString();
+    setInstallUrl(url.toString());
   }, [orgId, orgSlug]);
 
   if (isConnected) {
     return (
-      <div className={'space-y-3'}>
-        <div className="flex items-center gap-3 rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/20">
-            <Github className="h-5 w-5 text-green-600" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <p className="font-medium text-green-700 dark:text-green-400">GitHub Connected</p>
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Installation ID: {installationId}
-            </p>
-          </div>
-        </div>
-        <Button
-          size={'sm'}
-          variant={'outline'}
-          className={'gap-2'}
-          onClick={() => {
-            if (installUrl) {
-              window.location.href = installUrl;
-            }
-          }}
+      <div className={'space-y-4'}>
+        <MagicCard
+          gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+          gradientFrom="#10B981"
+          gradientTo="#059669"
+          gradientOpacity={0.2}
         >
-          <Github className={'h-4 w-4'} />
-          Reconnect GitHub
-        </Button>
-        <p className={'text-sm text-muted-foreground'}>
-          You&apos;re all set! Click Next to select repositories.
-        </p>
+          <div className="flex items-center gap-4 p-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500/20">
+              <Github className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-green-700 dark:text-green-400">GitHub Connected</p>
+                <CheckCircle2 className="h-5 w-5 text-green-600" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Installation ID: {installationId}
+              </p>
+            </div>
+          </div>
+        </MagicCard>
+        <div className="flex items-center justify-between">
+          <p className={'text-sm text-muted-foreground'}>
+            You&apos;re all set! Click Next to select repositories.
+          </p>
+          <Button
+            size={'sm'}
+            variant={'ghost'}
+            className={'gap-2'}
+            onClick={() => {
+              if (installUrl) {
+                window.location.href = installUrl;
+              }
+            }}
+          >
+            <Github className={'h-4 w-4'} />
+            Reconnect
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className={'space-y-3'}>
-      <Button
-        size={'lg'}
-        className={'gap-2'}
-        disabled={!installUrl || !appSlug}
-        onClick={() => {
-          if (installUrl) {
-            window.location.href = installUrl;
-          }
-        }}
+    <div className={'space-y-4'}>
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#8B5CF6"
+        gradientTo="#EC4899"
+        gradientOpacity={0.15}
       >
-        <Github className={'h-4 w-4'} />
-        Authorize with GitHub
-      </Button>
-      <p className={'text-sm text-muted-foreground'}>
-        Opens GitHub to grant access. Return here to pick repos.
-      </p>
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted/50 mb-4">
+            <Github className="h-8 w-8" />
+          </div>
+          <h3 className="font-semibold text-lg mb-2">Connect your GitHub account</h3>
+          <p className={'text-sm text-muted-foreground mb-6 max-w-sm'}>
+            Authorize MergeMint to access your repositories and start tracking your team&apos;s contributions.
+          </p>
+          <Button
+            size={'lg'}
+            className={'gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg shadow-violet-500/25'}
+            disabled={!installUrl || !appSlug}
+            onClick={() => {
+              if (installUrl) {
+                window.location.href = installUrl;
+              }
+            }}
+          >
+            <Github className={'h-5 w-5'} />
+            Authorize with GitHub
+          </Button>
+        </div>
+      </MagicCard>
       {!appSlug ? (
         <p className="text-sm text-destructive">
           GitHub App not configured. Set NEXT_PUBLIC_GITHUB_APP_SLUG to enable auth, or provide
@@ -454,6 +515,8 @@ function RepoStep({
   currentOrg: string;
   onOrgChange: (orgId: string, slug?: string | null) => void;
 }) {
+  const { theme } = useTheme();
+
   return (
     <div className={'grid gap-3'}>
       <div className="flex items-center justify-between">
@@ -492,36 +555,58 @@ function RepoStep({
       </div>
 
       {repos.map((repo) => (
-        <Card
+        <div
           key={repo.name}
-          className={'border-muted hover:border-primary'}
+          role="button"
+          tabIndex={0}
+          className="cursor-pointer transition-all"
+          onClick={() => onToggle(repo.name)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onToggle(repo.name);
+            }
+          }}
         >
-          <CardHeader className={'flex flex-row items-center justify-between space-y-0'}>
-            <div>
-              <CardTitle className={'text-base'}>{repo.name}</CardTitle>
-              <CardDescription className="line-clamp-2">
-                {repo.description || 'No description'}
-              </CardDescription>
-              {repo.pushed_at && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Last commit: {formatRelativeTime(repo.pushed_at)}
-                </p>
-              )}
+          <MagicCard
+            gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+            gradientFrom={repo.selected ? "#10B981" : "#8B5CF6"}
+            gradientTo={repo.selected ? "#059669" : "#EC4899"}
+            gradientOpacity={repo.selected ? 0.2 : 0.1}
+          >
+            <div className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <Github className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <h3 className="font-medium truncate">{repo.name}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                    {repo.description || 'No description'}
+                  </p>
+                  {repo.pushed_at && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Last commit: {formatRelativeTime(repo.pushed_at)}
+                    </p>
+                  )}
+                </div>
+                <div className="flex-shrink-0 ml-4">
+                  {repo.selected ? (
+                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                      <CheckCircle2 className="h-5 w-5" />
+                      <span className="text-sm font-medium">Selected</span>
+                    </div>
+                  ) : (
+                    <Badge variant="outline" className="rounded-xl">
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add
+                    </Badge>
+                  )}
+                </div>
+              </div>
             </div>
-            <Badge variant={repo.selected ? 'default' : 'outline'}>
-              {repo.selected ? 'Selected' : 'Not selected'}
-            </Badge>
-          </CardHeader>
-          <CardContent>
-            <Button
-              size={'sm'}
-              variant={repo.selected ? 'outline' : 'default'}
-              onClick={() => onToggle(repo.name)}
-            >
-              {repo.selected ? 'Remove' : 'Add to project'}
-            </Button>
-          </CardContent>
-        </Card>
+          </MagicCard>
+        </div>
       ))}
     </div>
   );
@@ -574,13 +659,13 @@ function ComponentStep({
   const { theme } = useTheme();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [selectedRepoForDialog, setSelectedRepoForDialog] = useState<string | null>(null);
   const [editingComponent, setEditingComponent] = useState<{
     repoFullName: string;
     idx: number;
     component: ComponentOption;
   } | null>(null);
   const [formData, setFormData] = useState({
-    repo_full_name: repos[0]?.full_name ?? repos[0]?.name ?? '',
     name: '',
     key: '',
     description: '',
@@ -588,16 +673,8 @@ function ComponentStep({
     multiplier: getMultiplierForImportance('normal'),
   });
 
-  // Auto-open dialog when no components and repos are selected
-  useEffect(() => {
-    if (components.length === 0 && repos.length > 0) {
-      setDialogOpen(true);
-    }
-  }, [components.length, repos.length]);
-
   const resetForm = () => {
     setFormData({
-      repo_full_name: repos[0]?.full_name ?? repos[0]?.name ?? '',
       name: '',
       key: '',
       description: '',
@@ -605,20 +682,19 @@ function ComponentStep({
       multiplier: getMultiplierForImportance('normal'),
     });
     setEditingComponent(null);
+    setSelectedRepoForDialog(null);
   };
 
-  const handleOpenDialog = (repo?: RepoOption) => {
+  const handleOpenDialog = (repo: RepoOption) => {
     resetForm();
-    if (repo) {
-      setFormData(prev => ({ ...prev, repo_full_name: repo.full_name ?? repo.name }));
-    }
+    setSelectedRepoForDialog(repo.full_name ?? repo.name);
     setDialogOpen(true);
   };
 
   const handleEditComponent = (repoFullName: string, idx: number, component: ComponentOption) => {
     setEditingComponent({ repoFullName, idx, component });
+    setSelectedRepoForDialog(repoFullName);
     setFormData({
-      repo_full_name: component.repo_full_name ?? repoFullName,
       name: component.name,
       key: component.key,
       description: component.description,
@@ -629,10 +705,12 @@ function ComponentStep({
   };
 
   const handleSave = async () => {
+    if (!selectedRepoForDialog) return;
+
     setSaving(true);
     try {
       const componentData = {
-        repo_full_name: formData.repo_full_name,
+        repo_full_name: selectedRepoForDialog,
         key: formData.key || generateKey(formData.name),
         name: formData.name,
         description: formData.description,
@@ -665,12 +743,12 @@ function ComponentStep({
           multiplier: formData.multiplier,
         });
       } else {
-        const repo = repos.find(r => (r.full_name ?? r.name) === formData.repo_full_name);
+        const repo = repos.find(r => (r.full_name ?? r.name) === selectedRepoForDialog);
         if (repo) {
           onAddComponent(repo);
-          const newIdx = components.filter(c => c.repo_full_name === formData.repo_full_name).length;
+          const newIdx = components.filter(c => c.repo_full_name === selectedRepoForDialog).length;
           setTimeout(() => {
-            onUpdateComponent(formData.repo_full_name, newIdx, {
+            onUpdateComponent(selectedRepoForDialog, newIdx, {
               name: formData.name || 'New component',
               key: formData.key || generateKey(formData.name),
               description: formData.description,
@@ -683,22 +761,35 @@ function ComponentStep({
 
       setDialogOpen(false);
       resetForm();
+      toast.success(editingComponent ? 'Component updated' : 'Component added');
     } catch (err) {
       console.error('Failed to save component:', err);
-      alert((err as Error).message);
+      toast.error('Failed to save component', {
+        description: (err as Error).message,
+      });
     } finally {
       setSaving(false);
     }
   };
 
   if (repos.length === 0) {
-  return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <Activity className="h-12 w-12 text-muted-foreground/50 mb-4" />
-        <p className="text-muted-foreground">
-          Select at least one repository to add components.
-        </p>
-      </div>
+    return (
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#F59E0B"
+        gradientTo="#EF4444"
+        gradientOpacity={0.1}
+      >
+        <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 mb-4">
+            <AlertTriangle className="h-7 w-7 text-amber-500" />
+          </div>
+          <p className="font-medium mb-1">No repositories selected</p>
+          <p className="text-sm text-muted-foreground">
+            Go back and select at least one repository to add components.
+          </p>
+        </div>
+      </MagicCard>
     );
   }
 
@@ -711,107 +802,118 @@ function ComponentStep({
     return acc;
   }, {} as Record<string, (ComponentOption & { globalIdx: number })[]>);
 
-  const allComponents = Object.entries(componentsByRepo).flatMap(([repoName, comps]) =>
-    comps.map((c, localIdx) => ({ ...c, repoName, localIdx }))
-        );
-
-        return (
+  return (
     <div className="space-y-4">
-      {/* Header with Add button */}
-      <div className="flex items-center justify-between">
-              <div>
-          <p className="text-sm text-muted-foreground">
-            Define the key components in your codebase and their importance for PR scoring.
-          </p>
-              </div>
-        <Button onClick={() => handleOpenDialog()} size="sm">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Component
-              </Button>
+      <div className="space-y-1">
+        <p className="text-sm text-muted-foreground">
+          Define the key components for each repository to track which parts of your codebase are affected by PRs.
+        </p>
+        <p className="text-xs text-muted-foreground/80">
+          Assign importance levels to weight contribution scores — changes to critical components like auth, payments, or core APIs will earn higher points than routine updates.
+        </p>
       </div>
 
-      {/* Components Table */}
-      {allComponents.length > 0 ? (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Component</TableHead>
-                <TableHead>Repository</TableHead>
-                <TableHead>Importance</TableHead>
-                <TableHead className="text-right">Multiplier</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {allComponents.map((component) => (
-                <TableRow key={`${component.repo_full_name}-${component.key}-${component.localIdx}`}>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{component.name}</p>
-                      <p className="text-xs text-muted-foreground">{component.key}</p>
+      {/* Repo cards with components */}
+      {repos.map((repo) => {
+        const repoName = repo.full_name ?? repo.name;
+        const repoComponents = componentsByRepo[repoName] || [];
+
+        return (
+          <MagicCard
+            key={repoName}
+            gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+            gradientFrom={repoComponents.length > 0 ? "#10B981" : "#8B5CF6"}
+            gradientTo={repoComponents.length > 0 ? "#059669" : "#EC4899"}
+            gradientOpacity={0.1}
+          >
+            <div className="p-4">
+              {/* Repo header */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Github className="h-4 w-4 text-muted-foreground" />
+                  <h3 className="font-medium">{repoName.split('/')[1] || repoName}</h3>
+                  <Badge variant="secondary" className="text-xs">
+                    {repoComponents.length} component{repoComponents.length !== 1 ? 's' : ''}
+                  </Badge>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="rounded-xl h-8"
+                  onClick={() => handleOpenDialog(repo)}
+                >
+                  <Plus className="h-3 w-3 mr-1" />
+                  Add
+                </Button>
+              </div>
+
+              {/* Components list */}
+              {repoComponents.length > 0 ? (
+                <div className="space-y-2">
+                  {repoComponents.map((component, localIdx) => (
+                    <div
+                      key={`${component.key}-${localIdx}`}
+                      className="flex items-center justify-between rounded-lg border border-border/50 bg-background/50 px-3 py-2"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <ImportanceBadge level={component.importance} />
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate">{component.name}</p>
+                          {component.description && (
+                            <p className="text-xs text-muted-foreground truncate">{component.description}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 ml-2">
+                        <span className="text-xs font-mono text-muted-foreground">
+                          {component.multiplier ?? 1}x
+                        </span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => handleEditComponent(repoName, localIdx, component)}
+                            >
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => onDeleteComponent(repoName, localIdx)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      {component.repo_full_name?.split('/')[1] || component.repo_full_name}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <ImportanceBadge level={component.importance} />
-                  </TableCell>
-                  <TableCell className="text-right font-mono">
-                    {component.multiplier ?? 1}x
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() => handleEditComponent(
-                            component.repo_full_name ?? component.repoName,
-                            component.localIdx,
-                            component
-                          )}
-                        >
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => onDeleteComponent(
-                            component.repo_full_name ?? component.repoName,
-                            component.localIdx
-                          )}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12 text-center">
-          <Sparkles className="h-10 w-10 text-muted-foreground/50 mb-3" />
-          <p className="text-sm font-medium">No components defined yet</p>
-          <p className="text-xs text-muted-foreground mt-1 mb-4">
-            Add components to track important parts of your codebase
-          </p>
-          <Button onClick={() => handleOpenDialog()} variant="outline" size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Add your first component
-          </Button>
-        </div>
-      )}
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center py-6 text-center border border-dashed border-border/50 rounded-lg">
+                  <div>
+                    <Sparkles className="h-5 w-5 text-muted-foreground/50 mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">No components yet</p>
+                    <Button
+                      size="sm"
+                      variant="link"
+                      className="text-xs h-auto p-0 mt-1"
+                      onClick={() => handleOpenDialog(repo)}
+                    >
+                      Add your first component
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </MagicCard>
+        );
+      })}
 
       {/* Add/Edit Component Dialog */}
       <Dialog open={dialogOpen} onOpenChange={(open) => {
@@ -831,31 +933,16 @@ function ComponentStep({
                 {editingComponent ? 'Edit Component' : 'Add Component'}
               </DialogTitle>
               <DialogDescription>
-                Components help track which parts of your codebase are affected by PRs.
+                {selectedRepoForDialog && (
+                  <span className="flex items-center gap-1 mt-1">
+                    <Github className="h-3 w-3" />
+                    {selectedRepoForDialog.split('/')[1] || selectedRepoForDialog}
+                  </span>
+                )}
               </DialogDescription>
             </DialogHeader>
-            
-            <div className="grid gap-4 px-6 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="repo">Repository</Label>
-                <Select
-                  value={formData.repo_full_name}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, repo_full_name: value }))}
-                  disabled={!!editingComponent}
-                >
-                  <SelectTrigger className="rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-colors">
-                    <SelectValue placeholder="Select a repository" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl">
-                    {repos.map((repo) => (
-                      <SelectItem key={repo.full_name ?? repo.name} value={repo.full_name ?? repo.name} className="rounded-lg">
-                        {repo.full_name ?? repo.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
 
+            <div className="grid gap-4 px-6 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -864,8 +951,8 @@ function ComponentStep({
                   value={formData.name}
                   onChange={(e) => {
                     const name = e.target.value;
-                    setFormData(prev => ({ 
-                      ...prev, 
+                    setFormData(prev => ({
+                      ...prev,
                       name,
                       key: generateKey(name)
                     }));
@@ -940,9 +1027,18 @@ function ComponentStep({
                     </SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground">
-                  Score multiplier: <span className="font-mono font-medium">{formData.multiplier}x</span>
-                </p>
+                <div className="rounded-lg border border-border/50 bg-muted/20 p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Score multiplier</span>
+                    <span className="text-xs font-mono font-medium">{formData.multiplier}x</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    PRs touching higher-importance components earn more contribution points.
+                    Mark core business logic, security-sensitive code, or frequently-used services as
+                    <span className="font-medium text-foreground"> Critical</span> or
+                    <span className="font-medium text-foreground"> High</span> to reward impactful work.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -952,7 +1048,7 @@ function ComponentStep({
               </Button>
               <Button 
                 onClick={handleSave} 
-                disabled={!formData.name || !formData.repo_full_name || saving}
+                disabled={!formData.name || !selectedRepoForDialog || saving}
                 className="rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg shadow-violet-500/25"
               >
                 {saving ? 'Saving...' : editingComponent ? 'Save Changes' : 'Add Component'}
@@ -972,45 +1068,87 @@ function ReviewStep({
   repos: RepoOption[];
   components: ComponentOption[];
 }) {
+  const { theme } = useTheme();
   const selectedRepos = repos.filter((r) => r.selected);
 
   return (
     <div className={'space-y-4'}>
-      <Card>
-        <CardHeader>
-          <CardTitle className={'text-base'}>Repositories</CardTitle>
-        </CardHeader>
-        <CardContent className={'flex flex-wrap gap-2'}>
-          {selectedRepos.length ? (
-            selectedRepos.map((repo) => (
-              <Badge key={repo.name} variant={'secondary'}>
-                {repo.name}
-              </Badge>
-            ))
-          ) : (
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#10B981"
+        gradientTo="#059669"
+        gradientOpacity={0.1}
+      >
+        <div className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <GitBranch className="h-4 w-4 text-green-600" />
+            <h3 className="font-medium">Repositories</h3>
+            <Badge variant="secondary" className="ml-auto">{selectedRepos.length}</Badge>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {selectedRepos.length ? (
+              selectedRepos.map((repo) => (
+                <Badge key={repo.name} variant="outline" className="gap-1">
+                  <Github className="h-3 w-3" />
+                  {repo.name}
+                </Badge>
+              ))
+            ) : (
+              <p className={'text-sm text-muted-foreground'}>
+                No repositories selected yet.
+              </p>
+            )}
+          </div>
+        </div>
+      </MagicCard>
+
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#8B5CF6"
+        gradientTo="#EC4899"
+        gradientOpacity={0.1}
+      >
+        <div className="p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Activity className="h-4 w-4 text-violet-600" />
+            <h3 className="font-medium">Components</h3>
+            <Badge variant="secondary" className="ml-auto">{components.length}</Badge>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {components.length ? (
+              components.map((component) => (
+                <Badge key={component.key} variant="outline" className="gap-1">
+                  <ImportanceLabel level={component.importance} />
+                  {component.name}
+                </Badge>
+              ))
+            ) : (
+              <p className={'text-sm text-muted-foreground'}>
+                No components defined yet.
+              </p>
+            )}
+          </div>
+        </div>
+      </MagicCard>
+
+      <MagicCard
+        gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+        gradientFrom="#3B82F6"
+        gradientTo="#06B6D4"
+        gradientOpacity={0.1}
+      >
+        <div className="p-4 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 flex-shrink-0">
+            <GitPullRequest className="h-5 w-5 text-blue-500" />
+          </div>
+          <div>
+            <p className="font-medium text-sm">Ready to sync</p>
             <p className={'text-sm text-muted-foreground'}>
-              No repositories selected yet.
+              Click Finish to save and start syncing your PRs.
             </p>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className={'text-base'}>Component importance</CardTitle>
-        </CardHeader>
-        <CardContent className={'flex flex-wrap gap-2'}>
-          {components.map((component) => (
-            <Badge key={component.key} variant={'secondary'}>
-              {component.name}: <ImportanceLabel level={component.importance} />
-            </Badge>
-          ))}
-        </CardContent>
-      </Card>
-
-      <p className={'text-sm text-muted-foreground'}>
-        Next: we’ll store these selections, kick off the first GitHub sync, and evaluate merged PRs.
-      </p>
+          </div>
+        </div>
+      </MagicCard>
     </div>
   );
 }
@@ -1099,7 +1237,6 @@ async function fetchRepos(
   orgSlug: string,
   setRepos: (repos: RepoOption[]) => void,
   setLoading: (loading: boolean) => void,
-  setStatus: (status: string | null) => void,
 ) {
   setLoading(true);
   try {
@@ -1117,10 +1254,11 @@ async function fetchRepos(
       description: r.description ?? '',
     }));
     setRepos(repos);
-    setStatus(null);
-  } catch {
-    setStatus('Could not load repos from GitHub. Falling back to sample data.');
-    setRepos(demoRepos);
+  } catch (err) {
+    toast.error('Could not load repos from GitHub', {
+      description: (err as Error).message,
+    });
+    setRepos([]);
   } finally {
     setLoading(false);
   }
@@ -1129,9 +1267,7 @@ async function fetchRepos(
 async function loadComponents(
   orgId: string,
   setComponents: (components: ComponentOption[]) => void,
-  setLoading: (loading: boolean) => void,
 ) {
-  setLoading(true);
   try {
     const res = await fetch(`/api/github/load-components?orgId=${orgId}`);
     if (!res.ok) return; // Silently fail, user can add components manually
@@ -1141,8 +1277,6 @@ async function loadComponents(
     }
   } catch (err) {
     console.error('Failed to load components:', err);
-  } finally {
-    setLoading(false);
   }
 }
 
@@ -1150,13 +1284,13 @@ async function persistSelections(
   orgId: string,
   repos: RepoOption[],
   components: ComponentOption[],
-  setStatus: (status: string | null) => void,
+  setSaving: (saving: boolean) => void,
 ) {
+  setSaving(true);
   try {
-    setStatus('Saving selections...');
     const selectedRepos = repos.filter((r) => r.selected);
     if (selectedRepos.length) {
-      await fetch('/api/github/save-repos', {
+      const res = await fetch('/api/github/save-repos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1170,6 +1304,10 @@ async function persistSelections(
           })),
         }),
       });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to save repos');
+      }
     }
 
     const componentPayload = components
@@ -1184,19 +1322,28 @@ async function persistSelections(
       }));
 
     if (componentPayload.length) {
-      await fetch('/api/github/save-components', {
+      const res = await fetch('/api/github/save-components', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orgId, components: componentPayload }),
       });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to save components');
+      }
     }
 
-    setStatus('Saved! Redirecting to PR processing...');
-    
+    toast.success('Setup complete!', {
+      description: 'Redirecting to PR processing...',
+    });
+
     // Redirect to processing page
     window.location.href = `/home/processing?orgId=${orgId}`;
-  } catch {
-    setStatus('Failed to save selections. Please retry.');
+  } catch (err) {
+    toast.error('Failed to save selections', {
+      description: (err as Error).message,
+    });
+    setSaving(false);
   }
 }
 

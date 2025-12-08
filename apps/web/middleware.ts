@@ -151,7 +151,8 @@ function getPatterns() {
       },
     },
     {
-      // Invitation pages - redirect to sign in if not authenticated
+      // Invitation pages - redirect to sign up if not authenticated
+      // (most invited users will be new users)
       pattern: new URLPattern({ pathname: '/invite/*?' }),
       handler: async (req: NextRequest, res: NextResponse) => {
         const { data } = await getUser(req, res);
@@ -159,11 +160,11 @@ function getPatterns() {
         const origin = req.nextUrl.origin;
         const next = req.nextUrl.pathname;
 
-        // If user is not logged in, redirect to sign in page
-        // They need to sign in/sign up first before accepting
+        // If user is not logged in, redirect to sign up page
+        // They can switch to sign in if they already have an account
         if (!data?.claims) {
-          const signIn = pathsConfig.auth.signIn;
-          const redirectPath = `${signIn}?next=${next}`;
+          const signUp = pathsConfig.auth.signUp;
+          const redirectPath = `${signUp}?next=${next}`;
 
           return NextResponse.redirect(new URL(redirectPath, origin).href);
         }

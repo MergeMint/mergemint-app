@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
@@ -29,17 +29,26 @@ import {
 import {
   Activity,
   AlertCircle,
+  ArrowRight,
   CheckCircle2,
   Clock,
+  Copy,
+  FastForward,
   GitMerge,
   GitPullRequest,
   Loader2,
+  Mail,
+  MailCheck,
   Medal,
   Play,
   RefreshCcw,
+  Square,
   Trophy,
+  UserPlus,
+  Users,
   XCircle,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 type ComponentInfo = {
   id: string;
@@ -98,9 +107,10 @@ type EvaluationResult = {
 };
 
 type ProcessedPR = PRInfo & {
-  status: 'pending' | 'processing' | 'completed' | 'error';
+  status: 'pending' | 'processing' | 'completed' | 'error' | 'skipped';
   evaluation?: EvaluationResult;
   error?: string;
+  github_pr_id?: number; // To match against existing evaluations
 };
 
 type LeaderboardEntry = {
@@ -114,6 +124,8 @@ type LeaderboardEntry = {
   p2_count: number;
   p3_count: number;
 };
+
+type ContributorInviteStatus = 'idle' | 'sending' | 'sent' | 'error';
 
 export function ProcessingClient({
   orgId,
@@ -134,22 +146,51 @@ export function ProcessingClient({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [_phase, setPhase] = useState<'idle' | 'fetching' | 'processing' | 'done'>('idle');
+  const stopRequestedRef = useRef(false);
+  const [evaluatedPrIds, setEvaluatedPrIds] = useState<Set<number>>(new Set());
+
+  // Contributor invitation state
+  const [inviteStatuses, setInviteStatuses] = useState<Record<string, ContributorInviteStatus>>({});
+  const [inviteUrls, setInviteUrls] = useState<Record<string, string>>({});
+  const [invitingAll, setInvitingAll] = useState(false);
+  const [contributorEmails, setContributorEmails] = useState<Record<string, string | null>>({});
+  const [loadingEmails, setLoadingEmails] = useState(false);
+  const [emailsSent, setEmailsSent] = useState<Record<string, boolean>>({});
 
   const fetchPRs = useCallback(async () => {
     setLoading(true);
     setError(null);
     setPhase('fetching');
     try {
-      const res = await fetch(`/api/github/merged-prs?orgId=${orgId}&months=3`);
-      if (!res.ok) {
-        const err = await res.json();
+      // Fetch PRs and existing evaluations in parallel
+      const [prsRes, evalsRes] = await Promise.all([
+        fetch(`/api/github/merged-prs?orgId=${orgId}&months=3`),
+        fetch(`/api/github/evaluations?orgId=${orgId}&months=3`),
+      ]);
+
+      if (!prsRes.ok) {
+        const err = await prsRes.json();
         throw new Error(err.error || 'Failed to fetch PRs');
       }
-      const data = await res.json();
+
+      const prsData = await prsRes.json();
+
+      // Get set of already-evaluated PR IDs
+      let evaluatedIds = new Set<number>();
+      if (evalsRes.ok) {
+        const evalsData = await evalsRes.json();
+        evaluatedIds = new Set(
+          (evalsData.evaluations ?? []).map((e: any) => e.pr?.id).filter(Boolean)
+        );
+        setEvaluatedPrIds(evaluatedIds);
+      }
+
+      // Mark PRs as completed if already evaluated
       setPRs(
-        data.prs.map((pr: PRInfo) => ({
+        prsData.prs.map((pr: PRInfo) => ({
           ...pr,
-          status: 'pending' as const,
+          github_pr_id: pr.pr.id,
+          status: evaluatedIds.has(pr.pr.id) ? 'completed' as const : 'pending' as const,
         })),
       );
       setPhase('idle');
@@ -207,11 +248,33 @@ export function ProcessingClient({
   const startProcessing = useCallback(async () => {
     if (prs.length === 0) return;
 
+    // Reset stop flag
+    stopRequestedRef.current = false;
     setProcessing(true);
     setPhase('processing');
-    setCurrentIndex(0);
+
+    // Find first pending PR to start from
+    const pendingPRs = prs.filter((pr) => pr.status === 'pending');
+    if (pendingPRs.length === 0) {
+      setProcessing(false);
+      setPhase('done');
+      return;
+    }
 
     for (let i = 0; i < prs.length; i++) {
+      // Check if stop was requested
+      if (stopRequestedRef.current) {
+        console.log('Processing stopped by user');
+        break;
+      }
+
+      const currentPR = prs[i]!;
+
+      // Skip already processed PRs
+      if (currentPR.status === 'completed' || currentPR.status === 'skipped') {
+        continue;
+      }
+
       setCurrentIndex(i);
 
       // Update status to processing
@@ -222,7 +285,7 @@ export function ProcessingClient({
       );
 
       try {
-        const evaluation = await processPR(prs[i]!);
+        const evaluation = await processPR(currentPR);
         setPRs((prev) =>
           prev.map((pr, idx) =>
             idx === i
@@ -240,6 +303,11 @@ export function ProcessingClient({
         );
       }
 
+      // Check stop flag again after processing
+      if (stopRequestedRef.current) {
+        break;
+      }
+
       // Small delay between requests to avoid rate limiting
       if (i < prs.length - 1) {
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -250,7 +318,11 @@ export function ProcessingClient({
     setPhase('done');
   }, [prs, processPR]);
 
-  // Calculate leaderboard
+  const stopProcessing = useCallback(() => {
+    stopRequestedRef.current = true;
+  }, []);
+
+  // Calculate leaderboard (moved up so inviteAll can reference it)
   const leaderboard: LeaderboardEntry[] = Object.values(
     prs
       .filter((pr) => pr.status === 'completed' && pr.evaluation)
@@ -286,6 +358,130 @@ export function ProcessingClient({
       ),
   ).sort((a, b) => b.total_score - a.total_score);
 
+  // Get unique repos from processed PRs
+  const uniqueRepos = [...new Set(prs.map(pr => pr.repo_full_name))];
+
+  // Fetch contributor emails from commit data
+  const fetchContributorEmails = useCallback(async () => {
+    if (leaderboard.length === 0) return;
+
+    setLoadingEmails(true);
+    try {
+      const usernames = leaderboard.map(c => c.author);
+      const res = await fetch('/api/github/contributor-emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orgId,
+          usernames,
+          repos: uniqueRepos,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setContributorEmails(data.emails || {});
+      }
+    } catch (err) {
+      console.error('Failed to fetch contributor emails:', err);
+    } finally {
+      setLoadingEmails(false);
+    }
+  }, [orgId, leaderboard, uniqueRepos]);
+
+  // Fetch emails when leaderboard is ready
+  useEffect(() => {
+    if (leaderboard.length > 0 && Object.keys(contributorEmails).length === 0 && !loadingEmails) {
+      fetchContributorEmails();
+    }
+  }, [leaderboard.length, contributorEmails, loadingEmails, fetchContributorEmails]);
+
+  // Send invitation to a contributor
+  const sendInvite = useCallback(async (githubLogin: string, avatarUrl?: string) => {
+    setInviteStatuses(prev => ({ ...prev, [githubLogin]: 'sending' }));
+
+    // Get email for this contributor
+    const email = contributorEmails[githubLogin] || undefined;
+
+    try {
+      const res = await fetch('/api/invitations/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orgId,
+          githubLogin,
+          avatarUrl,
+          email, // Include email if available
+          role: 'member',
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to create invitation');
+      }
+
+      const data = await res.json();
+      setInviteStatuses(prev => ({ ...prev, [githubLogin]: 'sent' }));
+      setInviteUrls(prev => ({ ...prev, [githubLogin]: data.invitation.inviteUrl }));
+
+      // Track if email was sent
+      if (data.invitation.emailSent) {
+        setEmailsSent(prev => ({ ...prev, [githubLogin]: true }));
+      }
+
+      return data.invitation;
+    } catch (err) {
+      setInviteStatuses(prev => ({ ...prev, [githubLogin]: 'error' }));
+      toast.error(`Failed to create invite for ${githubLogin}`, {
+        description: (err as Error).message,
+      });
+      return null;
+    }
+  }, [orgId, contributorEmails]);
+
+  // Invite all contributors at once
+  const inviteAll = useCallback(async () => {
+    setInvitingAll(true);
+    const uninvited = leaderboard.filter(c => inviteStatuses[c.author] !== 'sent');
+
+    let successCount = 0;
+    let emailCount = 0;
+    for (const contributor of uninvited) {
+      const result = await sendInvite(contributor.author, contributor.avatar_url);
+      if (result) {
+        successCount++;
+        if (result.emailSent) emailCount++;
+      }
+      // Small delay between requests
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+
+    setInvitingAll(false);
+    if (successCount > 0) {
+      if (emailCount > 0) {
+        toast.success(`Sent ${emailCount} email${emailCount > 1 ? 's' : ''} and created ${successCount - emailCount} invite link${successCount - emailCount !== 1 ? 's' : ''}`);
+      } else {
+        toast.success(`Created ${successCount} invite link${successCount > 1 ? 's' : ''}`);
+      }
+    }
+  }, [leaderboard, inviteStatuses, sendInvite]);
+
+  const copyInviteUrl = useCallback((url: string) => {
+    navigator.clipboard.writeText(url);
+    toast.success('Invite link copied to clipboard');
+  }, []);
+
+  const copyAllInviteUrls = useCallback(() => {
+    const urls = Object.values(inviteUrls).filter(Boolean);
+    if (urls.length === 0) {
+      toast.error('No invite links to copy');
+      return;
+    }
+    navigator.clipboard.writeText(urls.join('\n'));
+    toast.success(`Copied ${urls.length} invite link${urls.length > 1 ? 's' : ''} to clipboard`);
+  }, [inviteUrls]);
+
   // Ineligible PRs
   const ineligiblePRs = prs.filter(
     (pr) => pr.status === 'completed' && pr.evaluation && !pr.evaluation.is_eligible,
@@ -298,6 +494,8 @@ export function ProcessingClient({
 
   // Calculate progress
   const processedCount = prs.filter((pr) => pr.status === 'completed' || pr.status === 'error').length;
+  const pendingCount = prs.filter((pr) => pr.status === 'pending').length;
+  const skippedCount = prs.filter((pr) => pr.status === 'skipped').length;
   const progress = prs.length > 0 ? (processedCount / prs.length) * 100 : 0;
 
   // Load existing evaluations on mount
@@ -357,22 +555,37 @@ export function ProcessingClient({
             <RefreshCcw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Button
-            onClick={startProcessing}
-            disabled={loading || processing || prs.length === 0}
-          >
-            {processing ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Play className="mr-2 h-4 w-4" />
-                Start Processing
-              </>
-            )}
-          </Button>
+          {processing ? (
+            <Button
+              variant="destructive"
+              onClick={stopProcessing}
+            >
+              <Square className="mr-2 h-4 w-4" />
+              Stop
+            </Button>
+          ) : (
+            <Button
+              onClick={startProcessing}
+              disabled={loading || prs.length === 0 || pendingCount === 0}
+            >
+              {pendingCount === 0 && processedCount > 0 ? (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  All Processed
+                </>
+              ) : pendingCount < prs.length && pendingCount > 0 ? (
+                <>
+                  <FastForward className="mr-2 h-4 w-4" />
+                  Continue ({pendingCount} remaining)
+                </>
+              ) : (
+                <>
+                  <Play className="mr-2 h-4 w-4" />
+                  Start Processing
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -386,7 +599,7 @@ export function ProcessingClient({
       )}
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total PRs</CardTitle>
@@ -395,6 +608,18 @@ export function ProcessingClient({
           <CardContent>
             <div className="text-2xl font-bold">{prs.length}</div>
             <p className="text-xs text-muted-foreground">Last 3 months</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Pending</CardTitle>
+            <Clock className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{pendingCount}</div>
+            <p className="text-xs text-muted-foreground">
+              {pendingCount === 0 ? 'All done!' : 'Awaiting processing'}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -730,6 +955,207 @@ export function ProcessingClient({
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Next Steps Section - Shows when processing is complete */}
+      {pendingCount === 0 && processedCount > 0 && (
+        <div className="space-y-6">
+          {/* Invite Contributors Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-violet-500" />
+                    Invite Contributors
+                  </CardTitle>
+                  <CardDescription className="mt-1.5">
+                    {loadingEmails ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Finding contributor emails...
+                      </span>
+                    ) : (
+                      <>
+                        Send email invitations to contributors with known emails.
+                        {Object.values(contributorEmails).filter(Boolean).length > 0 && (
+                          <span className="ml-1 text-green-600">
+                            ({Object.values(contributorEmails).filter(Boolean).length} emails found)
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </CardDescription>
+                </div>
+                {leaderboard.length > 0 && (
+                  <div className="flex gap-2">
+                    {Object.keys(inviteUrls).length > 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyAllInviteUrls}
+                        className="gap-1"
+                      >
+                        <Copy className="h-4 w-4" />
+                        Copy All Links
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      onClick={inviteAll}
+                      disabled={invitingAll || leaderboard.every(c => inviteStatuses[c.author] === 'sent')}
+                      className="gap-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
+                    >
+                      {invitingAll ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : leaderboard.every(c => inviteStatuses[c.author] === 'sent') ? (
+                        <>
+                          <CheckCircle2 className="h-4 w-4" />
+                          All Invited
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="h-4 w-4" />
+                          Invite All ({leaderboard.filter(c => inviteStatuses[c.author] !== 'sent').length})
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              {leaderboard.length > 0 ? (
+                <div className="space-y-2">
+                  {leaderboard.map((contributor) => {
+                    const isInvited = inviteStatuses[contributor.author] === 'sent';
+                    const isSending = inviteStatuses[contributor.author] === 'sending';
+                    const email = contributorEmails[contributor.author];
+                    const wasEmailSent = emailsSent[contributor.author];
+
+                    return (
+                      <div
+                        key={contributor.author}
+                        className="flex items-center gap-4 rounded-lg border p-3"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {contributor.avatar_url ? (
+                            <img
+                              src={contributor.avatar_url}
+                              alt={contributor.author}
+                              className="h-10 w-10 rounded-full"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                              {contributor.author[0]?.toUpperCase()}
+                            </div>
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium truncate">@{contributor.author}</p>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <span>{contributor.total_score} pts • {contributor.pr_count} PRs</span>
+                              {email ? (
+                                <span className="flex items-center gap-1 text-green-600">
+                                  <Mail className="h-3 w-3" />
+                                  {email}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground/60">No email found</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {isInvited ? (
+                          <div className="flex items-center gap-2">
+                            {wasEmailSent ? (
+                              <Badge variant="secondary" className="gap-1 bg-green-500/10 text-green-600 border-green-200">
+                                <MailCheck className="h-3 w-3" />
+                                Email Sent
+                              </Badge>
+                            ) : (
+                              <Badge variant="secondary" className="gap-1 bg-blue-500/10 text-blue-600 border-blue-200">
+                                <CheckCircle2 className="h-3 w-3" />
+                                Link Ready
+                              </Badge>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => copyInviteUrl(inviteUrls[contributor.author]!)}
+                              title="Copy invite link"
+                              className="gap-1"
+                            >
+                              <Copy className="h-4 w-4" />
+                              Copy
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant={email ? 'default' : 'outline'}
+                            onClick={() => sendInvite(contributor.author, contributor.avatar_url)}
+                            disabled={isSending || invitingAll || loadingEmails}
+                            className={email ? 'gap-1 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700' : 'gap-1'}
+                          >
+                            {isSending ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : email ? (
+                              <>
+                                <Mail className="h-4 w-4" />
+                                Send Invite
+                              </>
+                            ) : (
+                              <>
+                                <UserPlus className="h-4 w-4" />
+                                Generate Link
+                              </>
+                            )}
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>No contributors found in processed PRs.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Go to Dashboard Card */}
+          <Card className="border-violet-500/50 bg-gradient-to-r from-violet-500/5 to-purple-500/5">
+            <CardContent className="flex items-center justify-between py-6">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-500/10">
+                  <Trophy className="h-6 w-6 text-violet-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">All done! Ready to view results?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Head to the dashboard to see the leaderboard and detailed analytics.
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="lg"
+                className="gap-2 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
+                onClick={() => {
+                  window.location.href = '/home';
+                }}
+              >
+                Go to Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
@@ -773,6 +1199,8 @@ function StatusIcon({ status }: { status: ProcessedPR['status'] }) {
       return <CheckCircle2 className="h-4 w-4 text-green-500" />;
     case 'error':
       return <AlertCircle className="h-4 w-4 text-destructive" />;
+    case 'skipped':
+      return <FastForward className="h-4 w-4 text-muted-foreground" />;
   }
 }
 

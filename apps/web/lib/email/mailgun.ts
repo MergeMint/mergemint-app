@@ -103,13 +103,14 @@ export async function sendInvitationEmail(params: {
 }): Promise<SendEmailResult> {
   const { to, inviterName, orgName, role, inviteToken, baseUrl = 'https://mergemint.dev' } = params;
   
-  const inviteUrl = `${baseUrl}/invite/${inviteToken}`;
+  const inviteUrl = `${baseUrl}/invite?token=${inviteToken}`;
   
   const roleLabels: Record<string, string> = {
     admin: 'Admin',
     pm: 'Product Manager',
     developer: 'Developer',
     viewer: 'Viewer',
+    member: 'Team Member',
   };
   
   const roleLabel = roleLabels[role] || role;

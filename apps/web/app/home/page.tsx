@@ -34,7 +34,21 @@ export default async function HomePage() {
 
   const hasCompletedWelcomeOnboarding = !!profile?.onboarding_completed_at;
 
-  // If no membership and hasn't completed welcome onboarding, show the dialog
+  // If user already has a membership (e.g., invited user), they don't need to create an org
+  // Just mark their onboarding as complete if not already done
+  if (membership && !hasCompletedWelcomeOnboarding) {
+    // Auto-complete onboarding for invited users - they're already in an org
+    await admin
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        display_name: profile?.display_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+        onboarding_completed_at: new Date().toISOString(),
+      }, { onConflict: 'id' });
+  }
+
+  // Only show onboarding dialog if user has NO membership and hasn't completed onboarding
+  // This is for brand new users who need to create their own organization
   if (!membership && !hasCompletedWelcomeOnboarding) {
     const userName = user.user_metadata?.full_name || 
                      user.user_metadata?.name || 

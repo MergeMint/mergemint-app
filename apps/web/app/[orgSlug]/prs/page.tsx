@@ -14,6 +14,7 @@ import {
 } from '@kit/ui/table';
 import { PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 export default async function EvaluatedPRsPage({
   params,
@@ -22,7 +23,8 @@ export default async function EvaluatedPRsPage({
 }) {
   const { orgSlug } = await params;
   const client = getSupabaseServerClient<any>();
-  const { data: org, error } = await client
+  const admin = getSupabaseServerAdminClient<any>();
+  const { data: org, error } = await admin
     .from('organizations')
     .select('id, name, slug')
     .eq('slug', orgSlug)
@@ -33,15 +35,15 @@ export default async function EvaluatedPRsPage({
 
   const [{ data: components }, { data: severities }, { data: evaluations }] =
     await Promise.all([
-      client
+      admin
         .from('product_components')
         .select('id, key, name')
         .eq('org_id', org.id),
-      client
+      admin
         .from('severity_levels')
         .select('id, key')
         .eq('org_id', org.id),
-      client
+      admin
         .from('pr_evaluations')
         .select(
           'id, pr_id, final_score, is_eligible, impact_summary, created_at, primary_component_id, severity_id, pull_requests!inner(number, title, url, merged_at_gh)',

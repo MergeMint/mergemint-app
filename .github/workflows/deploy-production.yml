@@ -57,3 +57,4 @@ jobs:
           echo "🔗 URL: https://mergemint.dev"
           echo "📦 Release: ${{ github.event.release.tag_name }}"
 
+

@@ -18,12 +18,23 @@ export const generateMetadata = async () => {
   };
 };
 
-const paths = {
-  callback: pathsConfig.auth.callback,
-  home: pathsConfig.app.home,
-};
+async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
 
-function SignInPage() {
+  const paths = {
+    callback: pathsConfig.auth.callback,
+    home: next || pathsConfig.app.home,
+  };
+
+  // Preserve the next parameter when linking to sign-up
+  const signUpHref = next 
+    ? `${pathsConfig.auth.signUp}?next=${encodeURIComponent(next)}`
+    : pathsConfig.auth.signUp;
+
   return (
     <>
       <Heading level={5} className={'tracking-tight'}>
@@ -34,7 +45,7 @@ function SignInPage() {
 
       <div className={'flex justify-center'}>
         <Button asChild variant={'link'} size={'sm'}>
-          <Link href={pathsConfig.auth.signUp}>
+          <Link href={signUpHref}>
             <Trans i18nKey={'auth:doNotHaveAccountYet'} />
           </Link>
         </Button>

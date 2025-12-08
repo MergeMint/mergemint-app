@@ -5,6 +5,7 @@ import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
@@ -16,7 +17,8 @@ export default async function MePage({
   const { orgSlug } = await params;
   const user = await requireUserInServerComponent();
   const client = getSupabaseServerClient<any>();
-  const { data: org, error } = await client
+  const admin = getSupabaseServerAdminClient<any>();
+  const { data: org, error } = await admin
     .from('organizations')
     .select('id, name')
     .eq('slug', orgSlug)
@@ -25,14 +27,14 @@ export default async function MePage({
   if (error) throw error;
   if (!org) redirect('/home/mergemint');
 
-  const { data: identities } = await client
+  const { data: identities } = await admin
     .from('github_identities')
     .select('id, github_login')
     .eq('linked_user_id', user.id);
   const identityIds = identities?.map((i) => i.id) ?? [];
 
   const { data: stats } = identityIds.length
-    ? await client
+    ? await admin
         .from('developer_daily_stats')
         .select('*')
         .eq('org_id', org.id)
@@ -42,7 +44,7 @@ export default async function MePage({
     : { data: [] };
 
   const { data: prs } = identityIds.length
-    ? await client
+    ? await admin
         .from('pull_requests')
         .select('id, title, number, url, merged_at_gh')
         .eq('org_id', org.id)
@@ -53,7 +55,7 @@ export default async function MePage({
 
   const prIds = prs?.map((p) => p.id) ?? [];
   const { data: evaluations } = prIds.length
-    ? await client
+    ? await admin
         .from('pr_evaluations')
         .select(
           'pr_id, final_score, impact_summary, is_eligible, justification_severity, justification_component',

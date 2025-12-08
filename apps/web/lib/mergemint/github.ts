@@ -8,6 +8,19 @@ type GithubUser = {
   id: number;
   login: string;
   avatar_url?: string;
+  email?: string | null;
+};
+
+export type GithubUserDetails = {
+  id: number;
+  login: string;
+  avatar_url?: string;
+  email?: string | null;
+  name?: string | null;
+  company?: string | null;
+  blog?: string | null;
+  location?: string | null;
+  bio?: string | null;
 };
 
 export type GithubRepository = {
@@ -271,7 +284,107 @@ export class GithubClient {
 
     return res.json();
   }
+
+  /**
+   * Get user details including email (if public)
+   */
+  async getUser(username: string): Promise<GithubUserDetails> {
+    return this.request<GithubUserDetails>(`/users/${username}`);
+  }
+
+  /**
+   * Get multiple users' details including emails
+   * Returns a map of username -> email (or null if not available)
+   */
+  async getUserEmails(usernames: string[]): Promise<Record<string, string | null>> {
+    const results: Record<string, string | null> = {};
+
+    // Fetch in parallel with concurrency limit
+    const batchSize = 5;
+    for (let i = 0; i < usernames.length; i += batchSize) {
+      const batch = usernames.slice(i, i + batchSize);
+      const promises = batch.map(async (username) => {
+        try {
+          const user = await this.getUser(username);
+          results[username] = user.email || null;
+        } catch (err) {
+          console.error(`Failed to fetch user ${username}:`, err);
+          results[username] = null;
+        }
+      });
+      await Promise.all(promises);
+    }
+
+    return results;
+  }
+
+  /**
+   * Get commits for a PR
+   */
+  async getPullRequestCommits(owner: string, repo: string, prNumber: number): Promise<GithubCommit[]> {
+    return this.request<GithubCommit[]>(
+      `/repos/${owner}/${repo}/pulls/${prNumber}/commits`,
+      { query: { per_page: 100 } },
+    );
+  }
+
+  /**
+   * Get contributor emails from their commits in a repo.
+   * This is more reliable than profile emails as commit emails are usually set.
+   * Returns a map of username -> email
+   */
+  async getContributorEmailsFromCommits(
+    owner: string,
+    repo: string,
+    usernames: string[],
+  ): Promise<Record<string, string | null>> {
+    const results: Record<string, string | null> = {};
+    const usernamesSet = new Set(usernames.map(u => u.toLowerCase()));
+
+    // Initialize all usernames with null
+    usernames.forEach(u => results[u] = null);
+
+    try {
+      // Get recent commits from the repo
+      const commits = await this.request<GithubCommit[]>(
+        `/repos/${owner}/${repo}/commits`,
+        { query: { per_page: 100 } },
+      );
+
+      // Extract emails from commits, matching by author login
+      for (const commit of commits) {
+        const login = commit.author?.login?.toLowerCase();
+        if (login && usernamesSet.has(login)) {
+          const email = commit.commit.author?.email;
+          // Skip noreply emails and already found entries
+          if (email &&
+              !email.includes('noreply') &&
+              !email.includes('@users.noreply.github.com') &&
+              !results[commit.author!.login]) {
+            results[commit.author!.login] = email;
+          }
+        }
+      }
+    } catch (err) {
+      console.error(`Failed to fetch commits for ${owner}/${repo}:`, err);
+    }
+
+    return results;
+  }
 }
+
+export type GithubCommit = {
+  sha: string;
+  commit: {
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    } | null;
+    message: string;
+  };
+  author: GithubUser | null;
+};
 
 /**
  * Resolve the GitHub token for an organization. Raw tokens are never stored

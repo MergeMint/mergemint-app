@@ -12,6 +12,7 @@ import {
 } from '@kit/ui/table';
 import { PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 export default async function LeaderboardPage({
   params,
@@ -20,7 +21,8 @@ export default async function LeaderboardPage({
 }) {
   const { orgSlug } = await params;
   const client = getSupabaseServerClient<any>();
-  const { data: org, error } = await client
+  const admin = getSupabaseServerAdminClient<any>();
+  const { data: org, error } = await admin
     .from('organizations')
     .select('id, name')
     .eq('slug', orgSlug)
@@ -29,7 +31,7 @@ export default async function LeaderboardPage({
   if (error) throw error;
   if (!org) redirect('/home/mergemint');
 
-  const { data: leaderboard } = await client
+  const { data: leaderboard } = await admin
     .from('view_leaderboard_last_30_days')
     .select('*')
     .eq('org_id', org.id)

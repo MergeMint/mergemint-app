@@ -58,12 +58,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if email matches (optional - can allow any authenticated user)
-    if (invitation.email.toLowerCase() !== user.email?.toLowerCase()) {
-      return NextResponse.json(
-        { error: 'This invitation was sent to a different email address' },
-        { status: 403 }
-      );
+    // Check if this is a GitHub-based invite
+    const isGithubInvite = invitation.metadata?.invite_type === 'github';
+    const inviteGithubLogin = invitation.metadata?.github_login;
+
+    // For GitHub-based invites, verify by GitHub username from user metadata
+    // For email-based invites, verify by email
+    if (isGithubInvite && inviteGithubLogin) {
+      // Get user's GitHub login from their auth metadata
+      const userGithubLogin = user.user_metadata?.user_name ||
+                              user.user_metadata?.preferred_username ||
+                              user.identities?.find((i: any) => i.provider === 'github')?.identity_data?.user_name;
+
+      if (!userGithubLogin || userGithubLogin.toLowerCase() !== inviteGithubLogin.toLowerCase()) {
+        return NextResponse.json(
+          { error: `This invitation is for GitHub user @${inviteGithubLogin}. Please sign in with the correct GitHub account.` },
+          { status: 403 }
+        );
+      }
+    } else if (!isGithubInvite) {
+      // Email-based invite - check email matches
+      if (invitation.email.toLowerCase() !== user.email?.toLowerCase()) {
+        return NextResponse.json(
+          { error: 'This invitation was sent to a different email address' },
+          { status: 403 }
+        );
+      }
     }
 
     // Check if user is already a member
@@ -176,4 +196,5 @@ export async function GET(request: NextRequest) {
     expiresAt: invitation.expires_at,
   });
 }
+
 

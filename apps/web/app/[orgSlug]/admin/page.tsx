@@ -16,6 +16,7 @@ import { Separator } from '@kit/ui/separator';
 import { Textarea } from '@kit/ui/textarea';
 import { PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import {
   saveComponentAction,
@@ -32,7 +33,8 @@ export default async function AdminPage({
 }) {
   const { orgSlug } = await params;
   const client = getSupabaseServerClient<any>();
-  const { data: org, error: orgError } = await client
+  const admin = getSupabaseServerAdminClient<any>();
+  const { data: org, error: orgError } = await admin
     .from('organizations')
     .select('id, name, slug')
     .eq('slug', orgSlug)
@@ -43,17 +45,17 @@ export default async function AdminPage({
 
   const [{ data: components }, { data: severities }, { data: ruleSet }] =
     await Promise.all([
-      client
+      admin
         .from('product_components')
         .select('*')
         .eq('org_id', org.id)
         .order('sort_order', { ascending: true }),
-      client
+      admin
         .from('severity_levels')
         .select('*')
         .eq('org_id', org.id)
         .order('sort_order', { ascending: true }),
-      client
+      admin
         .from('scoring_rule_sets')
         .select('id, name')
         .eq('org_id', org.id)
@@ -63,7 +65,7 @@ export default async function AdminPage({
     ]);
 
   const { data: promptTemplate } = ruleSet
-    ? await client
+    ? await admin
         .from('prompt_templates')
         .select('*')
         .eq('rule_set_id', ruleSet.id)
@@ -72,7 +74,7 @@ export default async function AdminPage({
         .maybeSingle()
     : { data: null };
 
-  const { data: connection } = await client
+  const { data: connection } = await admin
     .from('github_connections')
     .select('*')
     .eq('org_id', org.id)
