@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@kit/i18n/hooks';
 import { toast } from 'sonner';
 
 import { Database } from '@kit/supabase/database';

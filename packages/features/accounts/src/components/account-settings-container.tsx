@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@kit/i18n/hooks';
 
 import {
   Card,

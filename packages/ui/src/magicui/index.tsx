@@ -6,4 +6,5 @@ export { BlurFade } from './blur-fade';
 export { BentoGrid, BentoCard } from './bento-grid';
 export { ShineBorder } from './shine-border';
 export { Meteors } from './meteors';
+export { MagicCard } from './magic-card';
 

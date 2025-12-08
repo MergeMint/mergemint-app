@@ -28,13 +28,14 @@ import {
 export default async function AdminPage({
   params,
 }: {
-  params: { orgSlug: string };
+  params: Promise<{ orgSlug: string }>;
 }) {
+  const { orgSlug } = await params;
   const client = getSupabaseServerClient<any>();
   const { data: org, error: orgError } = await client
     .from('organizations')
     .select('id, name, slug')
-    .eq('slug', params.orgSlug)
+    .eq('slug', orgSlug)
     .maybeSingle();
 
   if (orgError) throw orgError;

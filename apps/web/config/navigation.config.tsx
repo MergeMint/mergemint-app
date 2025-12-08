@@ -1,4 +1,4 @@
-import { Home, Trophy, User } from 'lucide-react';
+import { Building2, Home, Settings, Trophy, User, Users } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -22,11 +22,6 @@ const routes = [
         path: pathsConfig.app.mergemint,
         Icon: <Trophy className={iconClasses} />,
       },
-      {
-        label: 'Onboarding',
-        path: pathsConfig.app.onboarding,
-        Icon: <Trophy className={iconClasses} />,
-      },
     ],
   },
   {
@@ -40,6 +35,37 @@ const routes = [
     ],
   },
 ] satisfies z.infer<typeof NavigationConfigSchema>['routes'];
+
+// Function to create org-specific routes
+export function getOrgRoutes(orgSlug: string) {
+  return [
+    {
+      label: 'Organization',
+      children: [
+        {
+          label: 'Leaderboard',
+          path: `/${orgSlug}/leaderboard`,
+          Icon: <Trophy className={iconClasses} />,
+        },
+        {
+          label: 'Team Members',
+          path: `/${orgSlug}/members`,
+          Icon: <Users className={iconClasses} />,
+        },
+        {
+          label: 'Org Settings',
+          path: `/${orgSlug}/settings`,
+          Icon: <Building2 className={iconClasses} />,
+        },
+        {
+          label: 'Admin',
+          path: `/${orgSlug}/admin`,
+          Icon: <Settings className={iconClasses} />,
+        },
+      ],
+    },
+  ];
+}
 
 export const navigationConfig = NavigationConfigSchema.parse({
   routes,

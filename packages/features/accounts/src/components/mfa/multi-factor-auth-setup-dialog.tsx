@@ -7,7 +7,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeftIcon } from 'lucide-react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@kit/i18n/hooks';
 import { toast } from 'sonner';
 import { z } from 'zod';
 

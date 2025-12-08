@@ -64,6 +64,7 @@ export function UpdatePasswordForm(params: { redirectTo: string }) {
         >
           <div className={'flex-col space-y-4'}>
             <FormField
+              control={form.control}
               name={'password'}
               render={({ field }) => (
                 <FormItem>
@@ -81,6 +82,7 @@ export function UpdatePasswordForm(params: { redirectTo: string }) {
             />
 
             <FormField
+              control={form.control}
               name={'repeatPassword'}
               render={({ field }) => (
                 <FormItem>

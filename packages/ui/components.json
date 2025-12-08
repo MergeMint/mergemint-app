@@ -10,11 +10,15 @@
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "radix",
   "aliases": {
     "components": "~/components",
     "utils": "~/utils",
+    "ui": "~/ui",
     "lib": "~/lib",
-    "hooks": "~/hooks",
-    "ui": "~/ui"
+    "hooks": "~/hooks"
+  },
+  "registries": {
+    "@magicui": "https://magicui.design/r/{name}.json"
   }
 }

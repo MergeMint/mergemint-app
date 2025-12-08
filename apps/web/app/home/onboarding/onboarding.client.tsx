@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useTheme } from 'next-themes';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
+import { MagicCard } from '@kit/ui/magicui';
 import { Popover, PopoverContent, PopoverTrigger } from '@kit/ui/popover';
 import {
   Dialog,
@@ -123,7 +125,6 @@ export function OnboardingClient({
   const [loadingRepos, setLoadingRepos] = useState(false);
   const [_loadingComponents, setLoadingComponents] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [creatingOrg, setCreatingOrg] = useState(false);
 
   useEffect(() => {
     if (orgId) {
@@ -141,45 +142,15 @@ export function OnboardingClient({
     }
   }, [currentStep, orgId, components.length]);
 
+  // If no orgs, redirect to home to complete welcome onboarding
   if (!orgOptions.length) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/home';
+    }
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Create an organization to continue</CardTitle>
-          <CardDescription>
-            GitHub authorization and repo selection require an organization.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button
-            onClick={async () => {
-              setCreatingOrg(true);
-              try {
-                const res = await fetch('/api/mergemint/orgs', { method: 'POST' });
-                if (!res.ok) throw new Error(await res.text());
-                const json = await res.json();
-                const nextOrgs = [json];
-                setOrgOptions(nextOrgs);
-                setOrgId(json.org_id);
-                setOrgSlug(json.organizations?.slug ?? '');
-                setStatus(null);
-              } catch {
-                setStatus('Failed to create organization. Please retry.');
-              } finally {
-                setCreatingOrg(false);
-              }
-            }}
-            disabled={creatingOrg}
-          >
-            {creatingOrg ? 'Creating...' : 'Create org and continue'}
-          </Button>
-          {status ? (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {status}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+      <div className="flex items-center justify-center py-12">
+        <p className="text-muted-foreground">Redirecting to setup...</p>
+      </div>
     );
   }
 
@@ -600,6 +571,7 @@ function ComponentStep({
   ) => void;
   onDeleteComponent: (repoFullName: string, idx: number) => void;
 }) {
+  const { theme } = useTheme();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editingComponent, setEditingComponent] = useState<{
@@ -846,133 +818,147 @@ function ComponentStep({
         setDialogOpen(open);
         if (!open) resetForm();
       }}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>
-              {editingComponent ? 'Edit Component' : 'Add Component'}
-            </DialogTitle>
-            <DialogDescription>
-              Components help track which parts of your codebase are affected by PRs.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="repo">Repository</Label>
-              <Select
-                value={formData.repo_full_name}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, repo_full_name: value }))}
-                disabled={!!editingComponent}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a repository" />
-                </SelectTrigger>
-                <SelectContent>
-                  {repos.map((repo) => (
-                    <SelectItem key={repo.full_name ?? repo.name} value={repo.full_name ?? repo.name}>
-                      {repo.full_name ?? repo.name}
+        <DialogContent className="sm:max-w-[500px] overflow-hidden p-0 border-0 bg-transparent shadow-none">
+          <MagicCard
+            gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
+            gradientFrom="#8B5CF6"
+            gradientTo="#EC4899"
+            gradientOpacity={0.15}
+            className="overflow-hidden"
+          >
+            <DialogHeader className="px-6 pt-6 pb-2">
+              <DialogTitle className="text-lg font-semibold">
+                {editingComponent ? 'Edit Component' : 'Add Component'}
+              </DialogTitle>
+              <DialogDescription>
+                Components help track which parts of your codebase are affected by PRs.
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="grid gap-4 px-6 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="repo">Repository</Label>
+                <Select
+                  value={formData.repo_full_name}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, repo_full_name: value }))}
+                  disabled={!!editingComponent}
+                >
+                  <SelectTrigger className="rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-colors">
+                    <SelectValue placeholder="Select a repository" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    {repos.map((repo) => (
+                      <SelectItem key={repo.full_name ?? repo.name} value={repo.full_name ?? repo.name} className="rounded-lg">
+                        {repo.full_name ?? repo.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  placeholder="e.g., Authentication Service"
+                  value={formData.name}
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      name,
+                      key: generateKey(name)
+                    }));
+                  }}
+                  className="rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-colors"
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="What does this component do?"
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  rows={2}
+                  className="rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-colors resize-none"
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Importance</Label>
+                <Select
+                  value={formData.importance}
+                  onValueChange={(value: ComponentOption['importance']) => 
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      importance: value,
+                      multiplier: getMultiplierForImportance(value)
+                    }))
+                  }
+                >
+                  <SelectTrigger className="rounded-xl border-border/50 bg-muted/30 focus:bg-background transition-colors">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="critical" className="rounded-lg">
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex items-center gap-2">
+                          <Flame className="h-4 w-4 text-red-500" />
+                          Critical
+                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">2.0x</span>
+                      </div>
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <SelectItem value="high" className="rounded-lg">
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-orange-500" />
+                          High
+                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">1.5x</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="normal" className="rounded-lg">
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex items-center gap-2">
+                          <Activity className="h-4 w-4 text-blue-500" />
+                          Normal
+                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">1.0x</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="low" className="rounded-lg">
+                      <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex items-center gap-2">
+                          <CircleDot className="h-4 w-4 text-gray-500" />
+                          Low
+                        </div>
+                        <span className="text-xs text-muted-foreground font-mono">0.5x</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Score multiplier: <span className="font-mono font-medium">{formData.multiplier}x</span>
+                </p>
+              </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                placeholder="e.g., Authentication Service"
-                value={formData.name}
-                onChange={(e) => {
-                  const name = e.target.value;
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    name,
-                    key: generateKey(name)
-                  }));
-                }}
-                        />
-                      </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                placeholder="What does this component do?"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                        rows={2}
-                      />
-                    </div>
-
-            <div className="grid gap-2">
-              <Label>Importance</Label>
-              <Select
-                value={formData.importance}
-                onValueChange={(value: ComponentOption['importance']) => 
-                  setFormData(prev => ({ 
-                    ...prev, 
-                    importance: value,
-                    multiplier: getMultiplierForImportance(value)
-                  }))
-                }
+            <DialogFooter className="border-t border-border/50 bg-muted/20 px-6 py-4">
+              <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving} className="rounded-xl">
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={!formData.name || !formData.repo_full_name || saving}
+                className="rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 shadow-lg shadow-violet-500/25"
               >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="critical">
-                    <div className="flex items-center justify-between gap-4 w-full">
-                      <div className="flex items-center gap-2">
-                        <Flame className="h-4 w-4 text-red-500" />
-                        Critical
-                      </div>
-                      <span className="text-xs text-muted-foreground font-mono">2.0x</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="high">
-                    <div className="flex items-center justify-between gap-4 w-full">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-orange-500" />
-                        High
-                      </div>
-                      <span className="text-xs text-muted-foreground font-mono">1.5x</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="normal">
-                    <div className="flex items-center justify-between gap-4 w-full">
-                      <div className="flex items-center gap-2">
-                        <Activity className="h-4 w-4 text-blue-500" />
-                        Normal
-                      </div>
-                      <span className="text-xs text-muted-foreground font-mono">1.0x</span>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="low">
-                    <div className="flex items-center justify-between gap-4 w-full">
-                      <div className="flex items-center gap-2">
-                        <CircleDot className="h-4 w-4 text-gray-500" />
-                        Low
-                      </div>
-                      <span className="text-xs text-muted-foreground font-mono">0.5x</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Score multiplier: <span className="font-mono font-medium">{formData.multiplier}x</span>
-              </p>
-            </div>
-                    </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={saving}>
-              Cancel
-                      </Button>
-            <Button onClick={handleSave} disabled={!formData.name || !formData.repo_full_name || saving}>
-              {saving ? 'Saving...' : editingComponent ? 'Save Changes' : 'Add Component'}
-            </Button>
-          </DialogFooter>
+                {saving ? 'Saving...' : editingComponent ? 'Save Changes' : 'Add Component'}
+              </Button>
+            </DialogFooter>
+          </MagicCard>
         </DialogContent>
       </Dialog>
     </div>

@@ -11,14 +11,15 @@ import { requireUserInServerComponent } from '~/lib/server/require-user-in-serve
 export default async function MePage({
   params,
 }: {
-  params: { orgSlug: string };
+  params: Promise<{ orgSlug: string }>;
 }) {
+  const { orgSlug } = await params;
   const user = await requireUserInServerComponent();
   const client = getSupabaseServerClient<any>();
   const { data: org, error } = await client
     .from('organizations')
     .select('id, name')
-    .eq('slug', params.orgSlug)
+    .eq('slug', orgSlug)
     .maybeSingle();
 
   if (error) throw error;

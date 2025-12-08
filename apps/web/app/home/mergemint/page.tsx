@@ -94,7 +94,7 @@ export default async function MergeMintHubPage() {
                     </form>
                   </div>
 
-                  <div className={'flex gap-3'}>
+                  <div className={'flex flex-wrap gap-3'}>
                     <Link href={`/${org.slug}/leaderboard`}>
                       <Button variant={'ghost'} size={'sm'}>
                         Leaderboard
@@ -103,6 +103,16 @@ export default async function MergeMintHubPage() {
                     <Link href={`/${org.slug}/prs`}>
                       <Button variant={'ghost'} size={'sm'}>
                         Evaluated PRs
+                      </Button>
+                    </Link>
+                    <Link href={`/${org.slug}/members`}>
+                      <Button variant={'ghost'} size={'sm'}>
+                        Members
+                      </Button>
+                    </Link>
+                    <Link href={`/${org.slug}/settings`}>
+                      <Button variant={'ghost'} size={'sm'}>
+                        Settings
                       </Button>
                     </Link>
                   </div>

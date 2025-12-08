@@ -10,13 +10,22 @@ import {
 
 import { AppLogo } from '~/components/app-logo';
 import { ProfileAccountDropdownContainer } from '~/components/personal-account-dropdown-container';
-import { navigationConfig } from '~/config/navigation.config';
+import { getOrgRoutes, navigationConfig } from '~/config/navigation.config';
 import { Tables } from '~/lib/database.types';
 
 export function HomeSidebar(props: {
   account?: Tables<'accounts'>;
   user: JwtPayload;
+  org?: { slug: string; name: string; role: string } | null;
 }) {
+  // Create combined config with org routes if org exists
+  const config = props.org
+    ? {
+        ...navigationConfig,
+        routes: [...navigationConfig.routes, ...getOrgRoutes(props.org.slug)],
+      }
+    : navigationConfig;
+
   return (
     <Sidebar collapsible={'icon'}>
       <SidebarHeader className={'h-16 justify-center'}>
@@ -28,7 +37,7 @@ export function HomeSidebar(props: {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarNavigation config={navigationConfig} />
+        <SidebarNavigation config={config} />
       </SidebarContent>
 
       <SidebarFooter>

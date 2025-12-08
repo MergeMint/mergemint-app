@@ -7,7 +7,7 @@ import type { Factor } from '@supabase/supabase-js';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShieldCheck, X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@kit/i18n/hooks';
 import { toast } from 'sonner';
 
 import { useFetchAuthFactors } from '@kit/supabase/hooks/use-fetch-mfa-factors';

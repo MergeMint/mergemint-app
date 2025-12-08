@@ -14,6 +14,11 @@ routes = [
 # Static assets configuration
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
 
+# Environment variables
+[vars]
+MAILGUN_DOMAIN = "mergemint.dev"
+MAILGUN_FROM = "MergeMint <noreply@mergemint.dev>"
+
 # Build configuration
 [build]
 command = "NEXT_PUBLIC_CI=true pnpm opennextjs-cloudflare build"

@@ -18,13 +18,14 @@ import { getSupabaseServerClient } from '@kit/supabase/server-client';
 export default async function EvaluatedPRsPage({
   params,
 }: {
-  params: { orgSlug: string };
+  params: Promise<{ orgSlug: string }>;
 }) {
+  const { orgSlug } = await params;
   const client = getSupabaseServerClient<any>();
   const { data: org, error } = await client
     .from('organizations')
     .select('id, name, slug')
-    .eq('slug', params.orgSlug)
+    .eq('slug', orgSlug)
     .maybeSingle();
 
   if (error) throw error;

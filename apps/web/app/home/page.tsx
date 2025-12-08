@@ -6,6 +6,7 @@ import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { MergeMintDashboard } from '~/home/_components/mergemint-dashboard';
+import { WelcomeOnboardingDialog } from '~/home/_components/welcome-onboarding-dialog';
 
 export default async function HomePage() {
   const supabase = getSupabaseServerClient();
@@ -24,6 +25,41 @@ export default async function HomePage() {
     .limit(1)
     .maybeSingle();
 
+  // Check if user has completed initial onboarding (profile + org setup)
+  const { data: profile } = await admin
+    .from('profiles')
+    .select('display_name, onboarding_completed_at')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  const hasCompletedWelcomeOnboarding = !!profile?.onboarding_completed_at;
+
+  // If no membership and hasn't completed welcome onboarding, show the dialog
+  if (!membership && !hasCompletedWelcomeOnboarding) {
+    const userName = user.user_metadata?.full_name || 
+                     user.user_metadata?.name || 
+                     user.email?.split('@')[0] || '';
+    
+    return (
+      <>
+        <PageHeader
+          title="Welcome"
+          description="Let's get you set up"
+        />
+        <PageBody>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <WelcomeOnboardingDialog 
+              open={true} 
+              userName={userName}
+              userEmail={user.email}
+            />
+          </div>
+        </PageBody>
+      </>
+    );
+  }
+
+  // If still no membership after welcome onboarding, redirect to GitHub setup
   if (!membership) {
     redirect('/home/onboarding');
   }

@@ -10,13 +10,14 @@ import { getSupabaseServerClient } from '@kit/supabase/server-client';
 export default async function PrDetailPage({
   params,
 }: {
-  params: { orgSlug: string; prId: string };
+  params: Promise<{ orgSlug: string; prId: string }>;
 }) {
+  const { orgSlug, prId } = await params;
   const client = getSupabaseServerClient<any>();
   const { data: org, error } = await client
     .from('organizations')
     .select('id, name, slug')
-    .eq('slug', params.orgSlug)
+    .eq('slug', orgSlug)
     .maybeSingle();
 
   if (error) throw error;
@@ -26,7 +27,7 @@ export default async function PrDetailPage({
     .from('pull_requests')
     .select('*')
     .eq('org_id', org.id)
-    .eq('id', params.prId)
+    .eq('id', prId)
     .maybeSingle();
 
   if (!pr) notFound();

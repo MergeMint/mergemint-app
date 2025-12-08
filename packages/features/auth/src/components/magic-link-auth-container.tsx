@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@kit/i18n/hooks';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -91,6 +91,8 @@ export function MagicLinkAuthContainer({
 
         <div className={'flex flex-col space-y-4'}>
           <FormField
+            control={form.control}
+            name={'email'}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -110,7 +112,6 @@ export function MagicLinkAuthContainer({
                 <FormMessage />
               </FormItem>
             )}
-            name={'email'}
           />
 
           <If condition={displayTermsCheckbox}>
