@@ -17,7 +17,6 @@ import { Button } from '@kit/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
 import { ShineBorder } from '@kit/ui/magicui';
 
-import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
 export const generateMetadata = async () => {
@@ -207,7 +206,7 @@ async function PricingPage() {
                 Free for Open Source Projects
               </h2>
               <p className="text-muted-foreground mb-6">
-                If you're maintaining an open source project, MergeMint Pro is completely free. 
+                If you&apos;re maintaining an open source project, MergeMint Pro is completely free. 
                 We believe in giving back to the community that makes our work possible.
               </p>
               <Button asChild variant="outline">

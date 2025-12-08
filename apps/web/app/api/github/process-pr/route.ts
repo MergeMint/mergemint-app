@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -338,7 +339,7 @@ Analyze this PR and determine:
         .replace(/```\n?/g, '')
         .trim();
       evaluation = JSON.parse(cleanedContent);
-    } catch (parseErr) {
+    } catch {
       console.error('Failed to parse AI response:', aiContent);
       return NextResponse.json(
         { error: 'Failed to parse AI evaluation', raw: aiContent },

@@ -6,7 +6,7 @@ import { requireUserInServerComponent } from '~/lib/server/require-user-in-serve
 
 export default async function OrgLayout({
   children,
-  params,
+  params: _params,
 }: {
   children: ReactNode;
   params: { orgSlug: string };

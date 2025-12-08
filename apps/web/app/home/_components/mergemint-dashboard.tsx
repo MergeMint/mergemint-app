@@ -7,10 +7,8 @@ import {
   Activity,
   ArrowDown,
   ArrowUp,
-  Award,
   BarChart3,
   Bug,
-  Calendar,
   Crown,
   ExternalLink,
   Flame,
@@ -32,8 +30,6 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   XAxis,
@@ -142,7 +138,7 @@ type DashboardData = {
   period: { days: number; since: string };
 };
 
-export function MergeMintDashboard({ orgId, orgName }: { orgId: string; orgName: string }) {
+export function MergeMintDashboard({ orgId, orgName: _orgName }: { orgId: string; orgName: string }) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -168,6 +164,7 @@ export function MergeMintDashboard({ orgId, orgName }: { orgId: string; orgName:
 
   useEffect(() => {
     fetchDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgId, days]);
 
   if (loading) {
@@ -698,7 +695,7 @@ function ComponentDistributionChart({
             </PieChart>
           </ChartContainer>
           <div className="flex-1 space-y-1">
-            {pieData.map((item, idx) => (
+            {pieData.map((item) => (
               <div key={item.name} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.fill }} />

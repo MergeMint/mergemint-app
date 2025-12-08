@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';

@@ -1,33 +1,25 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import {
-  ArrowDown,
   ArrowRightIcon,
   BarChart3,
   Bot,
   CheckCircle2,
-  Code2,
   Cog,
   Github,
   GitMerge,
-  GitPullRequest,
-  LayoutDashboard,
   Medal,
   MessageSquare,
-  Settings,
   Sparkles,
   Target,
   Trophy,
   Webhook,
-  Zap,
 } from 'lucide-react';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { ShineBorder } from '@kit/ui/magicui';
 
-import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
 export const generateMetadata = async () => {
@@ -56,7 +48,7 @@ async function HowItWorksPage() {
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             MergeMint automates the entire flow from PR merge to developer recognition. 
-            Here's exactly how it works.
+            Here&apos;s exactly how it works.
           </p>
         </div>
       </section>

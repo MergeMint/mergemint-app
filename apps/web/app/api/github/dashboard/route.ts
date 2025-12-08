@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
@@ -177,8 +178,7 @@ export async function GET(request: Request) {
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
     let streak = 0;
-    const today = new Date().toDateString();
-    let checkDate = new Date();
+    const checkDate = new Date();
     
     for (let i = 0; i < 30; i++) {
       const dateStr = checkDate.toDateString();

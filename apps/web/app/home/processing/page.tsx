@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 
 import { getSupabaseServerClient } from '@kit/supabase/server-client';

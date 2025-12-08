@@ -13,7 +13,6 @@ import {
   GitMerge,
   GitPullRequest,
   Github,
-  LayoutDashboard,
   Linkedin,
   Medal,
   Shield,
@@ -832,7 +831,7 @@ function PRNotification({
   author,
   score,
   severity,
-  component,
+  component: _component,
   time,
   color,
 }: {
@@ -901,6 +900,7 @@ function ReviewCard({
       )}
     >
       <div className="flex flex-row items-center gap-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="rounded-full" width="40" height="40" alt={name} src={img} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">

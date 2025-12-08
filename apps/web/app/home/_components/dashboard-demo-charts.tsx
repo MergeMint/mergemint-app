@@ -1,12 +1,11 @@
 'use client';
 
-import { Award, Flame, GitPullRequest, Shield, ShieldCheck } from 'lucide-react';
+import { Award, Flame, GitPullRequest, ShieldCheck } from 'lucide-react';
 import {
   Bar,
   BarChart,
   CartesianGrid,
   Line,
-  LineChart,
   XAxis,
   YAxis,
   Area,

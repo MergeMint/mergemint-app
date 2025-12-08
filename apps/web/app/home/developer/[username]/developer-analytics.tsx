@@ -6,8 +6,6 @@ import Link from 'next/link';
 import {
   Activity,
   ArrowLeft,
-  Award,
-  BarChart3,
   Bug,
   CheckCircle2,
   Code2,
@@ -27,8 +25,6 @@ import {
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Pie,
@@ -285,7 +281,7 @@ export function DeveloperAnalytics({ username, orgId }: { username: string; orgI
                 <h2 className={`text-3xl font-black ${title.color} mb-1`}>{title.title}</h2>
                 <p className="text-sm text-muted-foreground mb-2">{title.subtitle}</p>
                 <p className="text-sm italic text-muted-foreground max-w-md">
-                  "{title.flavorText}"
+                  &quot;{title.flavorText}&quot;
                 </p>
                 {title.badges.length > 0 && (
                   <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
@@ -524,10 +520,6 @@ function SeverityBreakdownChart({ data }: { data: DeveloperData['severityBreakdo
 }
 
 function ComponentBreakdownChart({ data }: { data: DeveloperData['componentBreakdown'] }) {
-  const chartConfig = {
-    score: { label: 'Score', color: 'hsl(var(--chart-3))' },
-  } as const;
-
   const topComponents = data.slice(0, 5);
 
   return (
@@ -540,7 +532,7 @@ function ComponentBreakdownChart({ data }: { data: DeveloperData['componentBreak
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {topComponents.map((item, idx) => (
+          {topComponents.map((item) => (
             <div key={item.key} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium truncate max-w-[150px]">{item.name}</span>

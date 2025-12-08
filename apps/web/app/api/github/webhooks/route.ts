@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'node:crypto';
 
 import { NextResponse } from 'next/server';

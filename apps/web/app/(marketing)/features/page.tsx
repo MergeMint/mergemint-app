@@ -9,38 +9,29 @@ import {
   Code2,
   Cog,
   Database,
-  FileJson,
   Github,
   GitMerge,
   GitPullRequest,
-  Globe,
   LayoutDashboard,
   Lock,
   Medal,
-  Palette,
   RefreshCcw,
   Server,
   Settings2,
   Shield,
   Sparkles,
   Target,
-  Trophy,
   Users,
   Webhook,
-  Zap,
 } from 'lucide-react';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { ShineBorder } from '@kit/ui/magicui';
 
-import { SitePageHeader } from '~/(marketing)/_components/site-page-header';
-import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
 export const generateMetadata = async () => {
-  const { t } = await createI18nServerInstance();
-
   return {
     title: 'Features - MergeMint',
     description: 'Discover all the features that make MergeMint the best AI-powered PR scoring platform for engineering teams.',
@@ -79,7 +70,7 @@ async function FeaturesPage() {
               Core Platform
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The fundamental building blocks that power MergeMint's PR intelligence.
+              The fundamental building blocks that power MergeMint&apos;s PR intelligence.
             </p>
           </div>
 

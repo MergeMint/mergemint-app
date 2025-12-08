@@ -119,8 +119,8 @@ export function ProcessingClient({
   orgId,
   orgSlug,
   orgName,
-  components,
-  severityLevels,
+  components: _components,
+  severityLevels: _severityLevels,
 }: {
   orgId: string;
   orgSlug: string;
@@ -133,7 +133,7 @@ export function ProcessingClient({
   const [processing, setProcessing] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [phase, setPhase] = useState<'idle' | 'fetching' | 'processing' | 'done'>('idle');
+  const [_phase, setPhase] = useState<'idle' | 'fetching' | 'processing' | 'done'>('idle');
 
   const fetchPRs = useCallback(async () => {
     setLoading(true);

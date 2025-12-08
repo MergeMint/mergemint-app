@@ -3,12 +3,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import { initReactI18next } from 'react-i18next';
 
-// Keep track of the number of iterations
-let iteration = 0;
-
-// Maximum number of iterations
-const MAX_ITERATIONS = 20;
-
 /**
  * Initialize the i18n instance on the client.
  * @param settings - the i18n settings

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
 

@@ -5,8 +5,6 @@ import { ArrowRight, ChevronDown, Github, HelpCircle } from 'lucide-react';
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 
-import { SitePageHeader } from '~/(marketing)/_components/site-page-header';
-import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
 export const generateMetadata = async () => {
@@ -162,8 +160,8 @@ async function FAQPage() {
               </span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              Everything you need to know about MergeMint. Can't find what you're looking for? 
-              Feel free to reach out.
+            Everything you need to know about MergeMint. Can&apos;t find what you&apos;re looking for? 
+            Feel free to reach out.
             </p>
           </div>
         </section>
@@ -193,7 +191,7 @@ async function FAQPage() {
             <div className="max-w-3xl mx-auto mt-16 p-8 rounded-2xl border bg-card text-center">
               <h3 className="text-xl font-semibold mb-2">Still have questions?</h3>
               <p className="text-muted-foreground mb-6">
-                We're here to help. Reach out through GitHub or contact us directly.
+                We&apos;re here to help. Reach out through GitHub or contact us directly.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button asChild variant="outline">

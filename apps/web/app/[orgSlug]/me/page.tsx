@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 
 import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
-import { Separator } from '@kit/ui/separator';
 import { PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';

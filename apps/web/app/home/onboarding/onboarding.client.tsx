@@ -121,7 +121,7 @@ export function OnboardingClient({
   const [orgId, setOrgId] = useState(orgs[0]?.org_id ?? '');
   const [orgSlug, setOrgSlug] = useState(orgs[0]?.organizations?.slug ?? '');
   const [loadingRepos, setLoadingRepos] = useState(false);
-  const [loadingComponents, setLoadingComponents] = useState(false);
+  const [_loadingComponents, setLoadingComponents] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [creatingOrg, setCreatingOrg] = useState(false);
 
@@ -163,7 +163,7 @@ export function OnboardingClient({
                 setOrgId(json.org_id);
                 setOrgSlug(json.organizations?.slug ?? '');
                 setStatus(null);
-              } catch (err) {
+              } catch {
                 setStatus('Failed to create organization. Please retry.');
               } finally {
                 setCreatingOrg(false);
@@ -432,7 +432,7 @@ function AuthStep({
           Reconnect GitHub
         </Button>
         <p className={'text-sm text-muted-foreground'}>
-          You're all set! Click Next to select repositories.
+          You&apos;re all set! Click Next to select repositories.
         </p>
       </div>
     );
@@ -578,7 +578,7 @@ function getMultiplierForImportance(importance: ComponentOption['importance']): 
 function ComponentStep({
   orgId,
   components,
-  onChangeImportance,
+  onChangeImportance: _onChangeImportance,
   repos,
   onAddComponent,
   onUpdateComponent,
@@ -1120,6 +1120,7 @@ async function fetchRepos(
     const res = await fetch(`/api/github/repos?orgId=${orgId}&orgSlug=${orgSlug}`);
     if (!res.ok) throw new Error(await res.text());
     const json = await res.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const repos: RepoOption[] = (json.repos ?? []).map((r: any) => ({
       id: r.id,
       name: r.full_name,
@@ -1131,7 +1132,7 @@ async function fetchRepos(
     }));
     setRepos(repos);
     setStatus(null);
-  } catch (err) {
+  } catch {
     setStatus('Could not load repos from GitHub. Falling back to sample data.');
     setRepos(demoRepos);
   } finally {
@@ -1208,7 +1209,7 @@ async function persistSelections(
     
     // Redirect to processing page
     window.location.href = `/home/processing?orgId=${orgId}`;
-  } catch (err) {
+  } catch {
     setStatus('Failed to save selections. Please retry.');
   }
 }

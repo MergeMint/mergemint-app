@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 
 import { PageBody, PageHeader } from '@kit/ui/page';

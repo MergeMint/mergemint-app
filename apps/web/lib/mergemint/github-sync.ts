@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SupabaseClient } from '@supabase/supabase-js';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';

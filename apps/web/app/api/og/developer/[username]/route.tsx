@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @next/next/no-img-element, jsx-a11y/alt-text */
 import { ImageResponse } from 'next/og';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';

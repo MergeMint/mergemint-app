@@ -4,7 +4,6 @@ import {
   Github,
   Mail,
   MessageSquare,
-  Sparkles,
   Twitter,
 } from 'lucide-react';
 
@@ -43,7 +42,7 @@ async function ContactPage() {
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Have questions about MergeMint? Want to discuss enterprise features? 
-            We'd love to hear from you.
+            We&apos;d love to hear from you.
           </p>
         </div>
       </section>
@@ -57,7 +56,7 @@ async function ContactPage() {
               <CardHeader>
                 <CardTitle>Send us a message</CardTitle>
                 <CardDescription>
-                  Fill out the form below and we'll get back to you within 24 hours.
+                  Fill out the form below and we&apos;ll get back to you within 24 hours.
                 </CardDescription>
               </CardHeader>
               <CardContent>
