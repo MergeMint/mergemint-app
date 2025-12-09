@@ -43,6 +43,28 @@ jobs:
           NEXT_PUBLIC_GITHUB_APP_SLUG: ${{ secrets.NEXT_PUBLIC_GITHUB_APP_SLUG }}
         run: pnpm exec opennextjs-cloudflare build
 
+      - name: Debug - Check env vars and build output
+        working-directory: apps/web
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "=== Checking if secrets are set ==="
+          if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ]; then echo "✅ NEXT_PUBLIC_SUPABASE_URL is set (length: ${#NEXT_PUBLIC_SUPABASE_URL})"; else echo "❌ NEXT_PUBLIC_SUPABASE_URL is NOT set"; fi
+          if [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then echo "✅ NEXT_PUBLIC_SUPABASE_ANON_KEY is set (length: ${#NEXT_PUBLIC_SUPABASE_ANON_KEY})"; else echo "❌ NEXT_PUBLIC_SUPABASE_ANON_KEY is NOT set"; fi
+
+          echo ""
+          echo "=== wrangler.toml content ==="
+          cat wrangler.toml
+
+          echo ""
+          echo "=== Checking built worker for SUPABASE_URL string ==="
+          grep -o "gptaepnnnvvwsdmphvqq" .open-next/worker.js | head -5 || echo "❌ Supabase URL NOT found in worker.js"
+
+          echo ""
+          echo "=== Worker.js size ==="
+          ls -lh .open-next/worker.js
+
       - name: Deploy to Cloudflare Workers (Production)
         working-directory: apps/web
         env:
