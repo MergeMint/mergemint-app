@@ -1,4 +1,4 @@
-import { Building2, FileText, Home, Settings, Trophy, User, Users } from 'lucide-react';
+import { BarChart3, Building2, FileText, Home, Layers, Settings, Trophy, User, Users } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -12,13 +12,7 @@ const routes = [
     label: 'common:routes.application',
     children: [
       {
-        label: 'common:routes.home',
-        path: pathsConfig.app.home,
-        Icon: <Home className={iconClasses} />,
-        end: true,
-      },
-      {
-        label: 'MergeMint',
+        label: 'MergeMint Hub',
         path: pathsConfig.app.mergemint,
         Icon: <Trophy className={iconClasses} />,
       },
@@ -43,9 +37,20 @@ export function getOrgRoutes(orgSlug: string) {
       label: 'Organization',
       children: [
         {
+          label: 'Dashboard',
+          path: `/${orgSlug}/dashboard`,
+          Icon: <Home className={iconClasses} />,
+          end: true,
+        },
+        {
+          label: 'Product Insights',
+          path: `/${orgSlug}/product`,
+          Icon: <Layers className={iconClasses} />,
+        },
+        {
           label: 'Leaderboard',
           path: `/${orgSlug}/leaderboard`,
-          Icon: <Trophy className={iconClasses} />,
+          Icon: <BarChart3 className={iconClasses} />,
         },
         {
           label: 'Team Members',

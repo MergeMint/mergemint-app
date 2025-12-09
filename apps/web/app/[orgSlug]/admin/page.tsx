@@ -129,10 +129,10 @@ export default async function AdminPage({
                   }
                 >
                   <div>
-                    <p className={'font-medium'}>
-                      {severity.name}{' '}
+                    <div className={'font-medium flex items-center gap-2'}>
+                      {severity.name}
                       <Badge variant={'secondary'}>{severity.key}</Badge>
-                    </p>
+                    </div>
                     <p className={'text-sm text-muted-foreground'}>
                       {severity.description ?? 'No description'}
                     </p>

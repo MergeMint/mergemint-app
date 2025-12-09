@@ -171,34 +171,67 @@ export function DeveloperAnalytics({ username, orgId }: { username: string; orgI
     fetchData();
   }, [username, orgId, days]);
 
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <Link href="/home">
+        <Button variant="ghost" size="sm">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Dashboard
+        </Button>
+      </Link>
+      <Select value={String(days)} onValueChange={(v) => setDays(parseInt(v, 10))}>
+        <SelectTrigger className="w-40">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="7">This week</SelectItem>
+          <SelectItem value="14">Last 2 weeks</SelectItem>
+          <SelectItem value="30">1 Month</SelectItem>
+          <SelectItem value="90">3 Months</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+
   if (loading) {
-    return <DeveloperSkeleton />;
+    return (
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <DeveloperSkeleton />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center text-destructive">
-            <p>Failed to load developer data: {error}</p>
-            <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center text-destructive">
+              <p>Failed to load developer data: {error}</p>
+              <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center text-muted-foreground">
-            <p>Developer not found</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center text-muted-foreground">
+              <p>Developer not found</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -224,25 +257,7 @@ export function DeveloperAnalytics({ username, orgId }: { username: string; orgI
     <TooltipProvider>
       <div className="flex flex-col space-y-6 pb-36">
         {/* Back button and period selector */}
-        <div className="flex items-center justify-between">
-          <Link href="/home">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          </Link>
-          <Select value={String(days)} onValueChange={(v) => setDays(parseInt(v, 10))}>
-            <SelectTrigger className="w-40">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="60">Last 60 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-              <SelectItem value="180">Last 6 months</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {renderHeader()}
 
         {/* Title Card */}
         <Card className={`bg-gradient-to-br ${rarityColors[title.rarity]} overflow-hidden relative`}>
@@ -799,7 +814,7 @@ function ShareButton({
 
 function DeveloperSkeleton() {
   return (
-    <div className="flex flex-col space-y-6">
+    <>
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center gap-6">
@@ -816,8 +831,8 @@ function DeveloperSkeleton() {
           </div>
         </CardContent>
       </Card>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map((i) => (
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {[1, 2, 3, 4, 5].map((i) => (
           <Card key={i}>
             <CardContent className="pt-4">
               <Skeleton className="h-4 w-20 mb-2" />
@@ -826,7 +841,19 @@ function DeveloperSkeleton() {
           </Card>
         ))}
       </div>
-    </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardContent className="pt-6">
+            <Skeleton className="h-64 w-full" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <Skeleton className="h-64 w-full" />
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }
 

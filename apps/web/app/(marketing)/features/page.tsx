@@ -1,17 +1,22 @@
 import Link from 'next/link';
 
 import {
+  AlertCircle,
+  AlertTriangle,
   ArrowRightIcon,
   BarChart3,
   Bell,
   Bot,
+  Bug,
   CheckCircle2,
   Code2,
   Cog,
+  Crown,
   Database,
   Github,
   GitMerge,
   GitPullRequest,
+  Layers,
   LayoutDashboard,
   Lock,
   Medal,
@@ -21,6 +26,8 @@ import {
   Shield,
   Sparkles,
   Target,
+  TrendingUp,
+  UserCheck,
   Users,
   Webhook,
 } from 'lucide-react';
@@ -298,6 +305,171 @@ async function FeaturesPage() {
         </div>
       </section>
 
+      {/* Product Insights - NEW */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-teal-500/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 border-cyan-500/30 bg-cyan-500/5">
+              <Layers className="mr-2 h-4 w-4 text-cyan-600" />
+              <span className="text-cyan-600">NEW</span>
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+              Product Insights
+              <span className="block bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                for Product Managers
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Go beyond developer scores. Get deep visibility into product development patterns,
+              identify problem areas, and make data-driven decisions about your roadmap.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <FeatureCard
+              icon={<Layers className="h-6 w-6" />}
+              title="Component Analytics"
+              description="Track which parts of your product are getting the most development attention and where work is distributed."
+              highlights={[
+                'PR count per component',
+                'Lines of code changed',
+                'Contributor count tracking',
+                'Activity trends over time',
+              ]}
+              gradientFrom="from-cyan-500"
+              gradientTo="to-teal-500"
+            />
+
+            <FeatureCard
+              icon={<Bug className="h-6 w-6" />}
+              title="Bug Hotspots"
+              description="Identify components with the most P0/P1 bug fixes to focus quality improvement efforts where they matter most."
+              highlights={[
+                'P0/P1 bug concentration',
+                'Week-over-week trends',
+                'Bug-to-feature ratio',
+                'Historical comparisons',
+              ]}
+              gradientFrom="from-red-500"
+              gradientTo="to-orange-500"
+            />
+
+            <FeatureCard
+              icon={<Crown className="h-6 w-6" />}
+              title="Feature Ownership"
+              description="Know who owns each area of your codebase. See primary contributors and ownership percentages for every component."
+              highlights={[
+                'Primary owner identification',
+                'Ownership percentage',
+                'Top 3 contributors per area',
+                'Bug fix specialists',
+              ]}
+              gradientFrom="from-purple-500"
+              gradientTo="to-pink-500"
+            />
+
+            <FeatureCard
+              icon={<AlertTriangle className="h-6 w-6" />}
+              title="Knowledge Silos"
+              description="Spot single-contributor components before they become problems. Proactively manage bus factor risk."
+              highlights={[
+                'Single contributor warnings',
+                'Low diversity alerts',
+                'Risk scoring',
+                'Recommended actions',
+              ]}
+              gradientFrom="from-yellow-500"
+              gradientTo="to-amber-500"
+            />
+
+            <FeatureCard
+              icon={<TrendingUp className="h-6 w-6" />}
+              title="Severity Trends"
+              description="Track the bug vs feature ratio over time. Understand if your team is in maintenance mode or shipping new value."
+              highlights={[
+                'Weekly trend charts',
+                'Bug/feature split',
+                'Quality metrics',
+                'Development focus analysis',
+              ]}
+              gradientFrom="from-blue-500"
+              gradientTo="to-indigo-500"
+            />
+
+            <FeatureCard
+              icon={<AlertCircle className="h-6 w-6" />}
+              title="At-Risk Components"
+              description="Combine multiple signals to identify components that need attention: high bugs, low eligibility, and poor quality scores."
+              highlights={[
+                'Composite risk scoring',
+                'Multi-factor analysis',
+                'Prioritized attention list',
+                'Actionable insights',
+              ]}
+              gradientFrom="from-rose-500"
+              gradientTo="to-red-500"
+            />
+          </div>
+
+          <div className="mt-16 p-8 rounded-2xl border bg-gradient-to-br from-cyan-500/5 to-teal-500/5 relative overflow-hidden">
+            <ShineBorder shineColor={['#06b6d4', '#14b8a6', '#06b6d4']} borderRadius={16} />
+            <div className="grid gap-8 lg:grid-cols-2 items-center">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">
+                  Make better product decisions
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  Product Insights transforms raw PR data into actionable intelligence. Know where
+                  your team is spending time, identify bottlenecks, and ensure no critical areas
+                  are neglected.
+                </p>
+                <div className="space-y-3">
+                  {[
+                    { icon: <UserCheck className="h-4 w-4" />, text: 'Identify expertise gaps in your team' },
+                    { icon: <TrendingUp className="h-4 w-4" />, text: 'Track product quality over time' },
+                    { icon: <Layers className="h-4 w-4" />, text: 'Balance work across all components' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-600">
+                        {item.icon}
+                      </div>
+                      <span className="text-sm">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-card rounded-xl border p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b">
+                    <span className="font-semibold">Component Health Score</span>
+                    <Badge className="bg-cyan-500/10 text-cyan-600 border-cyan-500/20">Dashboard</Badge>
+                  </div>
+                  {[
+                    { name: 'Auth', score: 92, color: 'bg-green-500' },
+                    { name: 'Payments', score: 78, color: 'bg-yellow-500' },
+                    { name: 'Dashboard', score: 85, color: 'bg-green-500' },
+                    { name: 'API', score: 65, color: 'bg-orange-500' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{item.name}</span>
+                        <span className="font-medium">{item.score}%</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-muted overflow-hidden">
+                        <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.score}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Self-Hosting */}
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -397,16 +569,29 @@ function FeatureCard({
   title,
   description,
   highlights,
+  gradientFrom,
+  gradientTo,
 }: {
   icon: React.ReactNode;
   title: string;
   description: string;
   highlights: string[];
+  gradientFrom?: string;
+  gradientTo?: string;
 }) {
+  const hasCustomGradient = gradientFrom && gradientTo;
+  const shineColors = hasCustomGradient
+    ? [gradientFrom.replace('from-', '#').replace('-500', ''), gradientTo.replace('to-', '#').replace('-500', ''), gradientFrom.replace('from-', '#').replace('-500', '')]
+    : ['#7c3aed', '#a855f7', '#7c3aed'];
+
   return (
     <div className="relative p-8 rounded-2xl border bg-card hover:shadow-lg transition-shadow overflow-hidden group">
-      <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={16} />
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+      <ShineBorder shineColor={shineColors as [string, string, string]} borderRadius={16} />
+      <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg transition-all ${
+        hasCustomGradient
+          ? `bg-gradient-to-br ${gradientFrom} ${gradientTo} text-white shadow-lg group-hover:scale-110`
+          : 'bg-purple-500/10 text-purple-600 group-hover:bg-purple-500 group-hover:text-white'
+      }`}>
         {icon}
       </div>
       <h3 className="text-xl font-semibold mb-3">{title}</h3>

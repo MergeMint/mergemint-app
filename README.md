@@ -44,6 +44,7 @@ Perfect for running internal bug bounty programs, performance reviews, or recogn
 - **Leaderboards** — Weekly MVP, top PRs, cumulative scores with gamification
 - **PR Comments** — Instant feedback posted directly on merged PRs
 - **Developer Profiles** — Individual pages showing score history and contribution patterns
+- **Product Insights** — Ship-level insights that summarize what actually changed
 
 ### GitHub Integration
 
@@ -58,6 +59,23 @@ Perfect for running internal bug bounty programs, performance reviews, or recogn
 - **Supabase Backend** — PostgreSQL with Row Level Security
 - **Docker Ready** — Easy deployment on any infrastructure
 - **Your API Keys** — Use your own Anthropic credentials
+
+## Product Tour
+
+- **Dashboard overview** — PR velocity, throughput, and open work at a glance.  
+  ![MergeMint dashboard view](dashboard.png)
+
+- **Product insights** — Automatic summaries of shipped work by area so you always know what changed.  
+  ![Product insights cards](product%20insights.png)
+
+- **Knowledge silos detection** — See ownership gaps and teammates who can help unblock reviews.  
+  ![Knowledge silos view](find%20out%20knowledge%20silos.png)
+
+- **AI-generated changelog** — Ready-to-paste release notes that distill merged PRs into user-facing updates.  
+  ![Auto generated changelog](auto%20generated%20product%20changelog.png)
+
+- **Dev analytics** — Track PR cycle time, review responsiveness, and contributor impact.  
+  ![Dev analytics](dev%20analytics.png)
 
 ## Quick Start
 

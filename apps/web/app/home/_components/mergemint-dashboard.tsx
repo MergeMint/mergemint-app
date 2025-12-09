@@ -167,74 +167,89 @@ export function MergeMintDashboard({ orgId, orgName: _orgName }: { orgId: string
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgId, days]);
 
+  const hero = data?.hero;
+
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm text-muted-foreground">
+          Showing data from {days === 7 ? 'this week' : days === 14 ? 'the last 2 weeks' : days === 30 ? 'the last month' : 'the last 3 months'}
+        </p>
+      </div>
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" onClick={fetchDashboard} disabled={loading}>
+          <RefreshCcw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
+        <Select value={String(days)} onValueChange={(v) => setDays(parseInt(v, 10))}>
+          <SelectTrigger className="w-40">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="7">This week</SelectItem>
+            <SelectItem value="14">Last 2 weeks</SelectItem>
+            <SelectItem value="30">1 Month</SelectItem>
+            <SelectItem value="90">3 Months</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+
   if (loading) {
-    return <DashboardSkeleton />;
+    return (
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <DashboardSkeleton />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="text-center text-destructive">
-            <p>Failed to load dashboard: {error}</p>
-            <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center text-destructive">
+              <p>Failed to load dashboard: {error}</p>
+              <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
-  if (!data || data.hero.totalPrs === 0) {
+  if (!data || !hero || hero.totalPrs === 0) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <GitPullRequest className="h-16 w-16 text-muted-foreground/50 mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No PR Data Yet</h3>
-            <p className="text-muted-foreground max-w-md">
-              Connect a GitHub repository and process some PRs to see analytics here.
-            </p>
-            <Button className="mt-4" onClick={() => window.location.href = '/home/onboarding'}>
-              Get Started
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-col space-y-6 pb-36">
+        {renderHeader()}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <GitPullRequest className="h-16 w-16 text-muted-foreground/50 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">No PR Data Yet</h3>
+              <p className="text-muted-foreground max-w-md">
+                Connect a GitHub repository and process some PRs to see analytics here.
+              </p>
+              <Button className="mt-4" onClick={() => window.location.href = '/home/onboarding'}>
+                Get Started
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
-
-  const { hero } = data;
 
   return (
     <TooltipProvider>
     <div className="flex flex-col space-y-6 pb-36">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-muted-foreground">
-            Showing data from the last {days} days
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={fetchDashboard}>
-            <RefreshCcw className="h-4 w-4 mr-1" />
-            Refresh
-          </Button>
-          <Select value={String(days)} onValueChange={(v) => setDays(parseInt(v, 10))}>
-            <SelectTrigger className="w-40">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="14">Last 14 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      {renderHeader()}
 
       {/* Hero Cards Row 1 - Key People & PRs */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -811,7 +826,8 @@ function SeverityBadge({ severity, small }: { severity: string; small?: boolean 
 
 function DashboardSkeleton() {
   return (
-    <div className="flex flex-col space-y-6">
+    <>
+      {/* Hero Cards Row */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
           <Card key={i}>
@@ -824,6 +840,7 @@ function DashboardSkeleton() {
           </Card>
         ))}
       </div>
+      {/* Metric Cards Row */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <Card key={i}>
@@ -834,18 +851,63 @@ function DashboardSkeleton() {
           </Card>
         ))}
       </div>
+      {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardContent className="pt-6">
+          <CardHeader>
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent>
             <Skeleton className="h-64 w-full" />
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardHeader>
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent>
             <Skeleton className="h-64 w-full" />
           </CardContent>
         </Card>
       </div>
-    </div>
+      {/* Two Column Layout */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-5 w-28" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-80 w-full" />
+          </CardContent>
+        </Card>
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-32" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-32 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-28" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-32 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-5 w-32" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-64 w-full" />
+        </CardContent>
+      </Card>
+    </>
   );
 }

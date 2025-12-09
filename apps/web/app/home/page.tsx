@@ -5,7 +5,6 @@ import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
-import { MergeMintDashboard } from '~/home/_components/mergemint-dashboard';
 import { WelcomeOnboardingDialog } from '~/home/_components/welcome-onboarding-dialog';
 
 export default async function HomePage() {
@@ -50,10 +49,10 @@ export default async function HomePage() {
   // Only show onboarding dialog if user has NO membership and hasn't completed onboarding
   // This is for brand new users who need to create their own organization
   if (!membership && !hasCompletedWelcomeOnboarding) {
-    const userName = user.user_metadata?.full_name || 
-                     user.user_metadata?.name || 
+    const userName = user.user_metadata?.full_name ||
+                     user.user_metadata?.name ||
                      user.email?.split('@')[0] || '';
-    
+
     return (
       <>
         <PageHeader
@@ -62,8 +61,8 @@ export default async function HomePage() {
         />
         <PageBody>
           <div className="flex items-center justify-center min-h-[400px]">
-            <WelcomeOnboardingDialog 
-              open={true} 
+            <WelcomeOnboardingDialog
+              open={true}
               userName={userName}
               userEmail={user.email}
             />
@@ -78,20 +77,12 @@ export default async function HomePage() {
     redirect('/home/onboarding');
   }
 
-  const orgId = membership.org_id;
+  // Redirect to the user's primary org dashboard
   const org = membership.organizations as unknown as { name: string; slug: string } | null;
-  const orgName = org?.name ?? 'Your Organization';
+  if (org?.slug) {
+    redirect(`/${org.slug}/dashboard`);
+  }
 
-  return (
-    <>
-      <PageHeader
-        title="Dashboard"
-        description={`PR analytics for ${orgName}`}
-      />
-
-      <PageBody>
-        <MergeMintDashboard orgId={orgId} orgName={orgName} />
-      </PageBody>
-    </>
-  );
+  // Fallback to mergemint hub if org doesn't have a slug
+  redirect('/home/mergemint');
 }

@@ -5,24 +5,31 @@ import Link from 'next/link';
 
 import {
   AlertCircle,
+  AlertTriangle,
   ArrowRightIcon,
   BarChart3,
   Bot,
+  Bug,
   Check,
   CheckCircle2,
   Code2,
+  Crown,
   GitBranch,
   GitMerge,
   GitPullRequest,
   Github,
+  Layers,
   Linkedin,
   Medal,
+  PieChart,
   Rocket,
   Shield,
   Sparkles,
   Star,
   Target,
+  TrendingUp,
   Trophy,
+  UserCheck,
   Users,
   X,
   Zap,
@@ -234,7 +241,7 @@ export default function Home() {
                       <span className="text-sm text-muted-foreground ml-2">MergeMint Dashboard</span>
                     </div>
                     <Image
-                      src="/images/dashboard.webp"
+                      src="/images/dashboard.png"
                       alt="MergeMint Dashboard"
                       width={1920}
                       height={1080}
@@ -886,6 +893,265 @@ export default function Home() {
               </div>
             </BlurFade>
           </div>
+        </div>
+      </section>
+
+      {/* Product Insights Section - NEW */}
+      <section className="py-24 lg:py-32 relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-teal-500/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative">
+          <BlurFade delay={0.1} inView>
+            <div className="text-center mb-16">
+              <Badge variant="outline" className="mb-4 px-4 py-2 border-cyan-500/30 bg-cyan-500/5">
+                <Layers className="mr-2 h-4 w-4 text-cyan-600" />
+                <span className="text-cyan-600">NEW</span>
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
+                Product Insights for<span className="block bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                  Product Managers
+                </span>
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+                Go beyond developer metrics. Understand where your product is evolving,
+                identify bug hotspots, track feature ownership, and spot knowledge silos before they become problems.
+              </p>
+            </div>
+          </BlurFade>
+
+          {/* Product Insights Bento Grid */}
+          <BlurFade delay={0.2} inView>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Component Activity - Large Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group lg:col-span-2 lg:row-span-2">
+                <ShineBorder shineColor={['#06b6d4', '#14b8a6', '#06b6d4']} borderRadius={16} />
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                      <Layers className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-2">Component Analytics</h3>
+                    <p className="text-muted-foreground text-sm max-w-md">
+                      See which parts of your product are getting the most attention, where bugs are concentrated, and how work is distributed.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Component breakdown visualization */}
+                <div className="mt-4 space-y-3">
+                  {[
+                    { name: 'Auth', prs: 24, bugs: 8, color: '#7c3aed', width: '100%' },
+                    { name: 'Payments', prs: 18, bugs: 3, color: '#ef4444', width: '75%' },
+                    { name: 'Dashboard', prs: 15, bugs: 2, color: '#3b82f6', width: '62%' },
+                    { name: 'API', prs: 12, bugs: 5, color: '#10b981', width: '50%' },
+                    { name: 'Notifications', prs: 8, bugs: 1, color: '#f59e0b', width: '33%' },
+                  ].map((comp, idx) => (
+                    <div key={idx} className="group/item">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium">{comp.name}</span>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <GitPullRequest className="h-3 w-3" />
+                            {comp.prs} PRs
+                          </span>
+                          <span className="flex items-center gap-1 text-red-500">
+                            <Bug className="h-3 w-3" />
+                            {comp.bugs}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-2 rounded-full bg-muted overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500 group-hover/item:opacity-80"
+                          style={{ width: comp.width, backgroundColor: comp.color }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bug Hotspots Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group bg-gradient-to-br from-red-500/5 to-orange-500/5">
+                <ShineBorder shineColor={['#ef4444', '#f97316', '#ef4444']} borderRadius={16} />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Bug className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Bug Hotspots</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Identify components with the most P0/P1 bug fixes
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { name: 'Auth', bugs: 8, trend: '+3' },
+                    { name: 'API', bugs: 5, trend: '+2' },
+                    { name: 'Payments', bugs: 3, trend: '-1' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-card border">
+                      <span className="text-sm font-medium">{item.name}</span>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="destructive" className="text-xs">{item.bugs} bugs</Badge>
+                        <span className={cn(
+                          'text-xs font-medium',
+                          item.trend.startsWith('+') ? 'text-red-500' : 'text-green-500'
+                        )}>
+                          {item.trend}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Feature Ownership Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group bg-gradient-to-br from-purple-500/5 to-pink-500/5">
+                <ShineBorder shineColor={['#a855f7', '#ec4899', '#a855f7']} borderRadius={16} />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Crown className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Feature Ownership</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Know who owns each feature area
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { component: 'Auth', owner: 'sarah_dev', percent: 68 },
+                    { component: 'Payments', owner: 'mike_eng', percent: 72 },
+                    { component: 'Dashboard', owner: 'alex_fe', percent: 55 },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-card border">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">{item.component}</span>
+                        <Crown className="h-3 w-3 text-yellow-500" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">@{item.owner}</span>
+                        <Badge variant="secondary" className="text-xs">{item.percent}%</Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Knowledge Silos Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group bg-gradient-to-br from-yellow-500/5 to-amber-500/5">
+                <ShineBorder shineColor={['#eab308', '#f59e0b', '#eab308']} borderRadius={16} />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <AlertTriangle className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Knowledge Silos</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Spot single-contributor components
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { component: 'Email Templates', contributor: 'jenny_ui', prs: 12 },
+                    { component: 'Legacy API', contributor: 'chris_be', prs: 8 },
+                  ].map((item, idx) => (
+                    <div key={idx} className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium">{item.component}</span>
+                        <Badge variant="outline" className="text-xs border-yellow-500/30 text-yellow-600">Risk</Badge>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <UserCheck className="h-3 w-3" />
+                        <span>Only @{item.contributor} ({item.prs} PRs)</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Severity Trends Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group bg-gradient-to-br from-blue-500/5 to-indigo-500/5">
+                <ShineBorder shineColor={['#3b82f6', '#6366f1', '#3b82f6']} borderRadius={16} />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <TrendingUp className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Severity Trends</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Track bug vs feature ratio over time
+                </p>
+                <div className="flex items-end justify-between h-[80px] gap-2">
+                  {[
+                    { bugs: 3, features: 8 },
+                    { bugs: 5, features: 6 },
+                    { bugs: 2, features: 10 },
+                    { bugs: 4, features: 7 },
+                    { bugs: 6, features: 5 },
+                    { bugs: 2, features: 9 },
+                    { bugs: 1, features: 11 },
+                  ].map((week, idx) => (
+                    <div key={idx} className="flex-1 flex flex-col gap-0.5">
+                      <div
+                        className="w-full rounded-t-sm bg-gradient-to-t from-blue-500 to-blue-400"
+                        style={{ height: `${week.features * 5}px` }}
+                      />
+                      <div
+                        className="w-full rounded-b-sm bg-gradient-to-t from-red-500 to-red-400"
+                        style={{ height: `${week.bugs * 5}px` }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-center gap-4 mt-3 text-xs">
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    Features
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    Bug fixes
+                  </span>
+                </div>
+              </div>
+
+              {/* At-Risk Components Card */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group bg-gradient-to-br from-rose-500/5 to-red-500/5">
+                <ShineBorder shineColor={['#f43f5e', '#ef4444', '#f43f5e']} borderRadius={16} />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <AlertCircle className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">At-Risk Components</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  High bugs + low eligibility = needs attention
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { name: 'Legacy Auth', score: 85, color: 'bg-red-500' },
+                    { name: 'Old API v1', score: 72, color: 'bg-orange-500' },
+                    { name: 'Admin Panel', score: 58, color: 'bg-yellow-500' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm font-medium">{item.name}</span>
+                          <span className="text-xs text-muted-foreground">Risk: {item.score}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                          <div className={cn('h-full rounded-full', item.color)} style={{ width: `${item.score}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </BlurFade>
+
+          {/* CTA for Product Insights */}
+          <BlurFade delay={0.3} inView>
+            <div className="mt-12 text-center">
+              <Button asChild size="lg" className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white px-8">
+                <Link href="/features">
+                  Explore Product Insights
+                  <ArrowRightIcon className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </BlurFade>
         </div>
       </section>
 
