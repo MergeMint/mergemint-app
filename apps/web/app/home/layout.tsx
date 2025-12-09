@@ -44,8 +44,13 @@ async function getUserOrg(userId: string) {
     .maybeSingle();
 
   if (membership?.organizations) {
-    const org = membership.organizations as { name: string; slug: string };
-    return { slug: org.slug, name: org.name, role: membership.role };
+    const orgData = Array.isArray(membership.organizations)
+      ? (membership.organizations as { name: string; slug: string }[])[0]
+      : (membership.organizations as { name: string; slug: string });
+
+    if (orgData) {
+      return { slug: orgData.slug, name: orgData.name, role: membership.role };
+    }
   }
   return null;
 }

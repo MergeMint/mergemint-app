@@ -24,7 +24,7 @@ export const generateMetadata = async () => {
 function extractInviteToken(next: string | undefined): string | null {
   if (!next) return null;
   const match = next.match(/^\/invite\/([a-f0-9]+)$/i);
-  return match ? match[1] : null;
+  return match?.[1] ?? null;
 }
 
 // Fetch invitation email by token

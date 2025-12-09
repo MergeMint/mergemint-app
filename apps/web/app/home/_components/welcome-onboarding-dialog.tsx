@@ -84,9 +84,11 @@ const steps = [
 export function WelcomeOnboardingDialog({
   open,
   userName,
+  userEmail,
 }: {
   open: boolean;
   userName?: string;
+  userEmail?: string;
 }) {
   const router = useRouter();
   const { theme } = useTheme();
@@ -102,7 +104,7 @@ export function WelcomeOnboardingDialog({
     invites: [],
   });
 
-  const [newInviteEmail, setNewInviteEmail] = useState('');
+  const [newInviteEmail, setNewInviteEmail] = useState(userEmail ?? '');
   const [newInviteRole, setNewInviteRole] = useState<InviteEntry['role']>('developer');
 
   const updateData = useCallback((updates: Partial<OnboardingData>) => {
