@@ -17,7 +17,7 @@ assets = { directory = ".open-next/assets", binding = "ASSETS" }
 # Environment variables
 [vars]
 MAILGUN_DOMAIN = "mergemint.dev"
-MAILGUN_FROM = "MergeMint <noreply@mergemint.dev>"
+MAILGUN_FROM = "MergeMint <hello@mg.mergemint.dev>"
 NEXT_PUBLIC_SUPABASE_URL = "https://gptaepnnnvvwsdmphvqq.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwdGFlcG5ubnZ2d3NkbXBodnFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMDE4NzksImV4cCI6MjA4MDc3Nzg3OX0.UaZPMyOhhirKa9EXrekonBES2ZI79WMv9HWzrYuvBaA"
 NEXT_PUBLIC_GITHUB_APP_SLUG = "mergemint-connector"
@@ -37,7 +37,7 @@ routes = [
 
 [env.staging.vars]
 MAILGUN_DOMAIN = "mergemint.dev"
-MAILGUN_FROM = "MergeMint <noreply@mergemint.dev>"
+MAILGUN_FROM = "MergeMint <hello@mg.mergemint.dev>"
 NEXT_PUBLIC_SUPABASE_URL = "https://gptaepnnnvvwsdmphvqq.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwdGFlcG5ubnZ2d3NkbXBodnFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMDE4NzksImV4cCI6MjA4MDc3Nzg3OX0.UaZPMyOhhirKa9EXrekonBES2ZI79WMv9HWzrYuvBaA"
 NEXT_PUBLIC_GITHUB_APP_SLUG = "mergemint-connector"
@@ -55,7 +55,7 @@ routes = [
 
 [env.production.vars]
 MAILGUN_DOMAIN = "mergemint.dev"
-MAILGUN_FROM = "MergeMint <noreply@mergemint.dev>"
+MAILGUN_FROM = "MergeMint <hello@mg.mergemint.dev>"
 NEXT_PUBLIC_SUPABASE_URL = "https://gptaepnnnvvwsdmphvqq.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwdGFlcG5ubnZ2d3NkbXBodnFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyMDE4NzksImV4cCI6MjA4MDc3Nzg3OX0.UaZPMyOhhirKa9EXrekonBES2ZI79WMv9HWzrYuvBaA"
 NEXT_PUBLIC_GITHUB_APP_SLUG = "mergemint-connector"
