@@ -8,11 +8,14 @@ import {
   Bell,
   Bot,
   Bug,
+  Calendar,
   CheckCircle2,
   Code2,
   Cog,
   Crown,
   Database,
+  ExternalLink,
+  FileText,
   Github,
   GitMerge,
   GitPullRequest,
@@ -21,6 +24,7 @@ import {
   Lock,
   Medal,
   RefreshCcw,
+  ScrollText,
   Server,
   Settings2,
   Shield,
@@ -30,6 +34,7 @@ import {
   UserCheck,
   Users,
   Webhook,
+  Zap,
 } from 'lucide-react';
 
 import { Badge } from '@kit/ui/badge';
@@ -460,6 +465,165 @@ async function FeaturesPage() {
                       </div>
                       <div className="h-2 rounded-full bg-muted overflow-hidden">
                         <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.score}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Product Changelog */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 border-violet-500/30 bg-violet-500/5">
+              <ScrollText className="mr-2 h-4 w-4 text-violet-600" />
+              <span className="text-violet-600">NEW</span>
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+              Product Changelog
+              <span className="block bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                Auto-Generated from PRs
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Keep your users informed with beautiful, AI-generated changelog pages.
+              Turn merged PRs into user-friendly release notes with a single click.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <FeatureCard
+              icon={<Zap className="h-6 w-6" />}
+              title="AI-Powered Generation"
+              description="Claude analyzes your PRs and generates user-friendly changelog entries automatically, categorizing them by type."
+              highlights={[
+                'Detects feature vs bug fix vs improvement',
+                'Writes clear, non-technical descriptions',
+                'Extracts key user-facing changes',
+                'Skips internal-only changes',
+              ]}
+              gradientFrom="from-violet-500"
+              gradientTo="to-purple-500"
+            />
+
+            <FeatureCard
+              icon={<FileText className="h-6 w-6" />}
+              title="Draft & Publish Workflow"
+              description="Generated entries start as drafts. Review, edit, and publish when ready. Full control over what goes public."
+              highlights={[
+                'Draft/published status management',
+                'Bulk selection and actions',
+                'Edit title and description',
+                'Change category anytime',
+              ]}
+              gradientFrom="from-blue-500"
+              gradientTo="to-indigo-500"
+            />
+
+            <FeatureCard
+              icon={<ExternalLink className="h-6 w-6" />}
+              title="Public Changelog Page"
+              description="Beautiful, hosted changelog page at your custom URL. Share product updates with your users and stakeholders."
+              highlights={[
+                'Clean timeline design',
+                'Category filtering',
+                'Grouped by month',
+                'Smooth animations',
+              ]}
+              gradientFrom="from-emerald-500"
+              gradientTo="to-teal-500"
+            />
+
+            <FeatureCard
+              icon={<Sparkles className="h-6 w-6" />}
+              title="Smart Categorization"
+              description="Entries are automatically categorized into New Features, Improvements, Bug Fixes, and Breaking Changes."
+              highlights={[
+                'Color-coded badges',
+                'Filter by category',
+                'Visual differentiation',
+                'Intuitive icons',
+              ]}
+              gradientFrom="from-amber-500"
+              gradientTo="to-orange-500"
+            />
+
+            <FeatureCard
+              icon={<Calendar className="h-6 w-6" />}
+              title="Timeline View"
+              description="Entries are grouped by month with a beautiful timeline design. Users can easily browse your product history."
+              highlights={[
+                'Monthly grouping',
+                'Chronological order',
+                'Animated entry reveals',
+                'Responsive design',
+              ]}
+              gradientFrom="from-pink-500"
+              gradientTo="to-rose-500"
+            />
+
+            <FeatureCard
+              icon={<Settings2 className="h-6 w-6" />}
+              title="Customizable Settings"
+              description="Configure your changelog to match your brand. Control what information is displayed and how it appears."
+              highlights={[
+                'Toggle date display',
+                'Custom product name',
+                'Your organization branding',
+                'Public URL per org',
+              ]}
+              gradientFrom="from-slate-500"
+              gradientTo="to-zinc-500"
+            />
+          </div>
+
+          <div className="mt-16 p-8 rounded-2xl border bg-gradient-to-br from-violet-500/5 to-purple-500/5 relative overflow-hidden">
+            <ShineBorder shineColor={['#8b5cf6', '#a855f7', '#8b5cf6']} borderRadius={16} />
+            <div className="grid gap-8 lg:grid-cols-2 items-center">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">
+                  From PR to changelog in seconds
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  Stop manually writing release notes. MergeMint reads your PRs, understands
+                  the changes, and generates polished changelog entries that your users will
+                  actually want to read.
+                </p>
+                <div className="space-y-3">
+                  {[
+                    { icon: <Zap className="h-4 w-4" />, text: 'Generate entries from multiple PRs at once' },
+                    { icon: <FileText className="h-4 w-4" />, text: 'Review and refine before publishing' },
+                    { icon: <ExternalLink className="h-4 w-4" />, text: 'Share your public changelog URL anywhere' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-600">
+                        {item.icon}
+                      </div>
+                      <span className="text-sm">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-card rounded-xl border p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b">
+                    <span className="font-semibold">Recent Updates</span>
+                    <Badge className="bg-violet-500/10 text-violet-600 border-violet-500/20">Public</Badge>
+                  </div>
+                  {[
+                    { category: 'New Feature', title: 'Dark mode support', color: 'bg-emerald-500' },
+                    { category: 'Improvement', title: 'Faster page load times', color: 'bg-blue-500' },
+                    { category: 'Bug Fix', title: 'Fixed login redirect issue', color: 'bg-amber-500' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                      <div className={`w-2 h-2 rounded-full ${item.color} mt-2`} />
+                      <div>
+                        <span className="text-xs text-muted-foreground">{item.category}</span>
+                        <p className="text-sm font-medium">{item.title}</p>
                       </div>
                     </div>
                   ))}

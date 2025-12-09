@@ -30,6 +30,7 @@ import {
   Activity,
   AlertCircle,
   ArrowRight,
+  Calendar,
   CheckCircle2,
   Clock,
   Copy,
@@ -48,6 +49,14 @@ import {
   Users,
   XCircle,
 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@kit/ui/select';
+import { Label } from '@kit/ui/label';
 import { toast } from 'sonner';
 
 type ComponentInfo = {
@@ -148,6 +157,7 @@ export function ProcessingClient({
   const [_phase, setPhase] = useState<'idle' | 'fetching' | 'processing' | 'done'>('idle');
   const stopRequestedRef = useRef(false);
   const [evaluatedPrIds, setEvaluatedPrIds] = useState<Set<number>>(new Set());
+  const [months, setMonths] = useState('3');
 
   // Contributor invitation state
   const [inviteStatuses, setInviteStatuses] = useState<Record<string, ContributorInviteStatus>>({});
@@ -164,8 +174,8 @@ export function ProcessingClient({
     try {
       // Fetch PRs and existing evaluations in parallel
       const [prsRes, evalsRes] = await Promise.all([
-        fetch(`/api/github/merged-prs?orgId=${orgId}&months=3`),
-        fetch(`/api/github/evaluations?orgId=${orgId}&months=3`),
+        fetch(`/api/github/merged-prs?orgId=${orgId}&months=${months}`),
+        fetch(`/api/github/evaluations?orgId=${orgId}&months=${months}`),
       ]);
 
       if (!prsRes.ok) {
@@ -200,7 +210,7 @@ export function ProcessingClient({
     } finally {
       setLoading(false);
     }
-  }, [orgId]);
+  }, [orgId, months]);
 
   const processPR = useCallback(
     async (prData: ProcessedPR): Promise<EvaluationResult | null> => {
@@ -501,7 +511,7 @@ export function ProcessingClient({
   // Load existing evaluations on mount
   const loadExistingEvaluations = useCallback(async (): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/github/evaluations?orgId=${orgId}&months=3`);
+      const res = await fetch(`/api/github/evaluations?orgId=${orgId}&months=${months}`);
       if (!res.ok) return false;
       const data = await res.json();
       if (data.evaluations?.length > 0) {
@@ -514,7 +524,7 @@ export function ProcessingClient({
       console.error('Failed to load existing evaluations:', err);
       return false;
     }
-  }, [orgId]);
+  }, [orgId, months]);
 
   // Auto-fetch on mount
   useEffect(() => {
@@ -546,7 +556,21 @@ export function ProcessingClient({
             Analyzing merged PRs for {orgName || orgSlug}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Select value={months} onValueChange={setMonths} disabled={loading || processing}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 month</SelectItem>
+                <SelectItem value="3">3 months</SelectItem>
+                <SelectItem value="6">6 months</SelectItem>
+                <SelectItem value="12">12 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Button
             variant="outline"
             onClick={fetchPRs}
@@ -607,7 +631,7 @@ export function ProcessingClient({
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{prs.length}</div>
-            <p className="text-xs text-muted-foreground">Last 3 months</p>
+            <p className="text-xs text-muted-foreground">Last {months} month{months !== '1' ? 's' : ''}</p>
           </CardContent>
         </Card>
         <Card>
@@ -879,7 +903,7 @@ export function ProcessingClient({
                 All Merged PRs
               </CardTitle>
               <CardDescription>
-                Complete list of PRs from the last 3 months
+                Complete list of PRs from the last {months} month{months !== '1' ? 's' : ''}
               </CardDescription>
             </CardHeader>
             <CardContent>

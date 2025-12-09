@@ -1,20 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@kit/ui/table';
 import { PageBody, PageHeader } from '@kit/ui/page';
-import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
+
+import { columns, type PREvaluation } from './_components/columns';
+import { PRsDataTable } from './_components/prs-data-table';
 
 export default async function EvaluatedPRsPage({
   params,
@@ -22,8 +14,8 @@ export default async function EvaluatedPRsPage({
   params: Promise<{ orgSlug: string }>;
 }) {
   const { orgSlug } = await params;
-  const client = getSupabaseServerClient<any>();
   const admin = getSupabaseServerAdminClient<any>();
+
   const { data: org, error } = await admin
     .from('organizations')
     .select('id, name, slug')
@@ -49,75 +41,54 @@ export default async function EvaluatedPRsPage({
           'id, pr_id, final_score, is_eligible, impact_summary, created_at, primary_component_id, severity_id, pull_requests!inner(number, title, url, merged_at_gh)',
         )
         .eq('org_id', org.id)
-        .order('created_at', { ascending: false })
-        .limit(50),
+        .order('created_at', { ascending: false }),
     ]);
 
   const componentMap = new Map(components?.map((c) => [c.id, c]));
   const severityMap = new Map(severities?.map((s) => [s.id, s]));
 
+  // Transform data for the table
+  const tableData: PREvaluation[] =
+    evaluations?.map((row) => {
+      const pr = (row as any).pull_requests;
+      const component = componentMap.get(row.primary_component_id!);
+      const severity = severityMap.get(row.severity_id!);
+
+      return {
+        id: row.id,
+        pr_id: row.pr_id,
+        final_score: row.final_score,
+        is_eligible: row.is_eligible,
+        impact_summary: row.impact_summary,
+        created_at: row.created_at,
+        merged_at: pr?.merged_at_gh ?? null,
+        pr_number: pr?.number ?? 0,
+        pr_title: pr?.title ?? 'Unknown',
+        pr_url: pr?.url ?? null,
+        component_key: component?.key ?? null,
+        severity_key: severity?.key ?? null,
+        org_slug: org.slug,
+      };
+    }) ?? [];
+
   return (
-    <PageBody className={'space-y-6'}>
+    <PageBody className="space-y-6">
       <PageHeader
-        title={`Evaluated PRs · ${org.name}`}
-        description={'Latest MergeMint evaluations.'}
+        title={`Evaluated PRs`}
+        description={`View and track MergeMint evaluations for ${org.name}.`}
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Pull requests</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Pull Requests</CardTitle>
+            <span className="text-muted-foreground text-sm">
+              {tableData.length} evaluation{tableData.length !== 1 ? 's' : ''}
+            </span>
+          </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>PR</TableHead>
-                <TableHead>Component</TableHead>
-                <TableHead>Severity</TableHead>
-                <TableHead className={'text-right'}>Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {evaluations?.map((row) => {
-                const component = componentMap.get(row.primary_component_id!);
-                const severity = severityMap.get(row.severity_id!);
-                const pr = (row as any).pull_requests;
-
-                return (
-                  <TableRow key={row.id}>
-                    <TableCell className={'font-medium'}>
-                      <Link
-                        href={`/${org.slug}/prs/${row.pr_id}`}
-                        className={'hover:underline'}
-                      >
-                        #{pr?.number} · {pr?.title}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={'secondary'}>
-                        {component?.key ?? 'N/A'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge>{severity?.key ?? 'N/A'}</Badge>
-                    </TableCell>
-                    <TableCell className={'text-right'}>
-                      <Badge variant={row.is_eligible ? 'default' : 'outline'}>
-                        {row.final_score ?? 0} pts
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {!evaluations?.length ? (
-                <TableRow>
-                  <TableCell colSpan={4} className={'text-center text-sm'}>
-                    No evaluations found.
-                  </TableCell>
-                </TableRow>
-              ) : null}
-            </TableBody>
-          </Table>
+          <PRsDataTable columns={columns} data={tableData} />
         </CardContent>
       </Card>
     </PageBody>

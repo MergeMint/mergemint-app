@@ -32,7 +32,9 @@ export async function GET(request: Request) {
         is_eligible,
         created_at,
         raw_response,
+        primary_component_id,
         severity_levels (key, name, base_points),
+        product_components (key, name),
         pull_requests!inner (
           id,
           number,
@@ -161,8 +163,9 @@ export async function GET(request: Request) {
 
     // Hottest component (most activity)
     const componentActivity = evals.reduce((acc: Record<string, number>, e: any) => {
-      const component = e.raw_response?.component_name ?? 
-        e.raw_response?.component_key ?? 
+      const component = e.product_components?.name ??
+        e.raw_response?.component_name ??
+        e.raw_response?.component_key ??
         'Other';
       acc[component] = (acc[component] ?? 0) + 1;
       return acc;
@@ -255,8 +258,8 @@ export async function GET(request: Request) {
     // Component scores
     const componentScores = Object.entries(
       evals.reduce((acc: Record<string, { score: number; count: number; name: string }>, e: any) => {
-        const key = e.raw_response?.component_key ?? 'OTHER';
-        const name = e.raw_response?.component_name ?? key;
+        const key = e.product_components?.key ?? e.raw_response?.component_key ?? 'OTHER';
+        const name = e.product_components?.name ?? e.raw_response?.component_name ?? key;
         if (!acc[key]) {
           acc[key] = { score: 0, count: 0, name };
         }
@@ -319,30 +322,37 @@ export async function GET(request: Request) {
         repo: e.pull_requests?.repositories?.full_name,
         author: e.pull_requests?.github_identities?.github_login ?? 'unknown',
         avatar_url: e.pull_requests?.github_identities?.avatar_url,
-        component: e.raw_response?.component_name ?? 'Other',
+        component: e.product_components?.name ?? e.raw_response?.component_name ?? 'Other',
         severity: e.severity_levels?.key ?? 'P3',
         score: e.final_score ?? 0,
         merged_at: e.pull_requests?.merged_at_gh,
       }));
 
-    // Recent evaluations
-    const recentEvaluations = evals.slice(0, 10).map((e: any) => ({
-      id: e.id,
-      title: e.pull_requests?.title ?? 'Unknown PR',
-      number: e.pull_requests?.number,
-      url: e.pull_requests?.url,
-      repo: e.pull_requests?.repositories?.full_name,
-      author: e.pull_requests?.github_identities?.github_login ?? 'unknown',
-      avatar_url: e.pull_requests?.github_identities?.avatar_url,
-      component: e.raw_response?.component_key ?? 'OTHER',
-      component_name: e.raw_response?.component_name ?? 'Other',
-      severity: e.severity_levels?.key ?? 'P3',
-      score: e.final_score ?? 0,
-      eligible: e.is_eligible ?? false,
-      merged_at: e.pull_requests?.merged_at_gh,
-      additions: e.pull_requests?.additions ?? 0,
-      deletions: e.pull_requests?.deletions ?? 0,
-    }));
+    // Recent evaluations (sorted by merged date, newest first)
+    const recentEvaluations = [...evals]
+      .sort((a: any, b: any) => {
+        const dateA = new Date(a.pull_requests?.merged_at_gh ?? a.created_at).getTime();
+        const dateB = new Date(b.pull_requests?.merged_at_gh ?? b.created_at).getTime();
+        return dateB - dateA;
+      })
+      .slice(0, 10)
+      .map((e: any) => ({
+        id: e.id,
+        title: e.pull_requests?.title ?? 'Unknown PR',
+        number: e.pull_requests?.number,
+        url: e.pull_requests?.url,
+        repo: e.pull_requests?.repositories?.full_name,
+        author: e.pull_requests?.github_identities?.github_login ?? 'unknown',
+        avatar_url: e.pull_requests?.github_identities?.avatar_url,
+        component: e.product_components?.key ?? e.raw_response?.component_key ?? 'OTHER',
+        component_name: e.product_components?.name ?? e.raw_response?.component_name ?? 'Other',
+        severity: e.severity_levels?.key ?? 'P3',
+        score: e.final_score ?? 0,
+        eligible: e.is_eligible ?? false,
+        merged_at: e.pull_requests?.merged_at_gh,
+        additions: e.pull_requests?.additions ?? 0,
+        deletions: e.pull_requests?.deletions ?? 0,
+      }));
 
     // Contributors trend (new vs returning)
     const contributorsByWeek = Object.entries(weeklyVelocity).reduce((acc: Record<string, Set<string>>, [week]) => {

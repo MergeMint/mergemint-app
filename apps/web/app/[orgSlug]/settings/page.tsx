@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache';
 
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
+
+import { PRSyncCard } from './_components/pr-sync-card';
 import {
   Card,
   CardContent,
@@ -228,6 +230,9 @@ export default async function OrgSettingsPage({
           </form>
         </CardContent>
       </Card>
+
+      {/* PR Sync - Admin Only */}
+      {isAdmin && <PRSyncCard orgId={org.id} />}
 
       {/* Quick Links */}
       <Card>
