@@ -654,7 +654,14 @@ function ComponentDistributionChart({
   data: DashboardData['componentScores']; 
   severityData: DashboardData['severityCounts'];
 }) {
-  const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
+  // Using actual color values for SVG fills (CSS variables don't resolve in SVG)
+  const COLORS = [
+    '#a855f7', // purple-500
+    '#7c3aed', // violet-600
+    '#d946ef', // fuchsia-500
+    '#ec4899', // pink-500
+    '#6366f1', // indigo-500
+  ];
   
   const chartConfig = {
     value: { label: 'PRs' },

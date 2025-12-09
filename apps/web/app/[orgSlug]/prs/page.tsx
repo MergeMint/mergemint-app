@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@kit/ui/table';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -57,7 +57,7 @@ export default async function EvaluatedPRsPage({
   const severityMap = new Map(severities?.map((s) => [s.id, s]));
 
   return (
-    <div className={'space-y-6'}>
+    <PageBody className={'space-y-6'}>
       <PageHeader
         title={`Evaluated PRs · ${org.name}`}
         description={'Latest MergeMint evaluations.'}
@@ -120,6 +120,6 @@ export default async function EvaluatedPRsPage({
           </Table>
         </CardContent>
       </Card>
-    </div>
+    </PageBody>
   );
 }

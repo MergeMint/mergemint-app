@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -68,7 +68,7 @@ export default async function MePage({
     stats?.reduce((acc, curr) => acc + (curr.total_score ?? 0), 0) ?? 0;
 
   return (
-    <div className={'space-y-6'}>
+    <PageBody className={'space-y-6'}>
       <PageHeader
         title={`My Performance · ${org.name}`}
         description={
@@ -184,6 +184,6 @@ export default async function MePage({
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageBody>
   );
 }

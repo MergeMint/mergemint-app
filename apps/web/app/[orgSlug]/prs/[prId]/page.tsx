@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { Separator } from '@kit/ui/separator';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 
 export default async function PrDetailPage({
@@ -63,7 +63,7 @@ export default async function PrDetailPage({
     .eq('pr_id', pr.id);
 
   return (
-    <div className={'space-y-6'}>
+    <PageBody className={'space-y-6'}>
       <PageHeader
         title={`PR #${pr.number} · ${pr.title}`}
         description={pr.url ?? ''}
@@ -152,7 +152,7 @@ export default async function PrDetailPage({
           ) : null}
         </CardContent>
       </Card>
-    </div>
+    </PageBody>
   );
 }
 

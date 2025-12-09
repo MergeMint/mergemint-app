@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from '@kit/ui/select';
 import { Separator } from '@kit/ui/separator';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -109,7 +109,7 @@ export default async function OrgSettingsPage({
   ];
 
   return (
-    <div className="space-y-6">
+    <PageBody className="space-y-6">
       <PageHeader
         title="Organization Settings"
         description={`Manage settings for ${org.name}`}
@@ -302,7 +302,7 @@ export default async function OrgSettingsPage({
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageBody>
   );
 }
 

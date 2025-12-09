@@ -213,19 +213,38 @@ export class GithubClient {
     let hasMore = true;
 
     while (hasMore) {
-      const prs = await this.listMergedPulls(owner, repo, since, page);
-      if (prs.length === 0) {
+      // Fetch raw closed PRs (not pre-filtered) to check pagination correctly
+      const rawPrs = await this.request<GithubPullRequest[]>(
+        `/repos/${owner}/${repo}/pulls`,
+        {
+          query: {
+            state: 'closed',
+            sort: 'updated',
+            direction: 'desc',
+            per_page: 100,
+            page,
+          },
+        },
+      );
+
+      if (rawPrs.length === 0) {
         hasMore = false;
       } else {
-        allPRs.push(...prs);
-        // If we got less than 100, we're at the end
-        if (prs.length < 100) {
+        // Filter to merged PRs within our date range
+        const sinceTime = new Date(since).getTime();
+        const mergedPrs = rawPrs.filter(
+          (pr) => pr.merged_at && new Date(pr.merged_at).getTime() >= sinceTime,
+        );
+        allPRs.push(...mergedPrs);
+
+        // If we got less than 100 raw PRs, we're at the end
+        if (rawPrs.length < 100) {
           hasMore = false;
         }
         page++;
       }
-      // Safety limit to avoid infinite loops
-      if (page > 20) {
+      // Safety limit to avoid infinite loops (50 pages = 5000 PRs max)
+      if (page > 50) {
         hasMore = false;
       }
     }

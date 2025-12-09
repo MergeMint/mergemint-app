@@ -1,4 +1,4 @@
-import { Building2, Home, Settings, Trophy, User, Users } from 'lucide-react';
+import { Building2, FileText, Home, Settings, Trophy, User, Users } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -61,6 +61,11 @@ export function getOrgRoutes(orgSlug: string) {
           label: 'Admin',
           path: `/${orgSlug}/admin`,
           Icon: <Settings className={iconClasses} />,
+        },
+        {
+          label: 'Changelog',
+          path: `/${orgSlug}/changelog`,
+          Icon: <FileText className={iconClasses} />,
         },
       ],
     },

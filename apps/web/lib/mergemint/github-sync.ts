@@ -144,7 +144,11 @@ async function syncPullRequests(
     .maybeSingle();
   const since = repoRow?.last_synced_at ?? undefined;
   const [owner = '', repoName = ''] = repo.full_name.split('/');
-  const pulls = await github.listPulls(owner, repoName, since ?? undefined);
+
+  // Use paginated fetch for all merged PRs (last 12 months if no since date)
+  const pulls = since
+    ? await github.listPulls(owner, repoName, since)
+    : await github.fetchAllMergedPRs(owner, repoName, 12);
 
   for (const pr of pulls) {
     const authorId = await upsertIdentity(client, pr.user);

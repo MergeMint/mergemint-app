@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '@kit/ui/table';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -287,7 +287,7 @@ export default async function MembersPage({
   };
 
   return (
-    <div className="space-y-6">
+    <PageBody className="space-y-6">
       <PageHeader
         title="Team Members"
         description={`Manage who has access to ${org.name}`}
@@ -523,7 +523,7 @@ export default async function MembersPage({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageBody>
   );
 }
 

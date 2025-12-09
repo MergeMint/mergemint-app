@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@kit/ui/table';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -38,7 +38,7 @@ export default async function LeaderboardPage({
     .order('total_score', { ascending: false });
 
   return (
-    <div className={'space-y-6'}>
+    <PageBody className={'space-y-6'}>
       <PageHeader
         title={`Leaderboard · ${org.name}`}
         description={'Top contributors over the last 30 days.'}
@@ -98,6 +98,6 @@ export default async function LeaderboardPage({
           </Table>
         </CardContent>
       </Card>
-    </div>
+    </PageBody>
   );
 }
