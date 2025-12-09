@@ -19,12 +19,12 @@ import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import {
-  saveComponentAction,
   savePromptTemplateAction,
   saveSeverityAction,
   triggerEvaluationRunAction,
   triggerGithubSyncAction,
 } from '~/lib/server/mergemint-actions';
+import { AdminComponentsEditor } from './admin-components.client';
 
 export default async function AdminPage({
   params,
@@ -43,13 +43,13 @@ export default async function AdminPage({
   if (orgError) throw orgError;
   if (!org) redirect('/home/mergemint');
 
-  const [{ data: components }, { data: severities }, { data: ruleSet }] =
+  const [{ data: repoComponents }, { data: severities }, { data: ruleSet }] =
     await Promise.all([
       admin
-        .from('product_components')
-        .select('*')
+        .from('repo_components')
+        .select('*, repositories!inner(full_name)')
         .eq('org_id', org.id)
-        .order('sort_order', { ascending: true }),
+        .order('name', { ascending: true }),
       admin
         .from('severity_levels')
         .select('*')
@@ -93,65 +93,24 @@ export default async function AdminPage({
         <Card>
           <CardHeader>
             <CardTitle>Components</CardTitle>
-            <CardDescription>Keyed areas with multipliers.</CardDescription>
+            <CardDescription>
+              Repository components and their importance multipliers.
+            </CardDescription>
           </CardHeader>
-          <CardContent className={'space-y-4'}>
-            <div className={'space-y-2'}>
-              {components?.map((component) => (
-                <div
-                  key={component.id}
-                  className={
-                    'flex items-center justify-between rounded-md border p-3'
-                  }
-                >
-                  <div>
-                    <p className={'font-medium'}>
-                      {component.name}{' '}
-                      <Badge variant={'secondary'}>{component.key}</Badge>
-                    </p>
-                    <p className={'text-sm text-muted-foreground'}>
-                      {component.description ?? 'No description'}
-                    </p>
-                  </div>
-                  <Badge>× {component.multiplier}</Badge>
-                </div>
-              ))}
-            </div>
-
-            <Separator />
-            <form action={saveComponentAction} className={'space-y-3'}>
-              <input type="hidden" name="orgId" value={org.id} />
-              <input type="hidden" name="slug" value={org.slug} />
-              <div className={'grid gap-2'}>
-                <Label htmlFor="key">Key</Label>
-                <Input id="key" name="key" placeholder="CORE_CHAT" required />
-              </div>
-              <div className={'grid gap-2'}>
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" placeholder="Core Chat" required />
-              </div>
-              <div className={'grid gap-2'}>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  placeholder="Short description"
-                />
-              </div>
-              <div className={'grid gap-2'}>
-                <Label htmlFor="multiplier">Multiplier</Label>
-                <Input
-                  id="multiplier"
-                  name="multiplier"
-                  type="number"
-                  min={0}
-                  step={0.1}
-                  defaultValue={1}
-                  required
-                />
-              </div>
-              <Button type="submit">Add / update component</Button>
-            </form>
+          <CardContent>
+            <AdminComponentsEditor
+              orgId={org.id}
+              initialComponents={(repoComponents || []).map((c: any) => ({
+                id: c.id,
+                repo_full_name: c.repositories?.full_name,
+                repo_id: c.repo_id,
+                key: c.key,
+                name: c.name,
+                importance: c.importance || 'normal',
+                description: c.description || '',
+                multiplier: c.multiplier,
+              }))}
+            />
           </CardContent>
         </Card>
 
