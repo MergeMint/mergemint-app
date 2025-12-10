@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 
 import { DeveloperAnalytics } from './developer-analytics';
 
@@ -49,6 +50,7 @@ export default async function DeveloperPage({
       <PageHeader
         title="Developer Analytics"
         description={`Performance metrics for @${params.username}`}
+        breadcrumbs={<AppBreadcrumbs values={{ [params.username]: `@${params.username}` }} />}
       />
 
       <PageBody>

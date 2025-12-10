@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Verwalte dein Abonnement und deine Abrechnung",
+  "planCardTitle": "Dein Plan",
+  "planCardDescription": "Hier sind die Details deines aktuellen Plans. Du kannst deinen Plan jederzeit ändern oder dein Abonnement kündigen.",
+  "planRenewal": "Erneuert sich alle {{interval}} für {{price}}",
+  "planDetails": "Plan-Details",
+  "checkout": "Zur Kasse gehen",
+  "trialEndsOn": "Dein Test endet am",
+  "billingPortalCardButton": "Zum Abrechnungsportal",
+  "billingPortalCardTitle": "Verwalte deine Abrechnungsdetails",
+  "billingPortalCardDescription": "Besuche dein Abrechnungsportal, um dein Abonnement und deine Abrechnung zu verwalten. Du kannst deinen Plan aktualisieren oder kündigen oder deine Rechnungen herunterladen.",
+  "cancelAtPeriodEndDescription": "Dein Abonnement wird am {{- endDate }} gekündigt.",
+  "renewAtPeriodEndDescription": "Dein Abonnement wird am {{- endDate }} erneuert",
+  "noPermissionsAlertHeading": "Du hast keine Berechtigung, die Abrechnungseinstellungen zu ändern",
+  "noPermissionsAlertBody": "Bitte kontaktiere deinen Kontoinhaber, um die Abrechnungseinstellungen für dein Konto zu ändern.",
+  "checkoutSuccessTitle": "Fertig! Du bist bereit.",
+  "checkoutSuccessDescription": "Danke, dass du dich anmeldest, wir haben dein Abonnement erfolgreich verarbeitet! Eine Bestätigungsmail wird an {{ customerEmail }} gesendet.",
+  "checkoutSuccessBackButton": "Zur App",
+  "cannotManageBillingAlertTitle": "Du kannst die Abrechnung nicht verwalten",
+  "cannotManageBillingAlertDescription": "Du hast keine Berechtigung, die Abrechnung zu verwalten. Bitte kontaktiere deinen Kontoinhaber.",
+  "manageTeamPlan": "Verwalte deinen Team-Plan",
+  "manageTeamPlanDescription": "Wähle einen Plan, der zu den Bedürfnissen deines Teams passt. Du kannst deinen Plan jederzeit upgraden oder downgraden.",
+  "basePlan": "Basis-Plan",
+  "billingInterval": {
+    "label": "Wähle dein Abrechnungsintervall",
+    "month": "Monatliche Abrechnung",
+    "year": "Jährliche Abrechnung"
+  },
+  "perMonth": "pro Monat",
+  "custom": "Custom Plan",
+  "lifetime": "Lebenslang",
+  "trialPeriod": "{{period}} Tage kostenlos testen",
+  "perPeriod": "pro {{period}}",
+  "redirectingToPayment": "Leite zur Kasse weiter. Bitte warten...",
+  "proceedToPayment": "Zur Zahlung",
+  "startTrial": "Test starten",
+  "perTeamMember": "Pro Teammitglied",
+  "perUnit": "Pro {{unit}} Nutzung",
+  "teamMembers": "Teammitglieder",
+  "includedUpTo": "Bis zu {{upTo}} {{unit}} im Plan enthalten",
+  "fromPreviousTierUpTo": "für jede {{unit}} für die nächsten {{ upTo }} {{ unit }}",
+  "andAbove": "über {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "für jede {{ unit }}",
+  "setupFee": "plus eine {{ setupFee }} Einrichtungsgebühr",
+  "perUnitIncluded": "({{included}} enthalten)",
+  "featuresLabel": "Features",
+  "detailsLabel": "Details",
+  "planPickerLabel": "Wähle deinen bevorzugten Plan",
+  "planCardLabel": "Verwalte deinen Plan",
+  "planPickerAlertErrorTitle": "Fehler beim Abrufen der Kasse",
+  "planPickerAlertErrorDescription": "Es gab einen Fehler beim Abrufen der Kasse. Bitte versuche es später erneut.",
+  "subscriptionCancelled": "Abonnement gekündigt",
+  "cancelSubscriptionDate": "Dein Abonnement wird am Ende des Zeitraums gekündigt",
+  "noPlanChosen": "Bitte wähle einen Plan aus",
+  "noIntervalPlanChosen": "Bitte wähle ein Abrechnungsintervall aus",
+  "status": {
+    "free": {
+      "badge": "Kostenloser Plan",
+      "heading": "Du nutzt gerade den kostenlosen Plan",
+      "description": "Du bist im kostenlosen Plan. Du kannst jederzeit auf einen bezahlten Plan upgraden."
+    },
+    "active": {
+      "badge": "Aktiv",
+      "heading": "Dein Abonnement ist aktiv",
+      "description": "Dein Abonnement ist aktiv. Du kannst dein Abonnement und deine Abrechnung im Customer Portal verwalten."
+    },
+    "trialing": {
+      "badge": "Testversion",
+      "heading": "Du bist in einer Testversion",
+      "description": "Du kannst die Vorteile des Plans bis zum Ende der Testversion nutzen"
+    },
+    "past_due": {
+      "badge": "Überfällig",
+      "heading": "Deine Rechnung ist überfällig",
+      "description": "Deine Rechnung ist überfällig. Bitte aktualisiere deine Zahlungsmethode."
+    },
+    "canceled": {
+      "badge": "Gekündigt",
+      "heading": "Dein Abonnement ist gekündigt",
+      "description": "Dein Abonnement ist gekündigt. Es endet am Ende des Abrechnungszeitraums."
+    },
+    "unpaid": {
+      "badge": "Unbezahlt",
+      "heading": "Deine Rechnung ist unbezahlt",
+      "description": "Deine Rechnung ist unbezahlt. Bitte aktualisiere deine Zahlungsmethode."
+    },
+    "incomplete": {
+      "badge": "Unvollständig",
+      "heading": "Wir warten auf deine Zahlung",
+      "description": "Wir warten darauf, dass deine Zahlung verarbeitet wird. Bitte hab noch etwas Geduld."
+    },
+    "incomplete_expired": {
+      "badge": "Abgelaufen",
+      "heading": "Deine Zahlung ist abgelaufen",
+      "description": "Deine Zahlung ist abgelaufen. Bitte aktualisiere deine Zahlungsmethode."
+    },
+    "paused": {
+      "badge": "Pausiert",
+      "heading": "Dein Abonnement ist pausiert",
+      "description": "Dein Abonnement ist pausiert. Du kannst es jederzeit fortsetzen."
+    },
+    "succeeded": {
+      "badge": "Erfolgreich",
+      "heading": "Deine Zahlung war erfolgreich",
+      "description": "Deine Zahlung war erfolgreich. Danke, dass du dich anmeldest!"
+    },
+    "pending": {
+      "badge": "Ausstehend",
+      "heading": "Deine Zahlung ist ausstehend",
+      "description": "Deine Zahlung ist ausstehend. Bitte hab noch etwas Geduld."
+    },
+    "failed": {
+      "badge": "Fehlgeschlagen",
+      "heading": "Deine Zahlung ist fehlgeschlagen",
+      "description": "Deine Zahlung ist fehlgeschlagen. Bitte aktualisiere deine Zahlungsmethode."
+    }
+  }
+}

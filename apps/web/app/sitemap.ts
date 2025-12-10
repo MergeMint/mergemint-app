@@ -1,73 +1,72 @@
 import { MetadataRoute } from 'next';
 
 import appConfig from '~/config/app.config';
+import { DEFAULT_LOCALE, LOCALES } from '~/lib/i18n/locales.config';
+import { getLocalizedPath, MARKETING_PATHS } from '~/lib/i18n/slug-translations';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = appConfig.url;
+  const sitemapEntries: MetadataRoute.Sitemap = [];
 
-  // Static marketing pages
-  const marketingPages = [
-    '',
-    '/features',
-    '/pricing',
-    '/how-it-works',
-    '/faq',
-    '/contact',
-    '/terms-of-service',
-    '/privacy-policy',
-  ];
+  // Define canonical marketing paths with their priorities
+  const pathPriorities: Record<string, { priority: number; changeFrequency: 'weekly' | 'monthly' | 'yearly' }> = {
+    '': { priority: 1.0, changeFrequency: 'weekly' },
+    features: { priority: 0.9, changeFrequency: 'weekly' },
+    pricing: { priority: 0.9, changeFrequency: 'weekly' },
+    'how-it-works': { priority: 0.9, changeFrequency: 'weekly' },
+    faq: { priority: 0.9, changeFrequency: 'weekly' },
+    contact: { priority: 0.9, changeFrequency: 'weekly' },
+    compare: { priority: 0.8, changeFrequency: 'monthly' },
+    'compare/linearb': { priority: 0.8, changeFrequency: 'monthly' },
+    'compare/jellyfish': { priority: 0.8, changeFrequency: 'monthly' },
+    'compare/gitclear': { priority: 0.8, changeFrequency: 'monthly' },
+    alternatives: { priority: 0.8, changeFrequency: 'monthly' },
+    'alternatives/linearb': { priority: 0.8, changeFrequency: 'monthly' },
+    'alternatives/jellyfish': { priority: 0.8, changeFrequency: 'monthly' },
+    'terms-of-service': { priority: 0.5, changeFrequency: 'yearly' },
+    'privacy-policy': { priority: 0.5, changeFrequency: 'yearly' },
+    'cookie-policy': { priority: 0.5, changeFrequency: 'yearly' },
+  };
 
-  // Comparison pages (high SEO value)
-  const comparisonPages = [
-    '/compare',
-    '/compare/linearb',
-    '/compare/jellyfish',
-    '/compare/gitclear',
-  ];
+  // Generate sitemap entries for each canonical path with all language variants
+  Object.entries(pathPriorities).forEach(([canonicalPath, config]) => {
+    // Generate entry for each locale
+    LOCALES.forEach((locale) => {
+      const localizedPath = getLocalizedPath(canonicalPath, locale);
+      const url = `${baseUrl}${localizedPath}`;
 
-  // Alternatives pages (high SEO value)
-  const alternativesPages = [
-    '/alternatives',
-    '/alternatives/linearb',
-    '/alternatives/jellyfish',
-  ];
+      // Build alternates object for this URL (hreflang)
+      const alternates: Record<string, string> = {};
+      LOCALES.forEach((altLocale) => {
+        const altPath = getLocalizedPath(canonicalPath, altLocale);
+        // Use locale code as key, with x-default for default locale
+        alternates[altLocale] = `${baseUrl}${altPath}`;
+      });
+      // Add x-default pointing to default locale
+      alternates['x-default'] = `${baseUrl}${getLocalizedPath(canonicalPath, DEFAULT_LOCALE)}`;
 
-  // Auth pages (lower priority)
+      sitemapEntries.push({
+        url,
+        lastModified: new Date(),
+        changeFrequency: config.changeFrequency,
+        priority: config.priority,
+        alternates: {
+          languages: alternates,
+        },
+      });
+    });
+  });
+
+  // Auth pages (no localization, lower priority)
   const authPages = ['/auth/sign-in', '/auth/sign-up'];
-
-  const allRoutes: MetadataRoute.Sitemap = [
-    // Marketing pages - highest priority
-    ...marketingPages.map((route) => ({
-      url: `${baseUrl}${route}`,
+  authPages.forEach((path) => {
+    sitemapEntries.push({
+      url: `${baseUrl}${path}`,
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: route === '' ? 1.0 : 0.9,
-    })),
-
-    // Comparison pages - high priority for SEO
-    ...comparisonPages.map((route) => ({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    })),
-
-    // Alternatives pages - high priority for SEO
-    ...alternativesPages.map((route) => ({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    })),
-
-    // Auth pages - lower priority
-    ...authPages.map((route) => ({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
+      changeFrequency: 'yearly',
       priority: 0.3,
-    })),
-  ];
+    });
+  });
 
-  return allRoutes;
+  return sitemapEntries;
 }

@@ -31,7 +31,10 @@
     "supabase:typegen": "pnpm run supabase:typegen:packages && pnpm run supabase:typegen:app",
     "supabase:typegen:packages": "supabase gen types typescript --local > ../../packages/supabase/src/database.types.ts",
     "supabase:typegen:app": "supabase gen types typescript --local > ./lib/database.types.ts",
-    "supabase:db:dump:local": "supabase db dump --local --data-only"
+    "supabase:db:dump:local": "supabase db dump --local --data-only",
+    "translate": "pnpm with-env npx tsx scripts/translate.ts",
+    "translate:all": "pnpm with-env npx tsx scripts/translate.ts",
+    "translate:dry-run": "pnpm with-env npx tsx scripts/translate.ts --dry-run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

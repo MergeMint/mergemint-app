@@ -2,6 +2,7 @@
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
@@ -75,6 +76,7 @@ export default async function OnboardingPage() {
       <PageHeader
         title="Connect Your Repositories"
         description="Connect GitHub to start tracking your team's PR contributions."
+        breadcrumbs={<AppBreadcrumbs />}
       />
       <PageBody className={'space-y-4'}>
         <Card>

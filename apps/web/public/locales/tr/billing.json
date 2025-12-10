@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Aboneliğini ve Faturanı Yönet",
+  "planCardTitle": "Senin Planın",
+  "planCardDescription": "Aşağıda mevcut planının detaylarını görebilirsin. İstediğin zaman planını değiştirebilir veya aboneliğini iptal edebilirsin.",
+  "planRenewal": "Her {{interval}}'de {{price}} ile yenilenir",
+  "planDetails": "Plan Detayları",
+  "checkout": "Ödemeye Geç",
+  "trialEndsOn": "Deneme sürümün şu tarihte bitiyor",
+  "billingPortalCardButton": "Fatura Portalını Ziyaret Et",
+  "billingPortalCardTitle": "Fatura Detaylarını Yönet",
+  "billingPortalCardDescription": "Aboneliğini ve faturanı yönetmek için Fatura Portalını ziyaret et. Planını güncelleyebilir, iptal edebilir veya faturalarını indirebilirsin.",
+  "cancelAtPeriodEndDescription": "Aboneliğin {{- endDate }} tarihinde iptal edilmek üzere planlanmış.",
+  "renewAtPeriodEndDescription": "Aboneliğin {{- endDate }} tarihinde yenilenmek üzere planlanmış",
+  "noPermissionsAlertHeading": "Fatura ayarlarını değiştirme izniniz yok",
+  "noPermissionsAlertBody": "Hesabınızın fatura ayarlarını değiştirmek için lütfen hesap sahibiyle iletişime geçin.",
+  "checkoutSuccessTitle": "Bitti! Hepsi hazır.",
+  "checkoutSuccessDescription": "Abone olduğun için teşekkürler, aboneliğini başarıyla işledik! Bir onay e-postası {{ customerEmail }} adresine gönderilecek.",
+  "checkoutSuccessBackButton": "Uygulamaya Dön",
+  "cannotManageBillingAlertTitle": "Faturalandırmayı yönetemezsin",
+  "cannotManageBillingAlertDescription": "Faturalandırmayı yönetme izniniz yok. Lütfen hesap sahibiyle iletişime geçin.",
+  "manageTeamPlan": "Takım Planını Yönet",
+  "manageTeamPlanDescription": "Takımının ihtiyaçlarına uygun bir plan seç. İstediğin zaman planını yükseltebilir veya düşürebilirsin.",
+  "basePlan": "Temel Plan",
+  "billingInterval": {
+    "label": "Fatura dönemini seç",
+    "month": "Aylık faturalandırma",
+    "year": "Yıllık faturalandırma"
+  },
+  "perMonth": "aylık",
+  "custom": "Özel Plan",
+  "lifetime": "Seumur Hidup",
+  "trialPeriod": "{{period}} günlük deneme",
+  "perPeriod": "{{period}} başına",
+  "redirectingToPayment": "Ödeme sayfasına yönlendiriliyorsun. Lütfen bekle...",
+  "proceedToPayment": "Ödemeye Geç",
+  "startTrial": "Denemeyi Başlat",
+  "perTeamMember": "Takım üyesi başına",
+  "perUnit": "{{unit}} kullanımı başına",
+  "teamMembers": "Takım Üyeleri",
+  "includedUpTo": "Plana kadar {{upTo}} {{unit}} dahil",
+  "fromPreviousTierUpTo": "sonraki {{ upTo }} {{ unit }} için her {{unit}} için",
+  "andAbove": "{{ previousTier }} {{ unit }} üzeri",
+  "forEveryUnit": "her {{ unit }} için",
+  "setupFee": "artı {{ setupFee }} kurulum ücreti",
+  "perUnitIncluded": "({{included}} dahil)",
+  "featuresLabel": "Özellikler",
+  "detailsLabel": "Detaylar",
+  "planPickerLabel": "Tercih ettiğin planı seç",
+  "planCardLabel": "Planını Yönet",
+  "planPickerAlertErrorTitle": "Ödeme isteğinde hata",
+  "planPickerAlertErrorDescription": "Ödeme isteğinde bir hata oluştu. Lütfen daha sonra tekrar dene.",
+  "subscriptionCancelled": "Abonelik İptal Edildi",
+  "cancelSubscriptionDate": "Aboneliğin dönem sonunda iptal edilecek",
+  "noPlanChosen": "Lütfen bir plan seçin",
+  "noIntervalPlanChosen": "Lütfen bir faturalandırma dönemini seçin",
+  "status": {
+    "free": {
+      "badge": "Ücretsiz Plan",
+      "heading": "Şu anda Ücretsiz Plan'dasınız",
+      "description": "Ücretsiz bir plandaysınız. İstediğiniz zaman ücretli bir plana yükseltebilirsiniz."
+    },
+    "active": {
+      "badge": "Aktif",
+      "heading": "Aboneliğiniz aktif",
+      "description": "Aboneliğiniz aktif. Aboneliğinizi ve faturalandırmayı Müşteri Portalı'nda yönetebilirsiniz."
+    },
+    "trialing": {
+      "badge": "Deneme",
+      "heading": "Deneme dönemdesiniz",
+      "description": "Deneme süresi bitene kadar planın avantajlarından yararlanabilirsiniz"
+    },
+    "past_due": {
+      "badge": "Vadesi Geçmiş",
+      "heading": "Faturanızın vadesi geçmiş",
+      "description": "Faturanızın vadesi geçmiş. Lütfen ödeme yönteminizi güncelleyin."
+    },
+    "canceled": {
+      "badge": "İptal Edildi",
+      "heading": "Aboneliğiniz iptal edildi",
+      "description": "Aboneliğiniz iptal edildi. Faturalandırma döneminin sonunda sona erecek şekilde planlanmıştır."
+    },
+    "unpaid": {
+      "badge": "Ödenmemiş",
+      "heading": "Faturanız ödenmemiş",
+      "description": "Faturanız ödenmemiş. Lütfen ödeme yönteminizi güncelleyin."
+    },
+    "incomplete": {
+      "badge": "Tamamlanmamış",
+      "heading": "Ödemenizin işlenmesini bekliyoruz",
+      "description": "Ödemenizin işlenmesini bekliyoruz. Lütfen sabırlı olun."
+    },
+    "incomplete_expired": {
+      "badge": "Süresi Doldu",
+      "heading": "Ödemenizin süresi doldu",
+      "description": "Ödemenizin süresi doldu. Lütfen ödeme yönteminizi güncelleyin."
+    },
+    "paused": {
+      "badge": "Duraklatıldı",
+      "heading": "Aboneliğiniz duraklatıldı",
+      "description": "Aboneliğiniz duraklatıldı. İstediğiniz zaman devam ettirebilirsiniz."
+    },
+    "succeeded": {
+      "badge": "Başarılı",
+      "heading": "Ödemeniz başarılı oldu",
+      "description": "Ödemeniz başarılı oldu. Abone olduğunuz için teşekkür ederiz!"
+    },
+    "pending": {
+      "badge": "Beklemede",
+      "heading": "Ödemeniz beklemede",
+      "description": "Ödemeniz beklemede. Lütfen sabırlı olun."
+    },
+    "failed": {
+      "badge": "Başarısız",
+      "heading": "Ödemeniz başarısız oldu",
+      "description": "Ödemeniz başarısız oldu. Lütfen ödeme yönteminizi güncelleyin."
+    }
+  }
+}

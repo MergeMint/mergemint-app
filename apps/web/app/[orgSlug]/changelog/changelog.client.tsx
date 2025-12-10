@@ -5,17 +5,12 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   Bug,
-  Check,
-  CheckCircle2,
-  ChevronDown,
   Edit2,
-  ExternalLink,
   Eye,
   EyeOff,
   FileText,
   Loader2,
   MoreHorizontal,
-  Plus,
   Sparkles,
   Trash2,
   TrendingUp,
@@ -109,14 +104,16 @@ export function ChangelogDashboardClient({
   orgSlug,
   isAdmin,
   initialEntries,
-  availablePrs,
+  initialAvailablePrs,
+  totalAvailablePrs,
   stats,
 }: {
   orgId: string;
   orgSlug: string;
   isAdmin: boolean;
   initialEntries: ChangelogEntry[];
-  availablePrs: AvailablePR[];
+  initialAvailablePrs: AvailablePR[];
+  totalAvailablePrs: number;
   stats: { published: number; drafts: number };
 }) {
   const router = useRouter();
@@ -127,17 +124,14 @@ export function ChangelogDashboardClient({
   const [generateOpen, setGenerateOpen] = useState(false);
   const [selectedPrs, setSelectedPrs] = useState<string[]>([]);
   const [generating, setGenerating] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState<{
-    current: number;
+  const [availablePrs, setAvailablePrs] = useState<AvailablePR[]>(initialAvailablePrs);
+  const [totalPrs, setTotalPrs] = useState(totalAvailablePrs);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [progress, setProgress] = useState<{
+    completed: number;
     total: number;
-    currentPr: AvailablePR | null;
-    results: Array<{
-      prId: string;
-      prNumber: number;
-      prTitle: string;
-      status: 'success' | 'skipped' | 'error';
-      reason?: string;
-    }>;
+    label: string;
+    currentPR?: string;
   } | null>(null);
 
   // Edit dialog state
@@ -171,17 +165,15 @@ export function ChangelogDashboardClient({
       return;
     }
 
-    setGenerating(true);
     const prsToProcess: AvailablePR[] = selectedPrs
       .map(id => availablePrs.find(pr => pr.id === id))
       .filter((pr): pr is AvailablePR => pr !== undefined);
 
-    setGenerationProgress({
-      current: 0,
-      total: prsToProcess.length,
-      currentPr: prsToProcess[0] ?? null,
-      results: [],
-    });
+    // Close the dialog and reset selection
+    setGenerateOpen(false);
+    setSelectedPrs([]);
+    setGenerating(true);
+    setProgress({ completed: 0, total: prsToProcess.length, label: 'Generating changelog entries' });
 
     const results: Array<{
       prId: string;
@@ -194,11 +186,13 @@ export function ChangelogDashboardClient({
     for (let i = 0; i < prsToProcess.length; i++) {
       const pr = prsToProcess[i]!;
 
-      setGenerationProgress(prev => prev ? {
-        ...prev,
-        current: i + 1,
-        currentPr: pr,
-      } : null);
+      // Update progress
+      setProgress({
+        completed: i,
+        total: prsToProcess.length,
+        label: 'Generating changelog entries',
+        currentPR: `#${pr.number} ${pr.title.slice(0, 40)}${pr.title.length > 40 ? '...' : ''}`,
+      });
 
       try {
         const res = await fetch('/api/changelog/generate-single', {
@@ -236,13 +230,8 @@ export function ChangelogDashboardClient({
             prTitle: pr.title,
             status: 'success',
           });
+          toast.success(`#${pr.number}: Entry created`);
         }
-
-        setGenerationProgress(prev => prev ? {
-          ...prev,
-          results: [...results],
-        } : null);
-
       } catch (err) {
         results.push({
           prId: pr.id,
@@ -251,31 +240,88 @@ export function ChangelogDashboardClient({
           status: 'error',
           reason: (err as Error).message,
         });
-
-        setGenerationProgress(prev => prev ? {
-          ...prev,
-          results: [...results],
-        } : null);
+        toast.error(`#${pr.number}: ${(err as Error).message}`);
       }
+
+      // Update progress after each PR
+      setProgress({
+        completed: i + 1,
+        total: prsToProcess.length,
+        label: 'Generating changelog entries',
+      });
     }
 
     const successCount = results.filter(r => r.status === 'success').length;
     const skippedCount = results.filter(r => r.status === 'skipped').length;
     const errorCount = results.filter(r => r.status === 'error').length;
 
-    toast.success(`Generated ${successCount} changelog entries`, {
-      description: `${skippedCount} skipped (not user-facing), ${errorCount} errors`,
-    });
+    // Show final summary toast
+    if (successCount > 0) {
+      toast.success(`Generated ${successCount} changelog entries`, {
+        description: `${skippedCount} skipped (not user-facing), ${errorCount} errors`,
+      });
+    } else if (errorCount > 0) {
+      toast.error('Failed to generate changelog entries', {
+        description: `${skippedCount} skipped, ${errorCount} errors`,
+      });
+    } else {
+      toast.info('No changelog entries generated', {
+        description: `${skippedCount} PRs skipped (not user-facing)`,
+      });
+    }
+
+    // Fetch updated entries to refresh the list
+    try {
+      const entriesRes = await fetch(`/api/changelog/entries?orgId=${orgId}`);
+      if (entriesRes.ok) {
+        const { entries: newEntries } = await entriesRes.json();
+        setEntries(newEntries || []);
+      }
+    } catch {
+      // Fall back to router refresh if fetch fails
+      router.refresh();
+    }
 
     setGenerating(false);
-    setSelectedPrs([]);
-    router.refresh();
+    setProgress(null);
   };
 
   const handleCloseGenerateDialog = () => {
     if (!generating) {
       setGenerateOpen(false);
-      setGenerationProgress(null);
+    }
+  };
+
+  const loadMorePrs = async (loadAll = false) => {
+    setLoadingMore(true);
+    try {
+      const limit = loadAll ? totalPrs : 100;
+      const res = await fetch(
+        `/api/changelog/available-prs?orgId=${orgId}&offset=${availablePrs.length}&limit=${limit}`
+      );
+      if (res.ok) {
+        const { prs, total } = await res.json();
+        setAvailablePrs(prev => [...prev, ...prs]);
+        setTotalPrs(total);
+        return prs;
+      }
+    } catch (err) {
+      toast.error('Failed to load more PRs');
+    } finally {
+      setLoadingMore(false);
+    }
+    return [];
+  };
+
+  const selectAllPrs = async () => {
+    if (availablePrs.length < totalPrs) {
+      // Load all remaining PRs first
+      const newPrs = await loadMorePrs(true);
+      // Select all including newly loaded
+      setSelectedPrs([...availablePrs, ...newPrs].map(pr => pr.id));
+    } else {
+      // All PRs already loaded, just select them
+      setSelectedPrs(availablePrs.map(pr => pr.id));
     }
   };
 
@@ -486,13 +532,41 @@ export function ChangelogDashboardClient({
 
         <div className="flex gap-2">
           {isAdmin && availablePrs.length > 0 && (
-            <Button onClick={() => setGenerateOpen(true)}>
+            <Button onClick={() => setGenerateOpen(true)} disabled={generating}>
               <Zap className="h-4 w-4 mr-2" />
               Generate from PRs
             </Button>
           )}
         </div>
       </div>
+
+      {/* Progress indicator */}
+      {progress && (
+        <Card>
+          <CardContent className="py-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {progress.label}...
+                </span>
+                <span>{progress.completed} / {progress.total}</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full bg-primary transition-all duration-300"
+                  style={{ width: `${(progress.completed / progress.total) * 100}%` }}
+                />
+              </div>
+              {progress.currentPR && (
+                <div className="text-xs text-muted-foreground truncate">
+                  Current: {progress.currentPR}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Bulk Selection Bar */}
       {isAdmin && filteredEntries.length > 0 && (
@@ -657,163 +731,111 @@ export function ChangelogDashboardClient({
       <Dialog open={generateOpen} onOpenChange={handleCloseGenerateDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>
-              {generationProgress ? 'Generating Changelog Entries' : 'Generate Changelog Entries'}
-            </DialogTitle>
+            <DialogTitle>Generate Changelog Entries</DialogTitle>
             <DialogDescription>
-              {generationProgress
-                ? `Processing ${generationProgress.current} of ${generationProgress.total} PRs...`
-                : 'Select merged PRs to generate user-friendly changelog entries using AI.'}
+              Select merged PRs to generate user-friendly changelog entries using AI.
             </DialogDescription>
           </DialogHeader>
 
-          {generationProgress ? (
-            // Progress View
-            <div className="space-y-4 py-4">
-              {/* Progress bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Progress</span>
-                  <span>{generationProgress.current} / {generationProgress.total}</span>
-                </div>
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary transition-all duration-300"
-                    style={{ width: `${(generationProgress.current / generationProgress.total) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Current PR being processed */}
-              {generating && generationProgress.currentPr && (
-                <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/50">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span className="text-sm">
-                    Processing PR #{generationProgress.currentPr.number}: {generationProgress.currentPr.title}
-                  </span>
-                </div>
+          <div className="flex items-center justify-between py-2 border-b">
+            <span className="text-sm text-muted-foreground">
+              {selectedPrs.length} of {availablePrs.length} selected
+              {totalPrs > availablePrs.length && (
+                <span className="text-muted-foreground/60"> ({totalPrs} total available)</span>
               )}
-
-              {/* Results list */}
-              <div className="max-h-[300px] overflow-y-auto space-y-2">
-                {generationProgress.results.map((result) => (
-                  <div
-                    key={result.prId}
-                    className={cn(
-                      'flex items-start gap-3 p-3 rounded-lg border text-sm',
-                      result.status === 'success' && 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30',
-                      result.status === 'skipped' && 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950/30',
-                      result.status === 'error' && 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30'
-                    )}
-                  >
-                    {result.status === 'success' && <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />}
-                    {result.status === 'skipped' && <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5 flex-shrink-0" />}
-                    {result.status === 'error' && <AlertTriangle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium">#{result.prNumber}: {result.prTitle}</p>
-                      {result.reason && (
-                        <p className="text-xs text-muted-foreground mt-1">{result.reason}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Summary when done */}
-              {!generating && generationProgress.results.length > 0 && (
-                <div className="flex gap-4 pt-2 border-t text-sm">
-                  <span className="text-green-600">
-                    ✓ {generationProgress.results.filter(r => r.status === 'success').length} created
-                  </span>
-                  <span className="text-yellow-600">
-                    ⊘ {generationProgress.results.filter(r => r.status === 'skipped').length} skipped
-                  </span>
-                  <span className="text-red-600">
-                    ✗ {generationProgress.results.filter(r => r.status === 'error').length} errors
-                  </span>
-                </div>
-              )}
-            </div>
-          ) : (
-            // Selection View
-            <>
-              <div className="flex items-center justify-between py-2 border-b">
-                <span className="text-sm text-muted-foreground">
-                  {selectedPrs.length} of {availablePrs.length} selected
-                </span>
+            </span>
+            <div className="flex gap-2">
+              {totalPrs > availablePrs.length && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => {
-                    if (selectedPrs.length === availablePrs.length) {
-                      setSelectedPrs([]);
-                    } else {
-                      setSelectedPrs(availablePrs.map(pr => pr.id));
-                    }
-                  }}
+                  onClick={selectAllPrs}
+                  disabled={loadingMore}
                 >
-                  {selectedPrs.length === availablePrs.length ? 'Deselect All' : 'Select All'}
-                </Button>
-              </div>
-
-              <div className="max-h-[400px] overflow-y-auto space-y-2 py-4">
-                {availablePrs.map(pr => (
-                  <label
-                    key={pr.id}
-                    className={cn(
-                      'flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
-                      selectedPrs.includes(pr.id)
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:bg-muted/50'
-                    )}
-                  >
-                    <Checkbox
-                      checked={selectedPrs.includes(pr.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedPrs([...selectedPrs, pr.id]);
-                        } else {
-                          setSelectedPrs(selectedPrs.filter(id => id !== pr.id));
-                        }
-                      }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm">#{pr.number}: {pr.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Merged {new Date(pr.merged_at_gh).toLocaleDateString()} · +{pr.additions} -{pr.deletions}
-                      </p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </>
-          )}
-
-          <DialogFooter>
-            {generationProgress && !generating ? (
-              <Button onClick={handleCloseGenerateDialog}>
-                Done
-              </Button>
-            ) : (
-              <>
-                <Button variant="outline" onClick={handleCloseGenerateDialog} disabled={generating}>
-                  Cancel
-                </Button>
-                <Button onClick={handleGenerate} disabled={generating || selectedPrs.length === 0}>
-                  {generating ? (
+                  {loadingMore ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
+                      <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                      Loading...
                     </>
                   ) : (
-                    <>
-                      <Zap className="mr-2 h-4 w-4" />
-                      Generate ({selectedPrs.length})
-                    </>
+                    `Select All ${totalPrs}`
                   )}
                 </Button>
-              </>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (selectedPrs.length === availablePrs.length) {
+                    setSelectedPrs([]);
+                  } else {
+                    setSelectedPrs(availablePrs.map(pr => pr.id));
+                  }
+                }}
+              >
+                {selectedPrs.length === availablePrs.length ? 'Deselect All' : 'Select Loaded'}
+              </Button>
+            </div>
+          </div>
+
+          <div className="max-h-[400px] overflow-y-auto space-y-2 py-4">
+            {availablePrs.map(pr => (
+              <label
+                key={pr.id}
+                className={cn(
+                  'flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
+                  selectedPrs.includes(pr.id)
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:bg-muted/50'
+                )}
+              >
+                <Checkbox
+                  checked={selectedPrs.includes(pr.id)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedPrs([...selectedPrs, pr.id]);
+                    } else {
+                      setSelectedPrs(selectedPrs.filter(id => id !== pr.id));
+                    }
+                  }}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm">#{pr.number}: {pr.title}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Merged {new Date(pr.merged_at_gh).toLocaleDateString()} · +{pr.additions} -{pr.deletions}
+                  </p>
+                </div>
+              </label>
+            ))}
+
+            {/* Load more button */}
+            {availablePrs.length < totalPrs && (
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => loadMorePrs()}
+                disabled={loadingMore}
+              >
+                {loadingMore ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  `Load more (${totalPrs - availablePrs.length} remaining)`
+                )}
+              </Button>
             )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseGenerateDialog}>
+              Cancel
+            </Button>
+            <Button onClick={handleGenerate} disabled={selectedPrs.length === 0}>
+              <Zap className="mr-2 h-4 w-4" />
+              Generate ({selectedPrs.length})
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

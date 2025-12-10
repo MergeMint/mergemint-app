@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { MergeMintDashboard } from '~/home/_components/mergemint-dashboard';
@@ -29,6 +30,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
       <PageHeader
         title="Dashboard"
         description={`PR analytics for ${org.name}`}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <PageBody>

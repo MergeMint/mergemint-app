@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Hantera din prenumeration och fakturering",
+  "planCardTitle": "Din plan",
+  "planCardDescription": "Nedan finns detaljer om din nuvarande plan. Du kan byta plan eller avsluta din prenumeration när som helst.",
+  "planRenewal": "Förnyas var {{interval}} för {{price}}",
+  "planDetails": "Plandetaljer",
+  "checkout": "Gå till kassan",
+  "trialEndsOn": "Din testperiod slutar den",
+  "billingPortalCardButton": "Besök fakturaportalen",
+  "billingPortalCardTitle": "Hantera dina faktureringsinställningar",
+  "billingPortalCardDescription": "Besök din fakturaportalen för att hantera din prenumeration och fakturering. Du kan uppdatera eller avsluta din plan, eller ladda ner dina fakturor.",
+  "cancelAtPeriodEndDescription": "Din prenumeration är planerad att avslutats den {{- endDate }}.",
+  "renewAtPeriodEndDescription": "Din prenumeration är planerad att förnyas den {{- endDate }}",
+  "noPermissionsAlertHeading": "Du har inte behörighet att ändra faktureringsinställningarna",
+  "noPermissionsAlertBody": "Kontakta din kontoägare för att ändra faktureringsinställningarna för ditt konto.",
+  "checkoutSuccessTitle": "Klart! Du är all set.",
+  "checkoutSuccessDescription": "Tack för att du prenumererar, vi har behandlat din prenumeration! Ett bekräftelsemail skickas till {{ customerEmail }}.",
+  "checkoutSuccessBackButton": "Gå till appen",
+  "cannotManageBillingAlertTitle": "Du kan inte hantera fakturering",
+  "cannotManageBillingAlertDescription": "Du har inte behörighet att hantera fakturering. Kontakta din kontoägare.",
+  "manageTeamPlan": "Hantera din teamplan",
+  "manageTeamPlanDescription": "Välj en plan som passar ditt teams behov. Du kan uppgradera eller nedgradera din plan när som helst.",
+  "basePlan": "Basplan",
+  "billingInterval": {
+    "label": "Välj din faktureringscykel",
+    "month": "Faktureras månadsvis",
+    "year": "Faktureras årligen"
+  },
+  "perMonth": "per månad",
+  "custom": "Anpassad plan",
+  "lifetime": "Livstid",
+  "trialPeriod": "{{period}} dagars testperiod",
+  "perPeriod": "per {{period}}",
+  "redirectingToPayment": "Omdirigerar till kassan. Vänta...",
+  "proceedToPayment": "Gå till betalning",
+  "startTrial": "Starta testperiod",
+  "perTeamMember": "Per teammedlem",
+  "perUnit": "Per {{unit}} användning",
+  "teamMembers": "Teammedlemmar",
+  "includedUpTo": "Upp till {{upTo}} {{unit}} ingår i planen",
+  "fromPreviousTierUpTo": "för varje {{unit}} för nästa {{ upTo }} {{ unit }}",
+  "andAbove": "över {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "för varje {{ unit }}",
+  "setupFee": "plus en {{ setupFee }} installationsavgift",
+  "perUnitIncluded": "({{included}} ingår)",
+  "featuresLabel": "Funktioner",
+  "detailsLabel": "Detaljer",
+  "planPickerLabel": "Välj din föredragna plan",
+  "planCardLabel": "Hantera din plan",
+  "planPickerAlertErrorTitle": "Fel vid kassabegäran",
+  "planPickerAlertErrorDescription": "Det uppstod ett fel vid kassabegäran. Försök igen senare.",
+  "subscriptionCancelled": "Prenumeration avslutad",
+  "cancelSubscriptionDate": "Din prenumeration kommer att avslutats vid slutet av perioden",
+  "noPlanChosen": "Välj en plan",
+  "noIntervalPlanChosen": "Välj en faktureringsperiod",
+  "status": {
+    "free": {
+      "badge": "Gratis plan",
+      "heading": "Du är på den kostnadsfria planen",
+      "description": "Du är på en gratis plan. Du kan uppgradera till en betald plan när som helst."
+    },
+    "active": {
+      "badge": "Aktiv",
+      "heading": "Din prenumeration är aktiv",
+      "description": "Din prenumeration är aktiv. Du kan hantera din prenumeration och fakturering i Customer Portal."
+    },
+    "trialing": {
+      "badge": "Testperiod",
+      "heading": "Du är på en testperiod",
+      "description": "Du kan njuta av fördelarna med planen tills testperioden slutar"
+    },
+    "past_due": {
+      "badge": "Förfallen",
+      "heading": "Din faktura är förfallen",
+      "description": "Din faktura är förfallen. Uppdatera din betalningsmetod."
+    },
+    "canceled": {
+      "badge": "Avbruten",
+      "heading": "Din prenumeration är avbruten",
+      "description": "Din prenumeration är avbruten. Den är planerad att avslutas vid slutet av faktureringsperioden."
+    },
+    "unpaid": {
+      "badge": "Obetald",
+      "heading": "Din faktura är obetald",
+      "description": "Din faktura är obetald. Uppdatera din betalningsmetod."
+    },
+    "incomplete": {
+      "badge": "Ofullständig",
+      "heading": "Vi väntar på din betalning",
+      "description": "Vi väntar på att din betalning ska gå igenom. Tack för ditt tålamod."
+    },
+    "incomplete_expired": {
+      "badge": "Utgången",
+      "heading": "Din betalning har utgått",
+      "description": "Din betalning har utgått. Uppdatera din betalningsmetod."
+    },
+    "paused": {
+      "badge": "Pausad",
+      "heading": "Din prenumeration är pausad",
+      "description": "Din prenumeration är pausad. Du kan återuppta den när som helst."
+    },
+    "succeeded": {
+      "badge": "Lyckades",
+      "heading": "Din betalning var framgångsrik",
+      "description": "Din betalning var framgångsrik. Tack för att du prenumererar!"
+    },
+    "pending": {
+      "badge": "Väntar",
+      "heading": "Din betalning väntar",
+      "description": "Din betalning väntar. Tack för ditt tålamod."
+    },
+    "failed": {
+      "badge": "Misslyckades",
+      "heading": "Din betalning misslyckades",
+      "description": "Din betalning misslyckades. Uppdatera din betalningsmetod."
+    }
+  }
+}

@@ -24,6 +24,7 @@ import {
 } from '@kit/ui/select';
 import { Separator } from '@kit/ui/separator';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -115,6 +116,7 @@ export default async function OrgSettingsPage({
       <PageHeader
         title="Organization Settings"
         description={`Manage settings for ${org.name}`}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <div className="grid gap-6 lg:grid-cols-3">

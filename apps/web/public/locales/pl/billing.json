@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Zarządzaj swoją subskrypcją i rozliczeniami",
+  "planCardTitle": "Twój Plan",
+  "planCardDescription": "Poniżej znajdziesz szczegóły Twojego obecnego planu. Możesz zmienić plan lub anulować subskrypcję w dowolnym momencie.",
+  "planRenewal": "Odnawia się co {{interval}} za {{price}}",
+  "planDetails": "Szczegóły Planu",
+  "checkout": "Przejdź do Kasy",
+  "trialEndsOn": "Twój okres próbny kończy się",
+  "billingPortalCardButton": "Odwiedź Portal Rozliczeń",
+  "billingPortalCardTitle": "Zarządzaj swoimi Danymi Rozliczeniowymi",
+  "billingPortalCardDescription": "Odwiedź swój Portal Rozliczeń, aby zarządzać subskrypcją i rozliczeniami. Możesz zaktualizować lub anulować swój plan albo pobrać faktury.",
+  "cancelAtPeriodEndDescription": "Twoja subskrypcja zostanie anulowana {{- endDate }}.",
+  "renewAtPeriodEndDescription": "Twoja subskrypcja zostanie odnowiona {{- endDate }}",
+  "noPermissionsAlertHeading": "Nie masz uprawnień do zmiany ustawień rozliczeń",
+  "noPermissionsAlertBody": "Skontaktuj się z właścicielem konta, aby zmienić ustawienia rozliczeń dla Twojego konta.",
+  "checkoutSuccessTitle": "Gotowe! Wszystko jest ustawione.",
+  "checkoutSuccessDescription": "Dziękujemy za subskrypcję, pomyślnie przetworyliśmy Twoją subskrypcję! Email potwierdzający zostanie wysłany na {{ customerEmail }}.",
+  "checkoutSuccessBackButton": "Przejdź do Aplikacji",
+  "cannotManageBillingAlertTitle": "Nie możesz zarządzać rozliczeniami",
+  "cannotManageBillingAlertDescription": "Nie masz uprawnień do zarządzania rozliczeniami. Skontaktuj się z właścicielem konta.",
+  "manageTeamPlan": "Zarządzaj swoim Planem Zespołowym",
+  "manageTeamPlanDescription": "Wybierz plan, który odpowiada potrzebom Twojego zespołu. Możesz uaktualnić lub obniżyć swój plan w dowolnym momencie.",
+  "basePlan": "Plan Podstawowy",
+  "billingInterval": {
+    "label": "Wybierz okres rozliczeniowy",
+    "month": "Rozliczane miesięcznie",
+    "year": "Rozliczane rocznie"
+  },
+  "perMonth": "za miesiąc",
+  "custom": "Plan Niestandardowy",
+  "lifetime": "Dożywotni",
+  "trialPeriod": "{{period}} dniowy okres próbny",
+  "perPeriod": "za {{period}}",
+  "redirectingToPayment": "Przekierowywanie do kasy. Czekaj...",
+  "proceedToPayment": "Przejdź do Płatności",
+  "startTrial": "Rozpocznij Okres Próbny",
+  "perTeamMember": "Na członka zespołu",
+  "perUnit": "Za {{unit}} użycia",
+  "teamMembers": "Członkowie Zespołu",
+  "includedUpTo": "Do {{upTo}} {{unit}} zawarte w planie",
+  "fromPreviousTierUpTo": "za każdy {{unit}} dla następnych {{ upTo }} {{ unit }}",
+  "andAbove": "powyżej {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "za każdy {{ unit }}",
+  "setupFee": "plus {{ setupFee }} opłata za konfigurację",
+  "perUnitIncluded": "({{included}} zawarte)",
+  "featuresLabel": "Funkcje",
+  "detailsLabel": "Szczegóły",
+  "planPickerLabel": "Wybierz preferowany plan",
+  "planCardLabel": "Zarządzaj swoim Planem",
+  "planPickerAlertErrorTitle": "Błąd podczas żądania kasy",
+  "planPickerAlertErrorDescription": "Podczas żądania kasy wystąpił błąd. Spróbuj ponownie później.",
+  "subscriptionCancelled": "Subskrypcja Anulowana",
+  "cancelSubscriptionDate": "Twoja subskrypcja zostanie anulowana na koniec okresu",
+  "noPlanChosen": "Proszę wybrać plan",
+  "noIntervalPlanChosen": "Proszę wybrać okres rozliczeniowy",
+  "status": {
+    "free": {
+      "badge": "Plan Darmowy",
+      "heading": "Jesteś na Planie Darmowym",
+      "description": "Jesteś na planie darmowym. Możesz przejść na plan płatny w dowolnym momencie."
+    },
+    "active": {
+      "badge": "Aktywny",
+      "heading": "Twoja subskrypcja jest aktywna",
+      "description": "Twoja subskrypcja jest aktywna. Możesz zarządzać subskrypcją i rozliczeniami w Portalu Klienta."
+    },
+    "trialing": {
+      "badge": "Okres Próbny",
+      "heading": "Jesteś na okresie próbnym",
+      "description": "Możesz korzystać z korzyści planu do końca okresu próbnego"
+    },
+    "past_due": {
+      "badge": "Zaległa",
+      "heading": "Twoja faktura jest zaległa",
+      "description": "Twoja faktura jest zaległa. Proszę zaktualizować metodę płatności."
+    },
+    "canceled": {
+      "badge": "Anulowana",
+      "heading": "Twoja subskrypcja jest anulowana",
+      "description": "Twoja subskrypcja jest anulowana. Zostanie zakończona na koniec okresu rozliczeniowego."
+    },
+    "unpaid": {
+      "badge": "Nieopłacona",
+      "heading": "Twoja faktura jest nieopłacona",
+      "description": "Twoja faktura jest nieopłacona. Proszę zaktualizować metodę płatności."
+    },
+    "incomplete": {
+      "badge": "Niekompletna",
+      "heading": "Czekamy na Twoją płatność",
+      "description": "Czekamy na przetworzenie Twojej płatności. Prosimy o cierpliwość."
+    },
+    "incomplete_expired": {
+      "badge": "Wygasła",
+      "heading": "Twoja płatność wygasła",
+      "description": "Twoja płatność wygasła. Proszę zaktualizować metodę płatności."
+    },
+    "paused": {
+      "badge": "Wstrzymana",
+      "heading": "Twoja subskrypcja jest wstrzymana",
+      "description": "Twoja subskrypcja jest wstrzymana. Możesz ją wznowić w dowolnym momencie."
+    },
+    "succeeded": {
+      "badge": "Pomyślna",
+      "heading": "Twoja płatność była pomyślna",
+      "description": "Twoja płatność była pomyślna. Dziękujemy za subskrypcję!"
+    },
+    "pending": {
+      "badge": "Oczekująca",
+      "heading": "Twoja płatność jest oczekująca",
+      "description": "Twoja płatność jest oczekująca. Prosimy o cierpliwość."
+    },
+    "failed": {
+      "badge": "Nieudana",
+      "heading": "Twoja płatność nie powiodła się",
+      "description": "Twoja płatność nie powiodła się. Proszę zaktualizować metodę płatności."
+    }
+  }
+}

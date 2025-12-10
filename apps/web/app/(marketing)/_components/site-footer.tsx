@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
 
 import { Github, Twitter } from 'lucide-react';
 
@@ -6,8 +10,40 @@ import { Footer } from '@kit/ui/marketing';
 import { Trans } from '@kit/ui/trans';
 
 import { AppLogo } from '~/components/app-logo';
+import {
+  DEFAULT_LOCALE,
+  isValidLocale,
+  type Locale,
+} from '~/lib/i18n/locales.config';
+import { getLocalizedPath } from '~/lib/i18n/slug-translations';
 
-export function SiteFooter() {
+interface SiteFooterProps {
+  locale?: Locale;
+}
+
+export function SiteFooter({ locale: localeProp }: SiteFooterProps) {
+  const pathname = usePathname();
+
+  // Determine current locale from pathname or prop
+  const locale = useMemo(() => {
+    if (localeProp) return localeProp;
+
+    const segments = pathname.split('/').filter(Boolean);
+    const potentialLocale = segments[0];
+
+    if (potentialLocale && isValidLocale(potentialLocale)) {
+      return potentialLocale;
+    }
+
+    return DEFAULT_LOCALE;
+  }, [localeProp, pathname]);
+
+  // Helper to localize internal marketing paths
+  const localize = (path: string) => {
+    if (path.startsWith('http')) return path;
+    const pathWithoutSlash = path.startsWith('/') ? path.slice(1) : path;
+    return getLocalizedPath(pathWithoutSlash, locale);
+  };
   return (
     <Footer
       logo={<AppLogo className="h-8 w-auto" />}
@@ -47,19 +83,19 @@ export function SiteFooter() {
           heading: 'Product',
           links: [
             {
-              href: '/features',
+              href: localize('/features'),
               label: 'Features',
             },
             {
-              href: '/how-it-works',
+              href: localize('/how-it-works'),
               label: 'How It Works',
             },
             {
-              href: '/pricing',
+              href: localize('/pricing'),
               label: 'Pricing',
             },
             {
-              href: '/faq',
+              href: localize('/faq'),
               label: 'FAQ',
             },
           ],
@@ -68,23 +104,23 @@ export function SiteFooter() {
           heading: 'Compare',
           links: [
             {
-              href: '/compare/linearb',
+              href: localize('/mergemint-vs-linearb'),
               label: 'MergeMint vs LinearB',
             },
             {
-              href: '/compare/jellyfish',
+              href: localize('/mergemint-vs-jellyfish'),
               label: 'MergeMint vs Jellyfish',
             },
             {
-              href: '/compare/gitclear',
+              href: localize('/mergemint-vs-gitclear'),
               label: 'MergeMint vs GitClear',
             },
             {
-              href: '/alternatives/linearb',
+              href: localize('/best-linearb-alternatives'),
               label: 'LinearB Alternatives',
             },
             {
-              href: '/alternatives/jellyfish',
+              href: localize('/best-jellyfish-alternatives'),
               label: 'Jellyfish Alternatives',
             },
           ],
@@ -110,15 +146,15 @@ export function SiteFooter() {
           heading: 'Company',
           links: [
             {
-              href: '/contact',
+              href: localize('/contact'),
               label: 'Contact',
             },
             {
-              href: '/terms-of-service',
+              href: localize('/terms-of-service'),
               label: <Trans i18nKey="marketing:termsOfService" />,
             },
             {
-              href: '/privacy-policy',
+              href: localize('/privacy-policy'),
               label: <Trans i18nKey="marketing:privacyPolicy" />,
             },
           ],

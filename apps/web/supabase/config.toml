@@ -93,3 +93,10 @@ content_path = "./supabase/templates/magic-link.html"
 
 [analytics]
 enabled = false
+
+# Custom Email Hook - Send emails via Mailgun instead of Supabase's built-in SMTP
+# This allows full control over email branding and delivery
+[auth.hook.send_email]
+enabled = true
+uri = "http://host.docker.internal:3000/api/auth/hook"
+secrets = "env(SUPABASE_AUTH_HOOK_SECRET)"

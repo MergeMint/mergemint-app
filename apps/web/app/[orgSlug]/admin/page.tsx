@@ -15,6 +15,7 @@ import { Label } from '@kit/ui/label';
 import { Separator } from '@kit/ui/separator';
 import { Textarea } from '@kit/ui/textarea';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -83,10 +84,11 @@ export default async function AdminPage({
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
-        title={`Admin · ${org.name}`}
+        title="Admin"
         description={
           'Configure scoring rules, prompts, and GitHub connection for this organization.'
         }
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <div className={'grid gap-4 lg:grid-cols-2'}>

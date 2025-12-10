@@ -63,7 +63,13 @@
     "dashboard": "Dashboard",
     "settings": "Settings",
     "profile": "Profile",
-    "application": "Application"
+    "application": "Application",
+    "changelog": "Changelog",
+    "leaderboard": "Leaderboard",
+    "product": "Product Insights",
+    "admin": "Admin",
+    "me": "My Profile",
+    "prs": "Pull Requests"
   },
   "roles": {
     "owner": {

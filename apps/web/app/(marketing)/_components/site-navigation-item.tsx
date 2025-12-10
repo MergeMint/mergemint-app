@@ -1,13 +1,18 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { NavigationMenuItem } from '@kit/ui/navigation-menu';
 import { cn, isRouteActive } from '@kit/ui/utils';
 
+import { LocalizedLink } from '~/components/localized-link';
+import type { Locale } from '~/lib/i18n/locales.config';
+
 const getClassName = (path: string, currentPathName: string) => {
-  const isActive = isRouteActive(path, currentPathName);
+  // Check if the current path matches the target path
+  // This needs to account for localized paths
+  const isActive = isRouteActive(path, currentPathName) ||
+    currentPathName.includes(path.replace('/', ''));
 
   return cn(
     `inline-flex w-max text-sm font-medium transition-colors duration-300`,
@@ -18,20 +23,25 @@ const getClassName = (path: string, currentPathName: string) => {
   );
 };
 
+interface SiteNavigationItemProps {
+  path: string;
+  children: React.ReactNode;
+  locale?: Locale;
+}
+
 export function SiteNavigationItem({
   path,
   children,
-}: React.PropsWithChildren<{
-  path: string;
-}>) {
+  locale,
+}: SiteNavigationItemProps) {
   const currentPathName = usePathname();
   const className = getClassName(path, currentPathName);
 
   return (
     <NavigationMenuItem key={path}>
-      <Link className={className} href={path}>
+      <LocalizedLink className={className} href={path} locale={locale}>
         {children}
-      </Link>
+      </LocalizedLink>
     </NavigationMenuItem>
   );
 }

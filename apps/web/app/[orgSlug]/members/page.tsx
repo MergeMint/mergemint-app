@@ -29,6 +29,7 @@ import {
   TableRow,
 } from '@kit/ui/table';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -132,15 +133,17 @@ async function removeMemberAction(formData: FormData) {
 
 async function cancelInvitationAction(formData: FormData) {
   'use server';
-  
+
   const invitationId = formData.get('invitationId') as string;
   const slug = formData.get('slug') as string;
 
   const admin = getSupabaseServerAdminClient<any>();
-  
+
+  // Delete the invitation instead of updating status to avoid unique constraint issues
+  // (org_id, email, status) - can't have multiple cancelled invites for same email
   const { error } = await admin
     .from('organization_invitations')
-    .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+    .delete()
     .eq('id', invitationId);
 
   if (error) {
@@ -291,6 +294,7 @@ export default async function MembersPage({
       <PageHeader
         title="Team Members"
         description={`Manage who has access to ${org.name}`}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       {/* Invite New Member */}

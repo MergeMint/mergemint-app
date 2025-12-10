@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Gérez votre abonnement et votre facturation",
+  "planCardTitle": "Votre plan",
+  "planCardDescription": "Voici les détails de votre plan actuel. Vous pouvez changer de plan ou annuler votre abonnement à tout moment.",
+  "planRenewal": "Se renouvelle tous les {{interval}} à {{price}}",
+  "planDetails": "Détails du plan",
+  "checkout": "Procéder au paiement",
+  "trialEndsOn": "Votre essai gratuit se termine le",
+  "billingPortalCardButton": "Accéder au portail de facturation",
+  "billingPortalCardTitle": "Gérez vos informations de facturation",
+  "billingPortalCardDescription": "Accédez à votre portail de facturation pour gérer votre abonnement et votre facturation. Vous pouvez mettre à jour ou annuler votre plan, ou télécharger vos factures.",
+  "cancelAtPeriodEndDescription": "Votre abonnement est prévu pour être annulé le {{- endDate }}.",
+  "renewAtPeriodEndDescription": "Votre abonnement est prévu pour être renouvelé le {{- endDate }}",
+  "noPermissionsAlertHeading": "Vous n'avez pas les permissions pour modifier les paramètres de facturation",
+  "noPermissionsAlertBody": "Veuillez contacter le propriétaire de votre compte pour modifier les paramètres de facturation.",
+  "checkoutSuccessTitle": "C'est fait ! Vous êtes prêt.",
+  "checkoutSuccessDescription": "Merci de vous être abonné, nous avons traité votre abonnement avec succès ! Un email de confirmation sera envoyé à {{ customerEmail }}.",
+  "checkoutSuccessBackButton": "Retourner à l'application",
+  "cannotManageBillingAlertTitle": "Vous ne pouvez pas gérer la facturation",
+  "cannotManageBillingAlertDescription": "Vous n'avez pas les permissions pour gérer la facturation. Veuillez contacter le propriétaire de votre compte.",
+  "manageTeamPlan": "Gérez votre plan d'équipe",
+  "manageTeamPlanDescription": "Choisissez un plan qui correspond aux besoins de votre équipe. Vous pouvez améliorer ou réduire votre plan à tout moment.",
+  "basePlan": "Plan de base",
+  "billingInterval": {
+    "label": "Choisissez votre intervalle de facturation",
+    "month": "Facturé mensuellement",
+    "year": "Facturé annuellement"
+  },
+  "perMonth": "par mois",
+  "custom": "Plan personnalisé",
+  "lifetime": "À vie",
+  "trialPeriod": "Essai gratuit de {{period}} jours",
+  "perPeriod": "par {{period}}",
+  "redirectingToPayment": "Redirection vers le paiement. Veuillez patienter...",
+  "proceedToPayment": "Procéder au paiement",
+  "startTrial": "Commencer l'essai gratuit",
+  "perTeamMember": "Par membre de l'équipe",
+  "perUnit": "Par {{unit}} d'utilisation",
+  "teamMembers": "Membres de l'équipe",
+  "includedUpTo": "Jusqu'à {{upTo}} {{unit}} inclus dans le plan",
+  "fromPreviousTierUpTo": "for each {{unit}} for the next {{ upTo }} {{ unit }}",
+  "andAbove": "above {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "for every {{ unit }}",
+  "setupFee": "plus a {{ setupFee }} setup fee",
+  "perUnitIncluded": "({{included}} inclus)",
+  "featuresLabel": "Fonctionnalités",
+  "detailsLabel": "Détails",
+  "planPickerLabel": "Choisissez votre plan préféré",
+  "planCardLabel": "Gérez votre plan",
+  "planPickerAlertErrorTitle": "Erreur lors de la demande de paiement",
+  "planPickerAlertErrorDescription": "Une erreur s'est produite lors de la demande de paiement. Veuillez réessayer plus tard.",
+  "subscriptionCancelled": "Abonnement annulé",
+  "cancelSubscriptionDate": "Votre abonnement sera annulé à la fin de la période",
+  "noPlanChosen": "Choisis un plan, s'il te plaît",
+  "noIntervalPlanChosen": "Choisis un intervalle de facturation, s'il te plaît",
+  "status": {
+    "free": {
+      "badge": "Plan Gratuit",
+      "heading": "Tu es actuellement sur le Plan Gratuit",
+      "description": "T'es sur un plan gratuit. Tu peux passer à un plan payant quand tu veux."
+    },
+    "active": {
+      "badge": "Actif",
+      "heading": "Ton abonnement est actif",
+      "description": "Ton abonnement est actif. Tu peux gérer ton abonnement et ta facturation dans le Portail Client."
+    },
+    "trialing": {
+      "badge": "Essai",
+      "heading": "T'es en période d'essai",
+      "description": "Tu peux profiter des avantages du plan jusqu'à la fin de l'essai"
+    },
+    "past_due": {
+      "badge": "En Retard",
+      "heading": "Ton facture est en retard",
+      "description": "Ton facture est en retard. Mets à jour ta méthode de paiement, s'il te plaît."
+    },
+    "canceled": {
+      "badge": "Annulé",
+      "heading": "Ton abonnement est annulé",
+      "description": "Ton abonnement est annulé. Il est prévu de se terminer à la fin de la période de facturation."
+    },
+    "unpaid": {
+      "badge": "Non Payé",
+      "heading": "Ton facture n'est pas payée",
+      "description": "Ton facture n'est pas payée. Mets à jour ta méthode de paiement, s'il te plaît."
+    },
+    "incomplete": {
+      "badge": "Incomplet",
+      "heading": "On attend ton paiement",
+      "description": "On attend que ton paiement soit traité. Sois patient avec nous."
+    },
+    "incomplete_expired": {
+      "badge": "Expiré",
+      "heading": "Ton paiement a expiré",
+      "description": "Ton paiement a expiré. Mets à jour ta méthode de paiement, s'il te plaît."
+    },
+    "paused": {
+      "badge": "En Pause",
+      "heading": "Ton abonnement est en pause",
+      "description": "Ton abonnement est en pause. Tu peux le reprendre quand tu veux."
+    },
+    "succeeded": {
+      "badge": "Réussi",
+      "heading": "Ton paiement a réussi",
+      "description": "Ton paiement a réussi. Merci de t'être abonné!"
+    },
+    "pending": {
+      "badge": "En Attente",
+      "heading": "Ton paiement est en attente",
+      "description": "Ton paiement est en attente. Sois patient avec nous."
+    },
+    "failed": {
+      "badge": "Échoué",
+      "heading": "Ton paiement a échoué",
+      "description": "Ton paiement a échoué. Mets à jour ta méthode de paiement, s'il te plaît."
+    }
+  }
+}

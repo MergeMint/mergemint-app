@@ -98,12 +98,8 @@ function getDefaultValues() {
   }
 
   const searchParams = new URLSearchParams(window.location.search);
-  const inviteToken = searchParams.get('invite_token');
 
-  if (!inviteToken) {
-    return { email: '' };
-  }
-
+  // Extract email from URL if present (used for invite flows)
   return {
     email: searchParams.get('email') ?? '',
   };

@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "Gestisci il tuo Abbonamento e la Fatturazione",
+  "planCardTitle": "Il Tuo Piano",
+  "planCardDescription": "Qui sotto troverai i dettagli del tuo piano attuale. Puoi cambiare il tuo piano o cancellare l'abbonamento in qualsiasi momento.",
+  "planRenewal": "Si rinnova ogni {{interval}} a {{price}}",
+  "planDetails": "Dettagli del Piano",
+  "checkout": "Procedi al Pagamento",
+  "trialEndsOn": "La tua prova termina il",
+  "billingPortalCardButton": "Accedi al Portale di Fatturazione",
+  "billingPortalCardTitle": "Gestisci i Tuoi Dati di Fatturazione",
+  "billingPortalCardDescription": "Accedi al tuo Portale di Fatturazione per gestire il tuo abbonamento e la fatturazione. Puoi aggiornare o cancellare il tuo piano, oppure scaricare le tue fatture.",
+  "cancelAtPeriodEndDescription": "Il tuo abbonamento è programmato per essere cancellato il {{- endDate }}.",
+  "renewAtPeriodEndDescription": "Il tuo abbonamento è programmato per essere rinnovato il {{- endDate }}",
+  "noPermissionsAlertHeading": "Non hai i permessi per modificare le impostazioni di fatturazione",
+  "noPermissionsAlertBody": "Contatta il proprietario del tuo account per modificare le impostazioni di fatturazione.",
+  "checkoutSuccessTitle": "Fatto! Tutto è pronto.",
+  "checkoutSuccessDescription": "Grazie per esserti abbonato, abbiamo elaborato con successo il tuo abbonamento! Un'email di conferma sarà inviata a {{ customerEmail }}.",
+  "checkoutSuccessBackButton": "Torna all'App",
+  "cannotManageBillingAlertTitle": "Non puoi gestire la fatturazione",
+  "cannotManageBillingAlertDescription": "Non hai i permessi per gestire la fatturazione. Contatta il proprietario del tuo account.",
+  "manageTeamPlan": "Gestisci il Tuo Piano Team",
+  "manageTeamPlanDescription": "Scegli un piano che si adatta alle esigenze del tuo team. Puoi aggiornare o ridimensionare il tuo piano in qualsiasi momento.",
+  "basePlan": "Piano Base",
+  "billingInterval": {
+    "label": "Scegli il tuo intervallo di fatturazione",
+    "month": "Fatturato mensilmente",
+    "year": "Fatturato annualmente"
+  },
+  "perMonth": "al mese",
+  "custom": "Piano Personalizzato",
+  "lifetime": "A Vita",
+  "trialPeriod": "Prova di {{period}} giorni",
+  "perPeriod": "per {{period}}",
+  "redirectingToPayment": "Reindirizzamento al pagamento. Attendi...",
+  "proceedToPayment": "Procedi al Pagamento",
+  "startTrial": "Inizia la Prova",
+  "perTeamMember": "Per membro del team",
+  "perUnit": "Per {{unit}} di utilizzo",
+  "teamMembers": "Membri del Team",
+  "includedUpTo": "Fino a {{upTo}} {{unit}} inclusi nel piano",
+  "fromPreviousTierUpTo": "per ogni {{unit}} per i prossimi {{ upTo }} {{ unit }}",
+  "andAbove": "sopra {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "per ogni {{ unit }}",
+  "setupFee": "più una commissione di configurazione di {{ setupFee }}",
+  "perUnitIncluded": "({{included}} inclusi)",
+  "featuresLabel": "Funzionalità",
+  "detailsLabel": "Dettagli",
+  "planPickerLabel": "Scegli il tuo piano preferito",
+  "planCardLabel": "Gestisci il Tuo Piano",
+  "planPickerAlertErrorTitle": "Errore nella richiesta di pagamento",
+  "planPickerAlertErrorDescription": "C'è stato un errore nella richiesta di pagamento. Riprova più tardi.",
+  "subscriptionCancelled": "Abbonamento Cancellato",
+  "cancelSubscriptionDate": "Il tuo abbonamento sarà cancellato alla fine del periodo",
+  "noPlanChosen": "Per favore, scegli un piano",
+  "noIntervalPlanChosen": "Per favore, scegli un intervallo di fatturazione",
+  "status": {
+    "free": {
+      "badge": "Piano Gratuito",
+      "heading": "Sei attualmente sul Piano Gratuito",
+      "description": "Sei su un piano gratuito. Puoi passare a un piano a pagamento quando vuoi."
+    },
+    "active": {
+      "badge": "Attivo",
+      "heading": "Il tuo abbonamento è attivo",
+      "description": "Il tuo abbonamento è attivo. Puoi gestire il tuo abbonamento e la fatturazione nel Customer Portal."
+    },
+    "trialing": {
+      "badge": "Prova",
+      "heading": "Sei in prova",
+      "description": "Puoi goderti i vantaggi del piano fino alla fine della prova"
+    },
+    "past_due": {
+      "badge": "Scaduto",
+      "heading": "La tua fattura è scaduta",
+      "description": "La tua fattura è scaduta. Per favore, aggiorna il tuo metodo di pagamento."
+    },
+    "canceled": {
+      "badge": "Annullato",
+      "heading": "Il tuo abbonamento è annullato",
+      "description": "Il tuo abbonamento è annullato. È programmato per terminare alla fine del periodo di fatturazione."
+    },
+    "unpaid": {
+      "badge": "Non Pagato",
+      "heading": "La tua fattura non è pagata",
+      "description": "La tua fattura non è pagata. Per favore, aggiorna il tuo metodo di pagamento."
+    },
+    "incomplete": {
+      "badge": "Incompleto",
+      "heading": "Stiamo aspettando il tuo pagamento",
+      "description": "Stiamo aspettando che il tuo pagamento vada a buon fine. Abbi pazienza."
+    },
+    "incomplete_expired": {
+      "badge": "Scaduto",
+      "heading": "Il tuo pagamento è scaduto",
+      "description": "Il tuo pagamento è scaduto. Per favore, aggiorna il tuo metodo di pagamento."
+    },
+    "paused": {
+      "badge": "In Pausa",
+      "heading": "Il tuo abbonamento è in pausa",
+      "description": "Il tuo abbonamento è in pausa. Puoi riprenderlo quando vuoi."
+    },
+    "succeeded": {
+      "badge": "Riuscito",
+      "heading": "Il tuo pagamento è stato completato",
+      "description": "Il tuo pagamento è stato completato. Grazie per esserti abbonato!"
+    },
+    "pending": {
+      "badge": "In Sospeso",
+      "heading": "Il tuo pagamento è in sospeso",
+      "description": "Il tuo pagamento è in sospeso. Abbi pazienza."
+    },
+    "failed": {
+      "badge": "Non Riuscito",
+      "heading": "Il tuo pagamento non è riuscito",
+      "description": "Il tuo pagamento non è riuscito. Per favore, aggiorna il tuo metodo di pagamento."
+    }
+  }
+}

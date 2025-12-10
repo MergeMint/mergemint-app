@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@kit/ui/table';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -40,8 +41,9 @@ export default async function LeaderboardPage({
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
-        title={`Leaderboard · ${org.name}`}
+        title="Leaderboard"
         description={'Top contributors over the last 30 days.'}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <Card>

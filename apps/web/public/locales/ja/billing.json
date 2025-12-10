@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "サブスクリプションと請求を管理する",
+  "planCardTitle": "あなたのプラン",
+  "planCardDescription": "以下は現在のプランの詳細です。いつでもプランを変更したり、サブスクリプションをキャンセルできます。",
+  "planRenewal": "{{interval}}ごとに{{price}}で更新されます",
+  "planDetails": "プランの詳細",
+  "checkout": "チェックアウトに進む",
+  "trialEndsOn": "トライアルの終了日",
+  "billingPortalCardButton": "請求ポータルにアクセス",
+  "billingPortalCardTitle": "請求情報を管理する",
+  "billingPortalCardDescription": "請求ポータルにアクセスして、サブスクリプションと請求を管理します。プランの更新またはキャンセル、請求書のダウンロードができます。",
+  "cancelAtPeriodEndDescription": "サブスクリプションは{{- endDate }}にキャンセルされる予定です。",
+  "renewAtPeriodEndDescription": "サブスクリプションは{{- endDate }}に更新される予定です",
+  "noPermissionsAlertHeading": "請求設定を変更する権限がありません",
+  "noPermissionsAlertBody": "アカウントの請求設定を変更するには、アカウント所有者に連絡してください。",
+  "checkoutSuccessTitle": "完了！すべて準備できました。",
+  "checkoutSuccessDescription": "サブスクリプションいただきありがとうございます。サブスクリプションの処理が完了しました！確認メールが{{ customerEmail }}に送信されます。",
+  "checkoutSuccessBackButton": "アプリに進む",
+  "cannotManageBillingAlertTitle": "請求を管理できません",
+  "cannotManageBillingAlertDescription": "請求を管理する権限がありません。アカウント所有者に連絡してください。",
+  "manageTeamPlan": "チームプランを管理する",
+  "manageTeamPlanDescription": "チームのニーズに合ったプランを選択します。いつでもプランをアップグレードまたはダウングレードできます。",
+  "basePlan": "ベースプラン",
+  "billingInterval": {
+    "label": "請求間隔を選択",
+    "month": "月額請求",
+    "year": "年額請求"
+  },
+  "perMonth": "月額",
+  "custom": "カスタムプラン",
+  "lifetime": "ライフタイム",
+  "trialPeriod": "{{period}}日間のトライアル",
+  "perPeriod": "{{period}}ごと",
+  "redirectingToPayment": "チェックアウトにリダイレクト中です。お待ちください...",
+  "proceedToPayment": "支払いに進む",
+  "startTrial": "トライアルを開始",
+  "perTeamMember": "チームメンバーあたり",
+  "perUnit": "{{unit}}の使用量あたり",
+  "teamMembers": "チームメンバー",
+  "includedUpTo": "プランに最大{{upTo}} {{unit}}が含まれます",
+  "fromPreviousTierUpTo": "次の{{ upTo }} {{ unit }}の各{{unit}}について",
+  "andAbove": "{{ previousTier }} {{ unit }}以上",
+  "forEveryUnit": "各{{ unit }}について",
+  "setupFee": "プラス{{ setupFee }}のセットアップ料金",
+  "perUnitIncluded": "({{included}}が含まれます)",
+  "featuresLabel": "機能",
+  "detailsLabel": "詳細",
+  "planPickerLabel": "希望するプランを選択",
+  "planCardLabel": "プランを管理",
+  "planPickerAlertErrorTitle": "チェックアウトのリクエストエラー",
+  "planPickerAlertErrorDescription": "チェックアウトをリクエスト中にエラーが発生しました。後でもう一度お試しください。",
+  "subscriptionCancelled": "サブスクリプションがキャンセルされました",
+  "cancelSubscriptionDate": "サブスクリプションは期間終了時にキャンセルされます",
+  "noPlanChosen": "プランを選んでください",
+  "noIntervalPlanChosen": "請求間隔を選んでください",
+  "status": {
+    "free": {
+      "badge": "無料プラン",
+      "heading": "現在、無料プランをご利用中です",
+      "description": "無料プランをご利用中です。いつでも有料プランにアップグレードできます。"
+    },
+    "active": {
+      "badge": "アクティブ",
+      "heading": "サブスクリプションがアクティブです",
+      "description": "サブスクリプションがアクティブです。カスタマーポータルでサブスクリプションと請求を管理できます。"
+    },
+    "trialing": {
+      "badge": "トライアル",
+      "heading": "トライアル中です",
+      "description": "トライアルが終了するまで、プランの機能をお楽しみいただけます"
+    },
+    "past_due": {
+      "badge": "期限超過",
+      "heading": "請求書が期限を超過しています",
+      "description": "請求書が期限を超過しています。お支払い方法を更新してください。"
+    },
+    "canceled": {
+      "badge": "キャンセル済み",
+      "heading": "サブスクリプションがキャンセルされました",
+      "description": "サブスクリプションがキャンセルされました。請求期間の終了時に終了予定です。"
+    },
+    "unpaid": {
+      "badge": "未払い",
+      "heading": "請求書が未払いです",
+      "description": "請求書が未払いです。お支払い方法を更新してください。"
+    },
+    "incomplete": {
+      "badge": "未完了",
+      "heading": "お支払いの完了をお待ちしています",
+      "description": "お支払いの完了をお待ちしています。もう少しお待ちください。"
+    },
+    "incomplete_expired": {
+      "badge": "期限切れ",
+      "heading": "お支払いの期限が切れました",
+      "description": "お支払いの期限が切れました。お支払い方法を更新してください。"
+    },
+    "paused": {
+      "badge": "一時停止中",
+      "heading": "サブスクリプションが一時停止中です",
+      "description": "サブスクリプションが一時停止中です。いつでも再開できます。"
+    },
+    "succeeded": {
+      "badge": "成功",
+      "heading": "お支払いが完了しました",
+      "description": "お支払いが完了しました。ご登録ありがとうございます!"
+    },
+    "pending": {
+      "badge": "保留中",
+      "heading": "お支払いが保留中です",
+      "description": "お支払いが保留中です。もう少しお待ちください。"
+    },
+    "failed": {
+      "badge": "失敗",
+      "heading": "お支払いが失敗しました",
+      "description": "お支払いが失敗しました。お支払い方法を更新してください。"
+    }
+  }
+}

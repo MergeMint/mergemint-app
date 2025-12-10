@@ -38,6 +38,7 @@ import {
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { AnimatedList, BentoCard, BentoGrid, BlurFade, Marquee, Meteors, NumberTicker, ShineBorder } from '@kit/ui/magicui';
+import { Trans } from '@kit/ui/trans';
 import { cn } from '@kit/ui/utils';
 
 // PR Evaluation notifications for animated list
@@ -199,11 +200,11 @@ export default function Home() {
               <div className="mb-8 flex flex-col items-center gap-3">
                 <Badge variant="outline" className="px-4 py-2 text-sm border-blue-500/30 bg-blue-500/5">
                   <Rocket className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-blue-600">Born at TextCortex AI</span>
+                  <span className="text-blue-600"><Trans i18nKey="marketing:home.heroBadge1" /></span>
                 </Badge>
                 <Badge variant="outline" className="px-4 py-2 text-sm border-purple-500/30 bg-purple-500/5">
                   <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-                  Open Source PR Intelligence Platform
+                  <Trans i18nKey="marketing:home.heroBadge2" />
                 </Badge>
               </div>
             </BlurFade>
@@ -211,9 +212,9 @@ export default function Home() {
             {/* Headline */}
             <BlurFade delay={0.2} inView>
               <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                <span className="block">Turn merged PRs into</span>
+                <span className="block"><Trans i18nKey="marketing:home.heroTitle" /></span>
                 <span className="block bg-gradient-to-r from-purple-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
-                  developer recognition
+                  <Trans i18nKey="marketing:home.heroTitleHighlight" />
                 </span>
               </h1>
             </BlurFade>
@@ -221,10 +222,7 @@ export default function Home() {
             {/* Subtitle */}
             <BlurFade delay={0.3} inView>
               <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-                Born from our struggle at TextCortex AI to fairly reward our top performers, 
-                MergeMint uses AI to automatically evaluate every merged pull request—scoring 
-                contributions by severity and impact. Finally, an objective way to recognize 
-                excellence and automate your bug bounty program.
+                <Trans i18nKey="marketing:home.heroDescription" />
               </p>
             </BlurFade>
 
@@ -233,14 +231,14 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button asChild size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg">
                   <Link href="/auth/sign-up">
-                    Start Free
+                    <Trans i18nKey="marketing:home.heroCta" />
                     <ArrowRightIcon className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="px-8 py-6 text-lg">
                   <Link href="https://github.com/MergeMint/mergemint-app" target="_blank">
                     <Github className="mr-2 h-5 w-5" />
-                    View on GitHub
+                    <Trans i18nKey="marketing:home.heroGithub" />
                   </Link>
                 </Button>
               </div>
@@ -251,15 +249,15 @@ export default function Home() {
               <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Shield className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">SOC 2 Ready</span>
+                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge1" /></span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span className="text-sm">Self-hosted option</span>
+                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge2" /></span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Code2 className="h-5 w-5 text-purple-500" />
-                  <span className="text-sm">Open Source (Non-Commercial)</span>
+                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge3" /></span>
                 </div>
               </div>
             </BlurFade>
@@ -279,7 +277,7 @@ export default function Home() {
                         <div className="h-3 w-3 rounded-full bg-yellow-500" />
                         <div className="h-3 w-3 rounded-full bg-green-500" />
                       </div>
-                      <span className="text-sm text-muted-foreground ml-2">MergeMint Dashboard</span>
+                      <span className="text-sm text-muted-foreground ml-2"><Trans i18nKey="marketing:home.dashboardTitle" /></span>
                     </div>
                     <Image
                       src="/images/dashboard.png"
@@ -295,7 +293,7 @@ export default function Home() {
                   <div className="lg:col-span-2 rounded-xl border bg-card shadow-2xl overflow-hidden">
                     <div className="flex items-center gap-2 px-4 py-3 mb-4 border-b bg-muted/50">
                       <Bot className="h-4 w-4 text-purple-500" />
-                      <span className="text-sm font-medium">Live PR Evaluations</span>
+                      <span className="text-sm font-medium"><Trans i18nKey="marketing:home.livePrEvaluations" /></span>
                     </div>
                     <div className="relative h-[400px] overflow-hidden">
                       <AnimatedList delay={2000}>
@@ -325,11 +323,11 @@ export default function Home() {
               <div className="text-center mb-12">
                 <Badge variant="outline" className="mb-4 px-4 py-2">
                   <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-                  Our Story
+                  <Trans i18nKey="marketing:home.storyBadge" />
                 </Badge>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-6">
-                  Built from<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-                    real pain
+                  <Trans i18nKey="marketing:home.storyTitle" /><span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                    <Trans i18nKey="marketing:home.storyTitleHighlight" />
                   </span>
                 </h2>
               </div>
@@ -354,16 +352,14 @@ export default function Home() {
                       </div>
                       <div>
                         <h3 className="text-xl font-bold mb-1 mt-0 bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-                          The Problem at TextCortex AI
+                          <Trans i18nKey="marketing:home.storyProblemTitle" />
                         </h3>
-                        <p className="text-sm text-muted-foreground mb-0">Where it all started</p>
+                        <p className="text-sm text-muted-foreground mb-0"><Trans i18nKey="marketing:home.storyProblemSubtitle" /></p>
                       </div>
                     </div>
-                    
+
                     <p className="text-lg leading-relaxed mb-6">
-                      At <strong className="text-purple-600">TextCortex AI</strong>, we knew who our star performers were—the developers who 
-                      consistently shipped critical bug fixes, tackled the hardest problems, and moved the product 
-                      forward. But when it came time for bonuses and recognition, we hit a wall.
+                      <Trans i18nKey="marketing:home.storyProblemDescription" />
                     </p>
 
                     <div className="grid md:grid-cols-2 gap-6 my-8 not-prose">
@@ -375,18 +371,13 @@ export default function Home() {
                             <div className="h-12 w-12 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
                               <AlertCircle className="h-6 w-6 text-red-500" />
                             </div>
-                            <h4 className="font-bold text-red-600 text-lg">The Struggles</h4>
+                            <h4 className="font-bold text-red-600 text-lg"><Trans i18nKey="marketing:home.storyStrugglesTitle" /></h4>
                           </div>
                           <ul className="space-y-3 text-sm text-muted-foreground">
-                            {[
-                              'Manual PR reviews took 20+ hours per week',
-                              'No clear metrics for "high performer"',
-                              'Spreadsheets became unmanageable',
-                              'Bias crept into recognition decisions',
-                            ].map((item, idx) => (
+                            {['storyStruggle1', 'storyStruggle2', 'storyStruggle3', 'storyStruggle4'].map((key, idx) => (
                               <li key={idx} className="flex items-start gap-2">
                                 <X className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
-                                <span>{item}</span>
+                                <span><Trans i18nKey={`marketing:home.${key}`} /></span>
                               </li>
                             ))}
                           </ul>
@@ -401,18 +392,13 @@ export default function Home() {
                             <div className="h-12 w-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
                               <Zap className="h-6 w-6 text-purple-600" />
                             </div>
-                            <h4 className="font-bold text-purple-600 text-lg">What We Needed</h4>
+                            <h4 className="font-bold text-purple-600 text-lg"><Trans i18nKey="marketing:home.storyNeededTitle" /></h4>
                           </div>
                           <ul className="space-y-3 text-sm text-muted-foreground">
-                            {[
-                              'Objective, AI-powered evaluation',
-                              'Automatic scoring on every merged PR',
-                              'Clear visibility into contributions',
-                              'Fair, transparent recognition system',
-                            ].map((item, idx) => (
+                            {['storyNeeded1', 'storyNeeded2', 'storyNeeded3', 'storyNeeded4'].map((key, idx) => (
                               <li key={idx} className="flex items-start gap-2">
                                 <CheckCircle2 className="h-4 w-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                                <span>{item}</span>
+                                <span><Trans i18nKey={`marketing:home.${key}`} /></span>
                               </li>
                             ))}
                           </ul>
@@ -421,8 +407,7 @@ export default function Home() {
                     </div>
 
                     <p className="text-lg leading-relaxed mb-6 text-center">
-                      We looked for existing solutions—but found nothing that automatically evaluated PR impact 
-                      using AI. So we built <strong className="text-purple-600 text-xl">MergeMint</strong>.
+                      <Trans i18nKey="marketing:home.storySolution" />
                     </p>
 
                     {/* Result Card with shine effect */}
@@ -432,13 +417,10 @@ export default function Home() {
                         <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
                           <CheckCircle2 className="h-6 w-6 text-green-600" />
                         </div>
-                        <h4 className="font-bold text-green-600 m-0 text-lg">The Result</h4>
+                        <h4 className="font-bold text-green-600 m-0 text-lg"><Trans i18nKey="marketing:home.storyResultTitle" /></h4>
                       </div>
                       <p className="text-muted-foreground mb-0">
-                        Today, every merged PR at TextCortex gets automatically evaluated by Claude. Our team knows 
-                        exactly how their work is valued, bonuses are calculated objectively, and our top performers 
-                        finally get the recognition they deserve. <strong className="text-green-600">We're now open-sourcing MergeMint so you 
-                        can solve the same problem.</strong>
+                        <Trans i18nKey="marketing:home.storyResultDescription" />
                       </p>
                     </div>
                   </div>
@@ -459,7 +441,7 @@ export default function Home() {
                 <div className="text-4xl font-bold text-purple-600">
                   <NumberTicker value={10000} />+
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">PRs Evaluated</p>
+                <p className="text-sm text-muted-foreground mt-1"><Trans i18nKey="marketing:home.stat1Label" /></p>
               </div>
             </BlurFade>
             <BlurFade delay={0.2} inView>
@@ -468,7 +450,7 @@ export default function Home() {
                 <div className="text-4xl font-bold text-purple-600">
                   <NumberTicker value={500} />+
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">Active Developers</p>
+                <p className="text-sm text-muted-foreground mt-1"><Trans i18nKey="marketing:home.stat2Label" /></p>
               </div>
             </BlurFade>
             <BlurFade delay={0.3} inView>
@@ -477,7 +459,7 @@ export default function Home() {
                 <div className="text-4xl font-bold text-purple-600">
                   <NumberTicker value={50} />+
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">Organizations</p>
+                <p className="text-sm text-muted-foreground mt-1"><Trans i18nKey="marketing:home.stat3Label" /></p>
               </div>
             </BlurFade>
             <BlurFade delay={0.4} inView>
@@ -486,7 +468,7 @@ export default function Home() {
                 <div className="text-4xl font-bold text-purple-600">
                   <NumberTicker value={95} />%
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">Accuracy Rate</p>
+                <p className="text-sm text-muted-foreground mt-1"><Trans i18nKey="marketing:home.stat4Label" /></p>
               </div>
             </BlurFade>
           </div>
@@ -498,12 +480,12 @@ export default function Home() {
         <div className="container mx-auto px-4 mb-12">
           <BlurFade delay={0.1} inView>
             <div className="text-center">
-              <Badge variant="outline" className="mb-4">Testimonials</Badge>
+              <Badge variant="outline" className="mb-4"><Trans i18nKey="marketing:home.testimonialsBadge" /></Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-                Trusted by engineering teams solving the same problems
+                <Trans i18nKey="marketing:home.testimonialsTitle" />
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                From TextCortex AI to startups and enterprises—see how teams are using MergeMint to recognize great work.
+                <Trans i18nKey="marketing:home.testimonialsDescription" />
               </p>
             </div>
           </BlurFade>
@@ -529,22 +511,21 @@ export default function Home() {
       <section className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/5 via-transparent to-transparent" />
-        
+
         <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 px-4 py-2">
                 <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-                How It Works
+                <Trans i18nKey="marketing:home.howItWorksBadge" />
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                From merge to recognition<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-                  in seconds, not hours
+                <Trans i18nKey="marketing:home.howItWorksTitle" /><span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                  <Trans i18nKey="marketing:home.howItWorksTitleHighlight" />
                 </span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                No more manual spreadsheets or subjective reviews. MergeMint connects to GitHub and 
-                automatically evaluates every merged pull request using Claude AI.
+                <Trans i18nKey="marketing:home.howItWorksDescription" />
               </p>
             </div>
           </BlurFade>
@@ -560,29 +541,29 @@ export default function Home() {
                 {
                   icon: <Github className="h-8 w-8" />,
                   step: '01',
-                  title: 'Connect GitHub',
-                  description: 'Install the MergeMint GitHub App on your organization. Takes less than 2 minutes.',
+                  titleKey: 'marketing:home.howItWorksStep1Title',
+                  descriptionKey: 'marketing:home.howItWorksStep1Description',
                   color: 'from-gray-500 to-gray-700',
                 },
                 {
                   icon: <GitMerge className="h-8 w-8" />,
                   step: '02',
-                  title: 'Merge a PR',
-                  description: 'Developers work as usual. When a PR is merged, MergeMint gets notified via webhook.',
+                  titleKey: 'marketing:home.howItWorksStep2Title',
+                  descriptionKey: 'marketing:home.howItWorksStep2Description',
                   color: 'from-blue-500 to-blue-700',
                 },
                 {
                   icon: <Bot className="h-8 w-8" />,
                   step: '03',
-                  title: 'AI Evaluation',
-                  description: 'Claude analyzes the diff, classifies the component and severity, and calculates a score.',
+                  titleKey: 'marketing:home.howItWorksStep3Title',
+                  descriptionKey: 'marketing:home.howItWorksStep3Description',
                   color: 'from-purple-500 to-violet-600',
                 },
                 {
                   icon: <Trophy className="h-8 w-8" />,
                   step: '04',
-                  title: 'Leaderboards Update',
-                  description: 'Scores feed into dashboards. Developers see their impact. PMs track quality metrics.',
+                  titleKey: 'marketing:home.howItWorksStep4Title',
+                  descriptionKey: 'marketing:home.howItWorksStep4Description',
                   color: 'from-yellow-500 to-orange-500',
                 },
               ].map((item, idx) => (
@@ -594,15 +575,15 @@ export default function Home() {
                       item.color
                     )} style={{ opacity: 0.1 }} />
                     <div className="absolute -inset-px bg-gradient-to-b from-purple-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                    
+
                     <div className="relative flex flex-col items-center text-center p-8 rounded-2xl border bg-card hover:shadow-xl transition-all duration-300 overflow-hidden">
                       <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} borderRadius={16} />
-                      
+
                       {/* Step number badge */}
                       <div className="absolute top-4 right-4">
                         <span className="text-4xl font-black text-purple-500/10">{item.step}</span>
                       </div>
-                      
+
                       {/* Icon with gradient background */}
                       <div className={cn(
                         'mb-4 flex h-18 w-18 items-center justify-center rounded-2xl text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300',
@@ -612,11 +593,11 @@ export default function Home() {
                           {item.icon}
                         </div>
                       </div>
-                      
-                      <span className="text-xs font-bold text-purple-500 mb-2 uppercase tracking-wider">Step {item.step}</span>
-                      <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground text-sm">{item.description}</p>
-                      
+
+                      <span className="text-xs font-bold text-purple-500 mb-2 uppercase tracking-wider"><Trans i18nKey="marketing:home.stepLabel" values={{ step: item.step }} /></span>
+                      <h3 className="text-xl font-semibold mb-2"><Trans i18nKey={item.titleKey} /></h3>
+                      <p className="text-muted-foreground text-sm"><Trans i18nKey={item.descriptionKey} /></p>
+
                       {/* Arrow indicator (except last) */}
                       {idx < 3 && (
                         <div className="hidden lg:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10">
@@ -639,15 +620,14 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-16">
-              <Badge variant="outline" className="mb-4">Features</Badge>
+              <Badge variant="outline" className="mb-4"><Trans i18nKey="marketing:home.featuresBadge" /></Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                Everything we wished we had<span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-                  (and now you can have too)
+                <Trans i18nKey="marketing:home.featuresTitle" /><span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
+                  <Trans i18nKey="marketing:home.featuresTitleHighlight" />
                 </span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                Built for engineering managers, PMs, and developers who are tired of manual PR reviews 
-                and want to measure and reward impact objectively.
+                <Trans i18nKey="marketing:home.featuresDescription" />
               </p>
             </div>
           </BlurFade>
@@ -656,7 +636,7 @@ export default function Home() {
             <BentoGrid className="lg:grid-rows-3 auto-rows-[18rem] lg:auto-rows-[16rem]">
               {/* AI Evaluation - Large card with animated PR list */}
               <BentoCard
-                name="AI-Powered Evaluation"
+                name={<Trans i18nKey="marketing:home.bentoAiEvaluationTitle" />}
                 className="col-span-3 lg:col-span-2 lg:row-span-2"
                 background={
                   <div className="absolute right-4 top-4 w-[60%] opacity-70">
@@ -670,14 +650,14 @@ export default function Home() {
                   </div>
                 }
                 Icon={Bot}
-                description="Claude analyzes PR diffs, linked issues, and commit messages to classify severity and component automatically."
+                description={<Trans i18nKey="marketing:home.bentoAiEvaluationDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
 
               {/* Leaderboards */}
               <BentoCard
-                name="Leaderboards"
+                name={<Trans i18nKey="marketing:home.bentoLeaderboardsTitle" />}
                 className="col-span-3 lg:col-span-1 lg:row-span-2"
                 background={
                   <div className="absolute top-4 right-4 w-[80%] opacity-80 [mask-image:linear-gradient(to_top,transparent_5%,#000_50%)]">
@@ -714,14 +694,14 @@ export default function Home() {
                   </div>
                 }
                 Icon={Medal}
-                description="Real-time rankings by total score, PR count, or average impact."
+                description={<Trans i18nKey="marketing:home.bentoLeaderboardsDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
 
               {/* GitHub Integration */}
               <BentoCard
-                name="GitHub Integration"
+                name={<Trans i18nKey="marketing:home.bentoGithubTitle" />}
                 className="col-span-3 lg:col-span-1"
                 background={
                   <div className="absolute top-4 right-6 opacity-80 [mask-image:linear-gradient(to_top,transparent_10%,#000_60%)]">
@@ -736,14 +716,14 @@ export default function Home() {
                   </div>
                 }
                 Icon={Github}
-                description="One-click GitHub App installation with webhook-driven PR processing."
+                description={<Trans i18nKey="marketing:home.bentoGithubDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
 
               {/* PR Comments - Wide card */}
               <BentoCard
-                name="PR Comments"
+                name={<Trans i18nKey="marketing:home.bentoPrCommentsTitle" />}
                 className="col-span-3 lg:col-span-2"
                 background={
                   <div className="absolute top-4 right-4 w-[65%] opacity-80 [mask-image:linear-gradient(to_top,transparent_10%,#000_60%)]">
@@ -769,14 +749,14 @@ export default function Home() {
                   </div>
                 }
                 Icon={GitPullRequest}
-                description="MergeMint posts detailed evaluation comments directly on every merged PR."
+                description={<Trans i18nKey="marketing:home.bentoPrCommentsDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
 
               {/* Team Analytics */}
               <BentoCard
-                name="Team Analytics"
+                name={<Trans i18nKey="marketing:home.bentoTeamAnalyticsTitle" />}
                 className="col-span-3 lg:col-span-1"
                 background={
                   <div className="absolute top-4 right-4 left-auto w-[70%] opacity-80 [mask-image:linear-gradient(to_top,transparent_10%,#000_60%)]">
@@ -795,14 +775,14 @@ export default function Home() {
                   </div>
                 }
                 Icon={BarChart3}
-                description="Track team velocity, quality index, and contributor trends."
+                description={<Trans i18nKey="marketing:home.bentoTeamAnalyticsDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
 
               {/* Self-Hosted */}
               <BentoCard
-                name="Self-Hosted Option"
+                name={<Trans i18nKey="marketing:home.bentoSelfHostedTitle" />}
                 className="col-span-3 lg:col-span-1"
                 background={
                   <div className="absolute top-4 right-6 opacity-80 [mask-image:linear-gradient(to_top,transparent_10%,#000_60%)]">
@@ -817,9 +797,9 @@ export default function Home() {
                   </div>
                 }
                 Icon={Shield}
-                description="Run MergeMint on your own infrastructure. Keep all data behind your firewall."
+                description={<Trans i18nKey="marketing:home.bentoSelfHostedDescription" />}
                 href="/features"
-                cta="Learn more"
+                cta={<Trans i18nKey="marketing:home.bentoLearnMore" />}
               />
             </BentoGrid>
           </BlurFade>
@@ -830,34 +810,33 @@ export default function Home() {
       <section className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute top-1/2 left-0 -translate-y-1/2 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-4 relative">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <BlurFade delay={0.1} inView>
               <div>
                 <Badge variant="outline" className="mb-4 px-4 py-2">
                   <Bot className="mr-2 h-4 w-4 text-purple-500" />
-                  Instant Feedback
+                  <Trans i18nKey="marketing:home.prPreviewBadge" />
                 </Badge>
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-6">
-                  Every PR gets a <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">detailed evaluation</span>
+                  <Trans i18nKey="marketing:home.prPreviewTitle" /> <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent"><Trans i18nKey="marketing:home.prPreviewTitleHighlight" /></span>
                 </h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  MergeMint comments on every merged PR with a breakdown of the score, eligibility checks, 
-                  and impact analysis. Developers know exactly how their work is valued.
+                  <Trans i18nKey="marketing:home.prPreviewDescription" />
                 </p>
                 <ul className="space-y-4">
                   {[
-                    { text: 'Component and severity classification', icon: <Target className="h-5 w-5 text-purple-600" /> },
-                    { text: 'Eligibility criteria (issue linked, tests, documentation)', icon: <CheckCircle2 className="h-5 w-5 text-green-500" /> },
-                    { text: 'Final score with multiplier breakdown', icon: <BarChart3 className="h-5 w-5 text-blue-500" /> },
-                    { text: 'AI-generated impact summary', icon: <Bot className="h-5 w-5 text-violet-500" /> },
+                    { textKey: 'marketing:home.prPreviewFeature1', icon: <Target className="h-5 w-5 text-purple-600" /> },
+                    { textKey: 'marketing:home.prPreviewFeature2', icon: <CheckCircle2 className="h-5 w-5 text-green-500" /> },
+                    { textKey: 'marketing:home.prPreviewFeature3', icon: <BarChart3 className="h-5 w-5 text-blue-500" /> },
+                    { textKey: 'marketing:home.prPreviewFeature4', icon: <Bot className="h-5 w-5 text-violet-500" /> },
                   ].map((item, idx) => (
                     <li key={idx} className="flex items-center gap-4 p-3 rounded-lg bg-card border hover:shadow-md transition-shadow">
                       <div className="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
                         {item.icon}
                       </div>
-                      <span className="font-medium">{item.text}</span>
+                      <span className="font-medium"><Trans i18nKey={item.textKey} /></span>
                     </li>
                   ))}
                 </ul>
@@ -948,16 +927,15 @@ export default function Home() {
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 px-4 py-2 border-cyan-500/30 bg-cyan-500/5">
                 <Layers className="mr-2 h-4 w-4 text-cyan-600" />
-                <span className="text-cyan-600">NEW</span>
+                <span className="text-cyan-600"><Trans i18nKey="marketing:home.productInsightsBadge" /></span>
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                Product Insights for<span className="block bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
-                  Product Managers
+                <Trans i18nKey="marketing:home.productInsightsTitle" /><span className="block bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                  <Trans i18nKey="marketing:home.productInsightsTitleHighlight" />
                 </span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                Go beyond developer metrics. Understand where your product is evolving,
-                identify bug hotspots, track feature ownership, and spot knowledge silos before they become problems.
+                <Trans i18nKey="marketing:home.productInsightsDescription" />
               </p>
             </div>
           </BlurFade>
@@ -973,9 +951,9 @@ export default function Home() {
                     <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                       <Layers className="h-6 w-6" />
                     </div>
-                    <h3 className="text-xl font-bold mb-2">Component Analytics</h3>
+                    <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.piComponentAnalyticsTitle" /></h3>
                     <p className="text-muted-foreground text-sm max-w-md">
-                      See which parts of your product are getting the most attention, where bugs are concentrated, and how work is distributed.
+                      <Trans i18nKey="marketing:home.piComponentAnalyticsDescription" />
                     </p>
                   </div>
                 </div>
@@ -1020,9 +998,9 @@ export default function Home() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-orange-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Bug className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Bug Hotspots</h3>
+                <h3 className="text-lg font-bold mb-2"><Trans i18nKey="marketing:home.piBugHotspotsTitle" /></h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Identify components with the most P0/P1 bug fixes
+                  <Trans i18nKey="marketing:home.piBugHotspotsDescription" />
                 </p>
                 <div className="space-y-2">
                   {[
@@ -1052,9 +1030,9 @@ export default function Home() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                   <Crown className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Feature Ownership</h3>
+                <h3 className="text-lg font-bold mb-2"><Trans i18nKey="marketing:home.piFeatureOwnershipTitle" /></h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Know who owns each feature area
+                  <Trans i18nKey="marketing:home.piFeatureOwnershipDescription" />
                 </p>
                 <div className="space-y-2">
                   {[
@@ -1082,9 +1060,9 @@ export default function Home() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                   <AlertTriangle className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Knowledge Silos</h3>
+                <h3 className="text-lg font-bold mb-2"><Trans i18nKey="marketing:home.piKnowledgeSilosTitle" /></h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Spot single-contributor components
+                  <Trans i18nKey="marketing:home.piKnowledgeSilosDescription" />
                 </p>
                 <div className="space-y-2">
                   {[
@@ -1111,9 +1089,9 @@ export default function Home() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                   <TrendingUp className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Severity Trends</h3>
+                <h3 className="text-lg font-bold mb-2"><Trans i18nKey="marketing:home.piSeverityTrendsTitle" /></h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  Track bug vs feature ratio over time
+                  <Trans i18nKey="marketing:home.piSeverityTrendsDescription" />
                 </p>
                 <div className="flex items-end justify-between h-[80px] gap-2">
                   {[
@@ -1140,11 +1118,11 @@ export default function Home() {
                 <div className="flex items-center justify-center gap-4 mt-3 text-xs">
                   <span className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-blue-500" />
-                    Features
+                    <Trans i18nKey="marketing:home.piFeaturesLabel" />
                   </span>
                   <span className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-red-500" />
-                    Bug fixes
+                    <Trans i18nKey="marketing:home.piBugFixesLabel" />
                   </span>
                 </div>
               </div>
@@ -1155,9 +1133,9 @@ export default function Home() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-lg group-hover:scale-110 transition-transform">
                   <AlertCircle className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">At-Risk Components</h3>
+                <h3 className="text-lg font-bold mb-2"><Trans i18nKey="marketing:home.piAtRiskTitle" /></h3>
                 <p className="text-muted-foreground text-sm mb-4">
-                  High bugs + low eligibility = needs attention
+                  <Trans i18nKey="marketing:home.piAtRiskDescription" />
                 </p>
                 <div className="space-y-2">
                   {[
@@ -1187,7 +1165,7 @@ export default function Home() {
             <div className="mt-12 text-center">
               <Button asChild size="lg" className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white px-8">
                 <Link href="/features">
-                  Explore Product Insights
+                  <Trans i18nKey="marketing:home.productInsightsCta" />
                   <ArrowRightIcon className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -1202,25 +1180,24 @@ export default function Home() {
           <BlurFade delay={0.1} inView>
             <Badge variant="outline" className="mb-4">
               <Code2 className="mr-2 h-4 w-4" />
-              Open Source
+              <Trans i18nKey="marketing:home.openSourceBadge" />
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-              Built by developers, for developers
+              <Trans i18nKey="marketing:home.openSourceTitle" />
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-8">
-              We solved our own problem at TextCortex AI, and now we're open-sourcing it for everyone. 
-              Self-host it, fork it, contribute to it. Free for non-commercial use under CC BY-NC 4.0.
+              <Trans i18nKey="marketing:home.openSourceDescription" />
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg" variant="outline" className="px-8">
                 <Link href="https://github.com/MergeMint/mergemint-app" target="_blank">
                   <Github className="mr-2 h-5 w-5" />
-                  Star on GitHub
+                  <Trans i18nKey="marketing:home.openSourceStar" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="ghost" className="px-8">
                 <Link href="https://github.com/MergeMint/mergemint-app/blob/main/CONTRIBUTING.md" target="_blank">
-                  Contribution Guide
+                  <Trans i18nKey="marketing:home.openSourceContribute" />
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -1230,15 +1207,15 @@ export default function Home() {
             <div className="mt-12 flex flex-wrap items-center justify-center gap-8">
               <div className="flex items-center gap-2">
                 <Star className="h-5 w-5 text-yellow-500" />
-                <span className="font-semibold">CC BY-NC 4.0</span>
+                <span className="font-semibold"><Trans i18nKey="marketing:home.openSourceLicense" /></span>
               </div>
               <div className="flex items-center gap-2">
                 <GitBranch className="h-5 w-5 text-purple-500" />
-                <span className="font-semibold">Actively Maintained</span>
+                <span className="font-semibold"><Trans i18nKey="marketing:home.openSourceMaintained" /></span>
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-blue-500" />
-                <span className="font-semibold">Community Driven</span>
+                <span className="font-semibold"><Trans i18nKey="marketing:home.openSourceCommunity" /></span>
               </div>
             </div>
           </BlurFade>
@@ -1250,19 +1227,19 @@ export default function Home() {
         {/* Background decorations */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-violet-500/5 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-16">
               <Badge variant="outline" className="mb-4 px-4 py-2">
                 <Zap className="mr-2 h-4 w-4 text-purple-500" />
-                Use Cases
+                <Trans i18nKey="marketing:home.useCasesBadge" />
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                Solve real problems, <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">like we did</span>
+                <Trans i18nKey="marketing:home.useCasesTitle" /> <span className="bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent"><Trans i18nKey="marketing:home.useCasesTitleHighlight" /></span>
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                Whether you're struggling with fair compensation, performance reviews, or contributor recognition—MergeMint has you covered.
+                <Trans i18nKey="marketing:home.useCasesDescription" />
               </p>
             </div>
           </BlurFade>
@@ -1270,25 +1247,25 @@ export default function Home() {
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                title: 'Fair Bonuses & Bug Bounties',
-                problem: 'Manually tracking PR impact is time-consuming and subjective',
-                solution: 'Automate scoring and payouts with AI-powered evaluation. Every contribution is measured objectively.',
+                titleKey: 'marketing:home.useCase1Title',
+                problemKey: 'marketing:home.useCase1Problem',
+                solutionKey: 'marketing:home.useCase1Solution',
                 icon: <Zap className="h-7 w-7" />,
                 gradient: 'from-yellow-500 to-orange-500',
                 bgGradient: 'from-yellow-500/5 to-orange-500/5',
               },
               {
-                title: 'Data-Driven Performance Reviews',
-                problem: 'Hard to quantify developer contributions during review cycles',
-                solution: 'Pull objective metrics for 1:1s, promotions, and compensation decisions. No more guesswork.',
+                titleKey: 'marketing:home.useCase2Title',
+                problemKey: 'marketing:home.useCase2Problem',
+                solutionKey: 'marketing:home.useCase2Solution',
                 icon: <BarChart3 className="h-7 w-7" />,
                 gradient: 'from-blue-500 to-cyan-500',
                 bgGradient: 'from-blue-500/5 to-cyan-500/5',
               },
               {
-                title: 'Recognizing Top Performers',
-                problem: 'Star developers go unnoticed while others take credit',
-                solution: 'Real-time leaderboards and public recognition for those who ship the most impactful work.',
+                titleKey: 'marketing:home.useCase3Title',
+                problemKey: 'marketing:home.useCase3Problem',
+                solutionKey: 'marketing:home.useCase3Solution',
                 icon: <Trophy className="h-7 w-7" />,
                 gradient: 'from-purple-500 to-pink-500',
                 bgGradient: 'from-purple-500/5 to-pink-500/5',
@@ -1300,7 +1277,7 @@ export default function Home() {
                   `bg-gradient-to-br ${item.bgGradient}`
                 )}>
                   <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={16} />
-                  
+
                   {/* Icon with gradient */}
                   <div className={cn(
                     'mb-6 flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-lg',
@@ -1309,9 +1286,9 @@ export default function Home() {
                   )}>
                     {item.icon}
                   </div>
-                  
-                  <h3 className="text-xl font-bold mb-4">{item.title}</h3>
-                  
+
+                  <h3 className="text-xl font-bold mb-4"><Trans i18nKey={item.titleKey} /></h3>
+
                   <div className="flex-grow space-y-4">
                     {/* Problem card */}
                     <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 group/problem hover:bg-red-500/10 transition-colors">
@@ -1319,27 +1296,27 @@ export default function Home() {
                         <div className="h-6 w-6 rounded-full bg-red-500/10 flex items-center justify-center">
                           <X className="h-4 w-4 text-red-500" />
                         </div>
-                        <p className="text-sm font-semibold text-red-600">Problem</p>
+                        <p className="text-sm font-semibold text-red-600"><Trans i18nKey="marketing:home.problemLabel" /></p>
                       </div>
-                      <p className="text-sm text-muted-foreground">{item.problem}</p>
+                      <p className="text-sm text-muted-foreground"><Trans i18nKey={item.problemKey} /></p>
                     </div>
-                    
+
                     {/* Arrow indicator */}
                     <div className="flex justify-center">
                       <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center transform rotate-90">
                         <ArrowRightIcon className="h-4 w-4 text-purple-500" />
                       </div>
                     </div>
-                    
+
                     {/* Solution card */}
                     <div className="p-4 rounded-xl bg-green-500/5 border border-green-500/20 group/solution hover:bg-green-500/10 transition-colors">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="h-6 w-6 rounded-full bg-green-500/10 flex items-center justify-center">
                           <CheckCircle2 className="h-4 w-4 text-green-500" />
                         </div>
-                        <p className="text-sm font-semibold text-green-600">Solution</p>
+                        <p className="text-sm font-semibold text-green-600"><Trans i18nKey="marketing:home.solutionLabel" /></p>
                       </div>
-                      <p className="text-sm text-muted-foreground">{item.solution}</p>
+                      <p className="text-sm text-muted-foreground"><Trans i18nKey={item.solutionKey} /></p>
                     </div>
                   </div>
                 </div>
@@ -1353,22 +1330,22 @@ export default function Home() {
       <section className="py-20 border-t bg-gradient-to-b from-muted/30 to-transparent relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-4 relative">
           <BlurFade delay={0.1} inView>
             <div className="text-center mb-8">
               <Badge variant="outline" className="mb-4 px-4 py-2">
                 <Users className="mr-2 h-4 w-4 text-purple-500" />
-                Meet the Creator
+                <Trans i18nKey="marketing:home.creatorBadge" />
               </Badge>
             </div>
-            
+
             <div className="max-w-4xl mx-auto">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/10 to-violet-500/10 rounded-3xl blur-2xl animate-pulse" />
                 <div className="relative flex flex-col lg:flex-row items-center gap-8 p-8 lg:p-10 rounded-2xl border bg-card shadow-2xl overflow-hidden">
                   <ShineBorder shineColor={['#7c3aed', '#a855f7', '#ec4899']} borderRadius={16} />
-                  
+
                   {/* Avatar with glow */}
                   <div className="flex-shrink-0 relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl blur-xl opacity-50" />
@@ -1379,33 +1356,32 @@ export default function Home() {
                       <CheckCircle2 className="h-4 w-4 text-white" />
                     </div>
                   </div>
-                  
+
                   {/* Info */}
                   <div className="flex-1 text-center lg:text-left">
                     <Badge className="mb-3 bg-purple-500/10 text-purple-600 border-purple-500/20">
-                      Founder & Creator
+                      <Trans i18nKey="marketing:home.creatorRole" />
                     </Badge>
                     <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-                      Jay Derinbogaz
+                      <Trans i18nKey="marketing:home.creatorName" />
                     </h3>
                     <p className="text-muted-foreground mb-4 text-lg">
-                      Co-founder & CTO at TextCortex AI
+                      <Trans i18nKey="marketing:home.creatorTitle" />
                     </p>
                     <p className="text-sm text-muted-foreground/80 mb-6">
-                      Built MergeMint to solve our own recognition problem—because every developer deserves 
-                      fair recognition for their work.
+                      <Trans i18nKey="marketing:home.creatorDescription" />
                     </p>
                     <div className="flex items-center gap-3 justify-center lg:justify-start">
-                      <Link 
-                        href="https://github.com/cderinbogaz" 
+                      <Link
+                        href="https://github.com/cderinbogaz"
                         target="_blank"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm font-medium transition-colors"
                       >
                         <Github className="h-4 w-4" />
                         <span>GitHub</span>
                       </Link>
-                      <Link 
-                        href="https://linkedin.com/in/ceyhunderinbogaz" 
+                      <Link
+                        href="https://linkedin.com/in/ceyhunderinbogaz"
                         target="_blank"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-muted/80 text-sm font-medium transition-colors"
                       >
@@ -1414,7 +1390,7 @@ export default function Home() {
                       </Link>
                     </div>
                   </div>
-                  
+
                   {/* Company badge */}
                   <div className="flex-shrink-0">
                     <div className="relative p-6 rounded-xl bg-gradient-to-br from-purple-500/5 to-violet-500/10 border border-purple-500/20 overflow-hidden">
@@ -1423,11 +1399,11 @@ export default function Home() {
                         <div className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent mb-2">
                           TextCortex AI
                         </div>
-                        <div className="text-xs text-muted-foreground">Where MergeMint was born</div>
+                        <div className="text-xs text-muted-foreground"><Trans i18nKey="marketing:home.creatorCompanySubtitle" /></div>
                         <div className="mt-3 flex justify-center gap-2">
                           <div className="px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-medium flex items-center gap-1">
                             <Check className="h-3 w-3" />
-                            Active Users
+                            <Trans i18nKey="marketing:home.creatorActiveUsers" />
                           </div>
                         </div>
                       </div>
@@ -1448,42 +1424,42 @@ export default function Home() {
               <ShineBorder shineColor={['#ffffff', '#a855f7', '#ffffff']} borderRadius={24} />
               <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
               <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-              
+
               <div className="relative text-center text-white">
                 <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
-                  Stop guessing. Start measuring.
+                  <Trans i18nKey="marketing:home.ctaTitle" />
                 </h2>
                 <p className="mx-auto max-w-2xl text-lg text-white/90 mb-3">
-                  Join TextCortex AI and hundreds of engineering teams who've solved the recognition problem.
+                  <Trans i18nKey="marketing:home.ctaDescription" />
                 </p>
                 <p className="mx-auto max-w-xl text-md text-white/70 mb-8">
-                  Setup takes 5 minutes. Free for non-commercial use. Open source and self-hostable.
+                  <Trans i18nKey="marketing:home.ctaSubDescription" />
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                   <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90 px-8 py-6 text-lg shadow-xl">
                     <Link href="/auth/sign-up">
-                      Get Started Free
+                      <Trans i18nKey="marketing:home.ctaCta" />
                       <ArrowRightIcon className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm">
                     <Link href="/features">
-                      See All Features
+                      <Trans i18nKey="marketing:home.ctaFeatures" />
                     </Link>
                   </Button>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/70">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>No credit card required</span>
+                    <span><Trans i18nKey="marketing:home.ctaBenefit1" /></span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>5-minute setup</span>
+                    <span><Trans i18nKey="marketing:home.ctaBenefit2" /></span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>Free for non-commercial</span>
+                    <span><Trans i18nKey="marketing:home.ctaBenefit3" /></span>
                   </div>
                 </div>
               </div>

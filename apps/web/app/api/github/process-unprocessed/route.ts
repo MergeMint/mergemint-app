@@ -104,7 +104,8 @@ export async function POST(request: Request) {
       `)
       .eq('org_id', orgId)
       .not('merged_at_gh', 'is', null) // Use merged_at_gh as indicator
-      .order('merged_at_gh', { ascending: false });
+      .order('merged_at_gh', { ascending: false })
+      .range(0, 49999); // Fetch up to 50k PRs
 
     if (prError) {
       console.error('[ProcessUnprocessed] Failed to fetch PRs:', prError);
@@ -114,11 +115,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get all existing evaluations for this org
+    // Get all existing evaluations for this org (use range to bypass 1000 row default limit)
     const { data: existingEvals } = await admin
       .from('pr_evaluations')
       .select('pr_id')
-      .eq('org_id', orgId);
+      .eq('org_id', orgId)
+      .range(0, 49999); // Fetch up to 50k evaluations
 
     const evaluatedPrIds = new Set((existingEvals ?? []).map((e: any) => e.pr_id));
 
@@ -275,13 +277,15 @@ export async function GET(request: Request) {
       `, { count: 'exact' })
       .eq('org_id', orgId)
       .not('merged_at_gh', 'is', null)
-      .order('merged_at_gh', { ascending: false });
+      .order('merged_at_gh', { ascending: false })
+      .range(0, 49999); // Fetch up to 50k PRs
 
-    // Get all evaluations for this org
+    // Get all evaluations for this org (use range to bypass 1000 row default limit)
     const { data: existingEvals } = await admin
       .from('pr_evaluations')
       .select('pr_id')
-      .eq('org_id', orgId);
+      .eq('org_id', orgId)
+      .range(0, 49999); // Fetch up to 50k evaluations
 
     const evaluatedPrIds = new Set((existingEvals ?? []).map((e: any) => e.pr_id));
     const unprocessedPRs = (allPRs ?? []).filter((pr: any) => !evaluatedPrIds.has(pr.id));

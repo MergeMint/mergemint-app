@@ -1,7 +1,8 @@
 import { use } from 'react';
 
 import { PersonalAccountSettingsContainer } from '@kit/accounts/personal-account-settings';
-import { PageBody } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 
 import authConfig from '~/config/auth.config';
 import pathsConfig from '~/config/paths.config';
@@ -17,7 +18,7 @@ const features = {
 };
 
 const paths = {
-  callback: callbackPath + `?next=${pathsConfig.app.profileSettings}`,
+  callback: callbackPath + `?next=/home/settings`,
 };
 
 export const generateMetadata = async () => {
@@ -34,15 +35,22 @@ function PersonalAccountSettingsPage() {
   const userId = user.id;
 
   return (
-    <PageBody>
-      <div className={'flex w-full flex-1 flex-col lg:max-w-2xl'}>
-        <PersonalAccountSettingsContainer
-          userId={userId}
-          paths={paths}
-          features={features}
-        />
-      </div>
-    </PageBody>
+    <>
+      <PageHeader
+        title="Account Settings"
+        description="Manage your personal account settings"
+        breadcrumbs={<AppBreadcrumbs />}
+      />
+      <PageBody>
+        <div className={'flex w-full flex-1 flex-col lg:max-w-2xl'}>
+          <PersonalAccountSettingsContainer
+            userId={userId}
+            paths={paths}
+            features={features}
+          />
+        </div>
+      </PageBody>
+    </>
   );
 }
 

@@ -1,18 +1,22 @@
 import { createI18nSettings } from '@kit/i18n';
 
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  isValidLocale,
+} from './locales.config';
+
 /**
  * The default language of the application.
  * This is used as a fallback language when the selected language is not supported.
- *
  */
-const defaultLanguage = process.env.NEXT_PUBLIC_DEFAULT_LOCALE ?? 'en';
+const defaultLanguage = DEFAULT_LOCALE;
 
 /**
  * The list of supported languages.
- * By default, only the default language is supported.
- * Add more languages here if needed.
+ * Imported from locales.config.ts for centralized management.
  */
-export const languages: string[] = [defaultLanguage];
+export const languages: string[] = [...LOCALES];
 
 /**
  * The name of the cookie that stores the selected language.
@@ -46,7 +50,7 @@ export function getI18nSettings(
 ) {
   let lng = language ?? defaultLanguage;
 
-  if (!languages.includes(lng)) {
+  if (!isValidLocale(lng)) {
     console.warn(
       `Language "${lng}" is not supported. Falling back to "${defaultLanguage}"`,
     );

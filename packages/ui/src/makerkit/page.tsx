@@ -154,11 +154,13 @@ export function PageHeader({
   description,
   className,
   displaySidebarTrigger = ENABLE_SIDEBAR_TRIGGER,
+  breadcrumbs,
 }: React.PropsWithChildren<{
   className?: string;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
   displaySidebarTrigger?: boolean;
+  breadcrumbs?: React.ReactNode;
 }>) {
   return (
     <div
@@ -173,20 +175,22 @@ export function PageHeader({
             <SidebarTrigger className="text-muted-foreground hover:text-secondary-foreground hidden h-4.5 w-4.5 cursor-pointer lg:inline-flex" />
           ) : null}
 
-          <If condition={description}>
-            <If condition={displaySidebarTrigger}>
-              <Separator
-                orientation="vertical"
-                className="hidden h-4 w-px lg:group-data-[minimized]:block"
-              />
-            </If>
-
-            <PageDescription>{description}</PageDescription>
+          <If condition={displaySidebarTrigger && breadcrumbs}>
+            <Separator
+              orientation="vertical"
+              className="hidden h-4 w-px lg:group-data-[minimized]:block"
+            />
           </If>
+
+          <If condition={breadcrumbs}>{breadcrumbs}</If>
         </div>
 
         <If condition={title}>
           <PageTitle>{title}</PageTitle>
+        </If>
+
+        <If condition={description}>
+          <PageDescription>{description}</PageDescription>
         </If>
       </div>
 

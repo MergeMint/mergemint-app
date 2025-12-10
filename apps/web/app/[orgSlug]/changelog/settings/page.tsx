@@ -1,18 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 
-import { Button } from '@kit/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@kit/ui/card';
-import { Input } from '@kit/ui/input';
-import { Label } from '@kit/ui/label';
-import { Textarea } from '@kit/ui/textarea';
 import { PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -76,6 +66,13 @@ export default async function ChangelogSettingsPage({
       <PageHeader
         title="Changelog Settings"
         description="Configure your product information and changelog display settings."
+        breadcrumbs={
+          <AppBreadcrumbs
+            values={{
+              [orgSlug]: org.name,
+            }}
+          />
+        }
       />
 
       <ChangelogSettingsClient

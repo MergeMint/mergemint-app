@@ -20,6 +20,7 @@ import {
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { ShineBorder } from '@kit/ui/magicui';
+import { Trans } from '@kit/ui/trans';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
@@ -63,20 +64,19 @@ async function HowItWorksPage() {
         <div className="container relative mx-auto px-4 text-center">
           <Badge variant="outline" className="mb-4">
             <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-            How It Works
+            <Trans i18nKey="marketing:howItWorks.badge" />
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            From merge to score
+            <Trans i18nKey="marketing:howItWorks.heroTitle" />
             <span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-              in seconds, not hours
+              <Trans i18nKey="marketing:howItWorks.heroTitleHighlight" />
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-4">
-            MergeMint automates the entire flow from PR merge to developer recognition. 
-            Here&apos;s exactly how it works.
+            <Trans i18nKey="marketing:howItWorks.heroDescription" />
           </p>
           <p className="mx-auto max-w-2xl text-sm text-muted-foreground/80">
-            No more manual spreadsheets like we used to do at TextCortex AI. Just automatic, AI-powered evaluation.
+            <Trans i18nKey="marketing:howItWorks.heroSubtext" />
           </p>
         </div>
       </section>
@@ -88,7 +88,7 @@ async function HowItWorksPage() {
             {/* Step 1 */}
             <div className="relative pb-16">
               <div className="absolute left-8 top-16 bottom-0 w-0.5 bg-gradient-to-b from-purple-500 to-purple-500/20 hidden md:block" />
-              
+
               <div className="flex gap-8 items-start">
                 <div className="hidden md:flex flex-shrink-0 h-16 w-16 rounded-2xl bg-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30">
                   <Github className="h-8 w-8" />
@@ -99,11 +99,14 @@ async function HowItWorksPage() {
                       <Github className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 1</Badge>
-                  <h2 className="text-2xl font-bold mb-3">Connect Your GitHub Organization</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step1Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step1Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    Install the MergeMint GitHub App on your organization. Select which repositories 
-                    you want to track. The setup takes less than 2 minutes.
+                    <Trans i18nKey="marketing:howItWorks.step1Description" />
                   </p>
                   <div className="relative p-6 rounded-xl border bg-card overflow-hidden">
                     <ShineBorder shineColor={['#7c3aed', '#a855f7', '#7c3aed']} />
@@ -112,22 +115,26 @@ async function HowItWorksPage() {
                         <Github className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="font-semibold">GitHub App Installation</p>
-                        <p className="text-sm text-muted-foreground">mergemint/mergemint-app</p>
+                        <p className="font-semibold">
+                          <Trans i18nKey="marketing:howItWorks.step1AppTitle" />
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          <Trans i18nKey="marketing:howItWorks.step1AppSubtitle" />
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Read access to code and pull requests</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step1Feature1" /></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Write access to issues (for comments)</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step1Feature2" /></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Webhook events for pull requests</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step1Feature3" /></span>
                       </div>
                     </div>
                   </div>
@@ -138,7 +145,7 @@ async function HowItWorksPage() {
             {/* Step 2 */}
             <div className="relative pb-16">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/20 via-purple-500 to-purple-500/20 hidden md:block" />
-              
+
               <div className="flex gap-8 items-start">
                 <div className="hidden md:flex flex-shrink-0 h-16 w-16 rounded-2xl bg-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30">
                   <Cog className="h-8 w-8" />
@@ -149,17 +156,20 @@ async function HowItWorksPage() {
                       <Cog className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 2</Badge>
-                  <h2 className="text-2xl font-bold mb-3">Configure Your Scoring Rules</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step2Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step2Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    Define the components of your product (e.g., Auth, Payments, UI) and assign 
-                    multipliers based on importance. Set up severity levels with base points.
+                    <Trans i18nKey="marketing:howItWorks.step2Description" />
                   </p>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="p-4 rounded-xl border bg-card">
                       <h4 className="font-semibold mb-3 flex items-center gap-2">
                         <Target className="h-4 w-4 text-purple-500" />
-                        Components
+                        <Trans i18nKey="marketing:howItWorks.step2Components" />
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between p-2 rounded bg-muted/50">
@@ -179,19 +189,25 @@ async function HowItWorksPage() {
                     <div className="p-4 rounded-xl border bg-card">
                       <h4 className="font-semibold mb-3 flex items-center gap-2">
                         <BarChart3 className="h-4 w-4 text-purple-500" />
-                        Severity Levels
+                        <Trans i18nKey="marketing:howItWorks.step2SeverityLevels" />
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between p-2 rounded bg-red-500/10">
-                          <span className="text-red-600">P0 Critical</span>
+                          <span className="text-red-600">
+                            <Trans i18nKey="marketing:howItWorks.step2P0" />
+                          </span>
                           <span className="font-medium">100 pts</span>
                         </div>
                         <div className="flex justify-between p-2 rounded bg-orange-500/10">
-                          <span className="text-orange-600">P1 High</span>
+                          <span className="text-orange-600">
+                            <Trans i18nKey="marketing:howItWorks.step2P1" />
+                          </span>
                           <span className="font-medium">50 pts</span>
                         </div>
                         <div className="flex justify-between p-2 rounded bg-yellow-500/10">
-                          <span className="text-yellow-600">P2 Medium</span>
+                          <span className="text-yellow-600">
+                            <Trans i18nKey="marketing:howItWorks.step2P2" />
+                          </span>
                           <span className="font-medium">25 pts</span>
                         </div>
                       </div>
@@ -204,7 +220,7 @@ async function HowItWorksPage() {
             {/* Step 3 */}
             <div className="relative pb-16">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/20 via-purple-500 to-purple-500/20 hidden md:block" />
-              
+
               <div className="flex gap-8 items-start">
                 <div className="hidden md:flex flex-shrink-0 h-16 w-16 rounded-2xl bg-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30">
                   <GitMerge className="h-8 w-8" />
@@ -215,16 +231,19 @@ async function HowItWorksPage() {
                       <GitMerge className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 3</Badge>
-                  <h2 className="text-2xl font-bold mb-3">A PR Gets Merged</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step3Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step3Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    Developers work as usual. When a pull request is merged, GitHub sends a 
-                    webhook to MergeMint with the PR details.
+                    <Trans i18nKey="marketing:howItWorks.step3Description" />
                   </p>
                   <div className="p-6 rounded-xl border bg-card font-mono text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground mb-3">
                       <Webhook className="h-4 w-4" />
-                      <span>Incoming Webhook</span>
+                      <span><Trans i18nKey="marketing:howItWorks.step3Webhook" /></span>
                     </div>
                     <pre className="text-xs overflow-x-auto">
 {`{
@@ -247,7 +266,7 @@ async function HowItWorksPage() {
             {/* Step 4 */}
             <div className="relative pb-16">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/20 via-purple-500 to-purple-500/20 hidden md:block" />
-              
+
               <div className="flex gap-8 items-start">
                 <div className="hidden md:flex flex-shrink-0 h-16 w-16 rounded-2xl bg-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30">
                   <Bot className="h-8 w-8" />
@@ -258,11 +277,14 @@ async function HowItWorksPage() {
                       <Bot className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 4</Badge>
-                  <h2 className="text-2xl font-bold mb-3">AI Evaluates the PR</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step4Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step4Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    MergeMint fetches the full diff and sends it to Claude. The AI analyzes the 
-                    changes, classifies the component and severity, and checks eligibility criteria.
+                    <Trans i18nKey="marketing:howItWorks.step4Description" />
                   </p>
                   <div className="p-6 rounded-xl border bg-gradient-to-br from-purple-500/5 to-violet-500/5">
                     <div className="flex items-center gap-3 mb-4">
@@ -270,26 +292,30 @@ async function HowItWorksPage() {
                         <Bot className="h-5 w-5 text-purple-600" />
                       </div>
                       <div>
-                        <p className="font-semibold">Claude AI Analysis</p>
-                        <p className="text-xs text-muted-foreground">Processing PR #142...</p>
+                        <p className="font-semibold">
+                          <Trans i18nKey="marketing:howItWorks.step4Analysis" />
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          <Trans i18nKey="marketing:howItWorks.step4Processing" />
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-3 text-sm">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Reading PR title, description, and linked issues</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step4Feature1" /></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Analyzing code diff across 3 files</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step4Feature2" /></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Matching file paths to component rules</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step4Feature3" /></span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        <span>Determining severity based on impact</span>
+                        <span><Trans i18nKey="marketing:howItWorks.step4Feature4" /></span>
                       </div>
                     </div>
                   </div>
@@ -300,7 +326,7 @@ async function HowItWorksPage() {
             {/* Step 5 */}
             <div className="relative pb-16">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500/20 via-purple-500 to-purple-500/20 hidden md:block" />
-              
+
               <div className="flex gap-8 items-start">
                 <div className="hidden md:flex flex-shrink-0 h-16 w-16 rounded-2xl bg-purple-500 items-center justify-center text-white shadow-lg shadow-purple-500/30">
                   <MessageSquare className="h-8 w-8" />
@@ -311,11 +337,14 @@ async function HowItWorksPage() {
                       <MessageSquare className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 5</Badge>
-                  <h2 className="text-2xl font-bold mb-3">Score Posted to PR</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step5Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step5Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    MergeMint posts a detailed comment on the PR with the evaluation results. 
-                    The developer gets instant feedback on their contribution.
+                    <Trans i18nKey="marketing:howItWorks.step5Description" />
                   </p>
                   <div className="relative p-6 rounded-xl border bg-card overflow-hidden">
                     <ShineBorder shineColor={['#7c3aed', '#ec4899', '#7c3aed']} />
@@ -324,33 +353,39 @@ async function HowItWorksPage() {
                         <Bot className="h-4 w-4 text-purple-600" />
                       </div>
                       <div>
-                        <p className="font-semibold text-sm">MergeMint Bot</p>
-                        <p className="text-xs text-muted-foreground">commented just now</p>
+                        <p className="font-semibold text-sm">
+                          <Trans i18nKey="marketing:howItWorks.step5Bot" />
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          <Trans i18nKey="marketing:howItWorks.step5CommentedJustNow" />
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
                         <Trophy className="h-5 w-5 text-yellow-500" />
-                        <span className="font-bold">Score: 75 points</span>
+                        <span className="font-bold">
+                          <Trans i18nKey="marketing:howItWorks.step5Score" values={{ points: 75 }} />
+                        </span>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 text-sm">
                         <div className="grid grid-cols-2 gap-2">
-                          <div>Component: <span className="text-purple-600 font-medium">AUTH (1.5×)</span></div>
-                          <div>Severity: <span className="text-orange-600 font-medium">P1 (50 pts)</span></div>
+                          <div><Trans i18nKey="marketing:howItWorks.step5Component" /> <span className="text-purple-600 font-medium">AUTH (1.5×)</span></div>
+                          <div><Trans i18nKey="marketing:howItWorks.step5Severity" /> <span className="text-orange-600 font-medium">P1 (50 pts)</span></div>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
                         <Badge variant="secondary" className="gap-1">
                           <CheckCircle2 className="h-3 w-3 text-green-500" />
-                          Issue Linked
+                          <Trans i18nKey="marketing:howItWorks.step5IssueLinked" />
                         </Badge>
                         <Badge variant="secondary" className="gap-1">
                           <CheckCircle2 className="h-3 w-3 text-green-500" />
-                          Tests Included
+                          <Trans i18nKey="marketing:howItWorks.step5TestsIncluded" />
                         </Badge>
                         <Badge variant="secondary" className="gap-1">
                           <CheckCircle2 className="h-3 w-3 text-green-500" />
-                          Implementation ✓
+                          <Trans i18nKey="marketing:howItWorks.step5Implementation" />
                         </Badge>
                       </div>
                     </div>
@@ -371,20 +406,25 @@ async function HowItWorksPage() {
                       <Trophy className="h-6 w-6" />
                     </div>
                   </div>
-                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">Step 6</Badge>
-                  <h2 className="text-2xl font-bold mb-3">Dashboards & Leaderboards Update</h2>
+                  <Badge className="mb-2 bg-purple-500/10 text-purple-600 border-purple-500/20">
+                    <Trans i18nKey="marketing:howItWorks.step6Badge" />
+                  </Badge>
+                  <h2 className="text-2xl font-bold mb-3">
+                    <Trans i18nKey="marketing:howItWorks.step6Title" />
+                  </h2>
                   <p className="text-muted-foreground mb-6">
-                    The score is recorded in the database. Leaderboards update in real-time. 
-                    PMs and eng leads can track team performance and recognize top contributors.
+                    <Trans i18nKey="marketing:howItWorks.step6Description" />
                   </p>
                   <div className="relative p-6 rounded-xl border bg-card overflow-hidden">
                     <ShineBorder shineColor={['#fbbf24', '#7c3aed', '#fbbf24']} />
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="font-semibold flex items-center gap-2">
                         <Medal className="h-4 w-4 text-purple-500" />
-                        Weekly Leaderboard
+                        <Trans i18nKey="marketing:howItWorks.step6Leaderboard" />
                       </h4>
-                      <Badge variant="outline">Live</Badge>
+                      <Badge variant="outline">
+                        <Trans i18nKey="marketing:howItWorks.step6Live" />
+                      </Badge>
                     </div>
                     <div className="space-y-3">
                       {[
@@ -392,8 +432,8 @@ async function HowItWorksPage() {
                         { rank: 2, name: 'mike_eng', score: 380, prs: 6 },
                         { rank: 3, name: 'dev123', score: 275, prs: 5, highlight: true },
                       ].map((dev) => (
-                        <div 
-                          key={dev.rank} 
+                        <div
+                          key={dev.rank}
                           className={`flex items-center gap-4 p-3 rounded-lg ${dev.highlight ? 'bg-purple-500/10 border border-purple-500/20' : 'bg-muted/50'}`}
                         >
                           <span className={`text-lg font-bold ${dev.rank === 1 ? 'text-yellow-500' : dev.rank === 2 ? 'text-gray-400' : 'text-amber-600'}`}>
@@ -401,9 +441,9 @@ async function HowItWorksPage() {
                           </span>
                           <div className="flex-1">
                             <p className="font-medium">{dev.name}</p>
-                            <p className="text-xs text-muted-foreground">{dev.prs} PRs</p>
+                            <p className="text-xs text-muted-foreground">{dev.prs} <Trans i18nKey="marketing:howItWorks.step6PRs" /></p>
                           </div>
-                          <span className="font-bold text-purple-600">{dev.score} pts</span>
+                          <span className="font-bold text-purple-600">{dev.score} <Trans i18nKey="marketing:howItWorks.step6Pts" /></span>
                         </div>
                       ))}
                     </div>
@@ -422,21 +462,21 @@ async function HowItWorksPage() {
             <ShineBorder shineColor={['#ffffff', '#a855f7', '#ffffff']} borderRadius={24} />
             <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 relative">
-              Ready to automate PR scoring?
+              <Trans i18nKey="marketing:howItWorks.ctaTitle" />
             </h2>
             <p className="mx-auto max-w-xl text-lg text-white/80 mb-8 relative">
-              Get started in under 5 minutes. Free for open source projects.
+              <Trans i18nKey="marketing:howItWorks.ctaDescription" />
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative">
               <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90">
                 <Link href="/auth/sign-up">
-                  Get Started Free
+                  <Trans i18nKey="marketing:howItWorks.ctaCta" />
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
                 <Link href="/features">
-                  See All Features
+                  <Trans i18nKey="marketing:howItWorks.ctaSecondaryCta" />
                 </Link>
               </Button>
             </div>
@@ -448,4 +488,3 @@ async function HowItWorksPage() {
 }
 
 export default withI18n(HowItWorksPage);
-

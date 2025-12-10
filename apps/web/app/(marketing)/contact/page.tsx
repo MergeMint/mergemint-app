@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/
 import { Input } from '@kit/ui/input';
 import { Label } from '@kit/ui/label';
 import { Textarea } from '@kit/ui/textarea';
+import { Trans } from '@kit/ui/trans';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
@@ -56,17 +57,16 @@ async function ContactPage() {
         <div className="container relative mx-auto px-4 text-center">
           <Badge variant="outline" className="mb-4">
             <MessageSquare className="mr-2 h-4 w-4 text-purple-500" />
-            Contact
+            <Trans i18nKey="marketing:contact.badge" />
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            Get in
+            <Trans i18nKey="marketing:contact.heroTitle" />
             <span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-              Touch
+              <Trans i18nKey="marketing:contact.heroTitleHighlight" />
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Have questions about MergeMint? Want to discuss enterprise features? 
-            We&apos;d love to hear from you.
+            <Trans i18nKey="marketing:contact.heroDescription" />
           </p>
         </div>
       </section>
@@ -78,37 +78,47 @@ async function ContactPage() {
             {/* Contact Form */}
             <Card>
               <CardHeader>
-                <CardTitle>Send us a message</CardTitle>
+                <CardTitle>
+                  <Trans i18nKey="marketing:contact.formTitle" />
+                </CardTitle>
                 <CardDescription>
-                  Fill out the form below and we&apos;ll get back to you within 24 hours.
+                  <Trans i18nKey="marketing:contact.formDescription" />
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form className="space-y-6">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
+                      <Label htmlFor="name">
+                        <Trans i18nKey="marketing:contact.nameLabel" />
+                      </Label>
                       <Input id="name" placeholder="Your name" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">
+                        <Trans i18nKey="marketing:contact.emailLabel" />
+                      </Label>
                       <Input id="email" type="email" placeholder="you@company.com" />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="subject">Subject</Label>
+                    <Label htmlFor="subject">
+                      <Trans i18nKey="marketing:contact.subjectLabel" />
+                    </Label>
                     <Input id="subject" placeholder="What's this about?" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea 
-                      id="message" 
-                      placeholder="Tell us how we can help..." 
+                    <Label htmlFor="message">
+                      <Trans i18nKey="marketing:contact.messageLabel" />
+                    </Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Tell us how we can help..."
                       className="min-h-[150px]"
                     />
                   </div>
                   <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
-                    Send Message
+                    <Trans i18nKey="marketing:contact.submitButton" />
                   </Button>
                 </form>
               </CardContent>
@@ -120,15 +130,19 @@ async function ContactPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Mail className="h-5 w-5 text-purple-500" />
-                    Email
+                    <Trans i18nKey="marketing:contact.emailTitle" />
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground mb-2">For general inquiries:</p>
+                  <p className="text-muted-foreground mb-2">
+                    <Trans i18nKey="marketing:contact.emailGeneralLabel" />
+                  </p>
                   <a href="mailto:hello@mergemint.dev" className="text-purple-600 hover:underline font-medium">
                     hello@mergemint.dev
                   </a>
-                  <p className="text-muted-foreground mt-4 mb-2">For enterprise sales:</p>
+                  <p className="text-muted-foreground mt-4 mb-2">
+                    <Trans i18nKey="marketing:contact.emailSalesLabel" />
+                  </p>
                   <a href="mailto:sales@mergemint.dev" className="text-purple-600 hover:underline font-medium">
                     sales@mergemint.dev
                   </a>
@@ -139,24 +153,24 @@ async function ContactPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Github className="h-5 w-5 text-purple-500" />
-                    GitHub
+                    <Trans i18nKey="marketing:contact.githubTitle" />
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-4">
-                    For bug reports, feature requests, and technical discussions:
+                    <Trans i18nKey="marketing:contact.githubDescription" />
                   </p>
                   <div className="space-y-2">
                     <Button asChild variant="outline" className="w-full justify-start">
                       <Link href="https://github.com/MergeMint/mergemint-app/issues" target="_blank">
                         <Github className="mr-2 h-4 w-4" />
-                        Open an Issue
+                        <Trans i18nKey="marketing:contact.githubOpenIssue" />
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="w-full justify-start">
                       <Link href="https://github.com/MergeMint/mergemint-app/discussions" target="_blank">
                         <MessageSquare className="mr-2 h-4 w-4" />
-                        Start a Discussion
+                        <Trans i18nKey="marketing:contact.githubStartDiscussion" />
                       </Link>
                     </Button>
                   </div>
@@ -167,17 +181,17 @@ async function ContactPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Twitter className="h-5 w-5 text-purple-500" />
-                    Social
+                    <Trans i18nKey="marketing:contact.socialTitle" />
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-4">
-                    Follow us for updates and announcements:
+                    <Trans i18nKey="marketing:contact.socialDescription" />
                   </p>
                   <Button asChild variant="outline" className="w-full justify-start">
                     <Link href="https://twitter.com/mergemint" target="_blank">
                       <Twitter className="mr-2 h-4 w-4" />
-                      @mergemint on Twitter
+                      <Trans i18nKey="marketing:contact.twitterHandle" />
                     </Link>
                   </Button>
                 </CardContent>
@@ -191,4 +205,3 @@ async function ContactPage() {
 }
 
 export default withI18n(ContactPage);
-

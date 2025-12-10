@@ -41,6 +41,7 @@ import {
 import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { ShineBorder } from '@kit/ui/magicui';
+import { Trans } from '@kit/ui/trans';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
@@ -85,20 +86,19 @@ async function FeaturesPage() {
         <div className="container relative mx-auto px-4 text-center">
           <Badge variant="outline" className="mb-4">
             <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-            Features
+            <Trans i18nKey="marketing:features.badge" />
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            Everything you need to
+            <Trans i18nKey="marketing:features.heroTitle" />
             <span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-              measure developer impact
+              <Trans i18nKey="marketing:features.heroTitleHighlight" />
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-4">
-            MergeMint combines AI evaluation, configurable scoring, and beautiful dashboards 
-            to turn every merged PR into actionable insights.
+            <Trans i18nKey="marketing:features.heroDescription" />
           </p>
           <p className="mx-auto max-w-2xl text-sm text-muted-foreground/80">
-            Built at TextCortex AI to solve our own recognition problem. Now open source for everyone.
+            <Trans i18nKey="marketing:features.heroSubtext" />
           </p>
         </div>
       </section>
@@ -108,83 +108,83 @@ async function FeaturesPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Core Platform
+              <Trans i18nKey="marketing:features.corePlatformTitle" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The fundamental building blocks that power MergeMint&apos;s PR intelligence.
+              <Trans i18nKey="marketing:features.corePlatformDescription" />
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<Bot className="h-6 w-6" />}
-              title="AI-Powered Evaluation"
-              description="Claude analyzes every merged PR—reading the diff, understanding the changes, and classifying the impact automatically."
-              highlights={[
-                'Intelligent component detection',
-                'Severity classification (P0-P3)',
-                'Context-aware scoring',
-                'Handles large diffs gracefully',
+              titleKey="marketing:features.aiEvaluationTitle"
+              descriptionKey="marketing:features.aiEvaluationDescription"
+              highlightKeys={[
+                'marketing:features.aiEvaluationFeature1',
+                'marketing:features.aiEvaluationFeature2',
+                'marketing:features.aiEvaluationFeature3',
+                'marketing:features.aiEvaluationFeature4',
               ]}
             />
 
             <FeatureCard
               icon={<Settings2 className="h-6 w-6" />}
-              title="Configurable Scoring Rules"
-              description="Define your own scoring system. Set multipliers per component, base points per severity, and custom eligibility criteria."
-              highlights={[
-                'Custom component definitions',
-                'Adjustable multipliers',
-                'Severity level configuration',
-                'Per-repository overrides',
+              titleKey="marketing:features.configurableTitle"
+              descriptionKey="marketing:features.configurableDescription"
+              highlightKeys={[
+                'marketing:features.configurableFeature1',
+                'marketing:features.configurableFeature2',
+                'marketing:features.configurableFeature3',
+                'marketing:features.configurableFeature4',
               ]}
             />
 
             <FeatureCard
               icon={<LayoutDashboard className="h-6 w-6" />}
-              title="Real-time Dashboards"
-              description="Beautiful, data-rich dashboards for PMs and developers. See scores, trends, and leaderboards at a glance."
-              highlights={[
-                'Team overview dashboard',
-                'Individual developer profiles',
-                'Component hotspot analysis',
-                'Score trend visualization',
+              titleKey="marketing:features.dashboardsTitle"
+              descriptionKey="marketing:features.dashboardsDescription"
+              highlightKeys={[
+                'marketing:features.dashboardsFeature1',
+                'marketing:features.dashboardsFeature2',
+                'marketing:features.dashboardsFeature3',
+                'marketing:features.dashboardsFeature4',
               ]}
             />
 
             <FeatureCard
               icon={<Medal className="h-6 w-6" />}
-              title="Leaderboards"
-              description="Gamify contributions with real-time leaderboards. Track weekly MVPs, top PRs, and cumulative scores."
-              highlights={[
-                'Weekly/monthly/all-time views',
-                'Top PR highlights',
-                'Streak tracking',
-                'Export capabilities',
+              titleKey="marketing:features.leaderboardsTitle"
+              descriptionKey="marketing:features.leaderboardsDescription"
+              highlightKeys={[
+                'marketing:features.leaderboardsFeature1',
+                'marketing:features.leaderboardsFeature2',
+                'marketing:features.leaderboardsFeature3',
+                'marketing:features.leaderboardsFeature4',
               ]}
             />
 
             <FeatureCard
               icon={<GitPullRequest className="h-6 w-6" />}
-              title="PR Comments"
-              description="MergeMint posts detailed evaluation comments directly on GitHub PRs, giving developers instant feedback."
-              highlights={[
-                'Score breakdown',
-                'Eligibility check results',
-                'Impact summary',
-                'Optional (can be disabled)',
+              titleKey="marketing:features.prCommentsTitle"
+              descriptionKey="marketing:features.prCommentsDescription"
+              highlightKeys={[
+                'marketing:features.prCommentsFeature1',
+                'marketing:features.prCommentsFeature2',
+                'marketing:features.prCommentsFeature3',
+                'marketing:features.prCommentsFeature4',
               ]}
             />
 
             <FeatureCard
               icon={<Users className="h-6 w-6" />}
-              title="Developer Profiles"
-              description="Each contributor gets a profile page showing their score history, PR breakdown, and contribution patterns."
-              highlights={[
-                'Historical score trends',
-                'Component expertise',
-                'Severity distribution',
-                'PR activity timeline',
+              titleKey="marketing:features.profilesTitle"
+              descriptionKey="marketing:features.profilesDescription"
+              highlightKeys={[
+                'marketing:features.profilesFeature1',
+                'marketing:features.profilesFeature2',
+                'marketing:features.profilesFeature3',
+                'marketing:features.profilesFeature4',
               ]}
             />
           </div>
@@ -198,31 +198,34 @@ async function FeaturesPage() {
             <div>
               <Badge variant="outline" className="mb-4">
                 <Github className="mr-2 h-4 w-4" />
-                GitHub Integration
+                <Trans i18nKey="marketing:features.githubBadge" />
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">
-                Deep GitHub integration
+                <Trans i18nKey="marketing:features.githubTitle" />
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                MergeMint integrates seamlessly with GitHub through a secure GitHub App. 
-                Automatic webhook processing, no manual work required.
+                <Trans i18nKey="marketing:features.githubDescription" />
               </p>
 
               <div className="space-y-4">
                 {[
-                  { icon: <Webhook />, title: 'Webhook-driven', desc: 'Instant processing when PRs are merged' },
-                  { icon: <GitMerge />, title: 'Diff analysis', desc: 'Full access to PR diffs and file changes' },
-                  { icon: <Target />, title: 'Issue linking', desc: 'Detects linked issues from PR descriptions' },
-                  { icon: <Bell />, title: 'PR comments', desc: 'Posts evaluation results as PR comments' },
-                  { icon: <RefreshCcw />, title: 'Backfill support', desc: 'Process historical PRs on demand' },
+                  { icon: <Webhook />, titleKey: 'marketing:features.githubWebhook', descKey: 'marketing:features.githubWebhookDesc' },
+                  { icon: <GitMerge />, titleKey: 'marketing:features.githubDiff', descKey: 'marketing:features.githubDiffDesc' },
+                  { icon: <Target />, titleKey: 'marketing:features.githubIssue', descKey: 'marketing:features.githubIssueDesc' },
+                  { icon: <Bell />, titleKey: 'marketing:features.githubComments', descKey: 'marketing:features.githubCommentsDesc' },
+                  { icon: <RefreshCcw />, titleKey: 'marketing:features.githubBackfill', descKey: 'marketing:features.githubBackfillDesc' },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-start gap-4">
                     <div className="flex-shrink-0 h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-600">
                       {item.icon}
                     </div>
                     <div>
-                      <h4 className="font-semibold">{item.title}</h4>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      <h4 className="font-semibold">
+                        <Trans i18nKey={item.titleKey} />
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        <Trans i18nKey={item.descKey} />
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -270,13 +273,13 @@ async function FeaturesPage() {
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4">
               <Target className="mr-2 h-4 w-4" />
-              Scoring Engine
+              <Trans i18nKey="marketing:features.scoringBadge" />
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Fully customizable scoring
+              <Trans i18nKey="marketing:features.scoringTitle" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Every team is different. Configure MergeMint to match your specific needs.
+              <Trans i18nKey="marketing:features.scoringDescription" />
             </p>
           </div>
 
@@ -284,23 +287,23 @@ async function FeaturesPage() {
             <div className="p-8 rounded-2xl border bg-card">
               <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Cog className="h-5 w-5 text-purple-500" />
-                Component Definitions
+                <Trans i18nKey="marketing:features.componentDefinitions" />
               </h3>
               <p className="text-muted-foreground mb-6">
-                Define the components of your product and assign multipliers based on complexity or business importance.
+                <Trans i18nKey="marketing:features.componentDefinitionsDesc" />
               </p>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                   <span className="font-mono text-sm">AUTH</span>
-                  <Badge variant="secondary">1.5× multiplier</Badge>
+                  <Badge variant="secondary">1.5× <Trans i18nKey="marketing:features.multiplier" /></Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                   <span className="font-mono text-sm">PAYMENTS</span>
-                  <Badge variant="secondary">2.0× multiplier</Badge>
+                  <Badge variant="secondary">2.0× <Trans i18nKey="marketing:features.multiplier" /></Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                   <span className="font-mono text-sm">UI</span>
-                  <Badge variant="secondary">1.0× multiplier</Badge>
+                  <Badge variant="secondary">1.0× <Trans i18nKey="marketing:features.multiplier" /></Badge>
                 </div>
               </div>
             </div>
@@ -308,27 +311,35 @@ async function FeaturesPage() {
             <div className="p-8 rounded-2xl border bg-card">
               <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-purple-500" />
-                Severity Levels
+                <Trans i18nKey="marketing:features.severityLevels" />
               </h3>
               <p className="text-muted-foreground mb-6">
-                Configure severity levels with base points. The AI will classify each PR based on the impact of the changes.
+                <Trans i18nKey="marketing:features.severityLevelsDesc" />
               </p>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 rounded-lg bg-red-500/10">
-                  <span className="font-mono text-sm text-red-600">P0 - Critical</span>
-                  <Badge variant="destructive">100 pts</Badge>
+                  <span className="font-mono text-sm text-red-600">
+                    <Trans i18nKey="marketing:features.severityP0" />
+                  </span>
+                  <Badge variant="destructive">100 <Trans i18nKey="marketing:features.pts" /></Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-orange-500/10">
-                  <span className="font-mono text-sm text-orange-600">P1 - High</span>
-                  <Badge className="bg-orange-500">50 pts</Badge>
+                  <span className="font-mono text-sm text-orange-600">
+                    <Trans i18nKey="marketing:features.severityP1" />
+                  </span>
+                  <Badge className="bg-orange-500">50 <Trans i18nKey="marketing:features.pts" /></Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-500/10">
-                  <span className="font-mono text-sm text-yellow-600">P2 - Medium</span>
-                  <Badge className="bg-yellow-500 text-yellow-900">25 pts</Badge>
+                  <span className="font-mono text-sm text-yellow-600">
+                    <Trans i18nKey="marketing:features.severityP2" />
+                  </span>
+                  <Badge className="bg-yellow-500 text-yellow-900">25 <Trans i18nKey="marketing:features.pts" /></Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                  <span className="font-mono text-sm">P3 - Low</span>
-                  <Badge variant="secondary">10 pts</Badge>
+                  <span className="font-mono text-sm">
+                    <Trans i18nKey="marketing:features.severityP3" />
+                  </span>
+                  <Badge variant="secondary">10 <Trans i18nKey="marketing:features.pts" /></Badge>
                 </div>
               </div>
             </div>
@@ -345,30 +356,31 @@ async function FeaturesPage() {
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 border-cyan-500/30 bg-cyan-500/5">
               <Layers className="mr-2 h-4 w-4 text-cyan-600" />
-              <span className="text-cyan-600">NEW</span>
+              <span className="text-cyan-600">
+                <Trans i18nKey="marketing:features.productInsightsBadge" />
+              </span>
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Product Insights
+              <Trans i18nKey="marketing:features.productInsightsTitle" />
               <span className="block bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
-                for Product Managers
+                <Trans i18nKey="marketing:features.productInsightsSubtitle" />
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Go beyond developer scores. Get deep visibility into product development patterns,
-              identify problem areas, and make data-driven decisions about your roadmap.
+              <Trans i18nKey="marketing:features.productInsightsDescription" />
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<Layers className="h-6 w-6" />}
-              title="Component Analytics"
-              description="Track which parts of your product are getting the most development attention and where work is distributed."
-              highlights={[
-                'PR count per component',
-                'Lines of code changed',
-                'Contributor count tracking',
-                'Activity trends over time',
+              titleKey="marketing:features.componentAnalyticsTitle"
+              descriptionKey="marketing:features.componentAnalyticsDescription"
+              highlightKeys={[
+                'marketing:features.componentAnalyticsFeature1',
+                'marketing:features.componentAnalyticsFeature2',
+                'marketing:features.componentAnalyticsFeature3',
+                'marketing:features.componentAnalyticsFeature4',
               ]}
               gradientFrom="from-cyan-500"
               gradientTo="to-teal-500"
@@ -376,13 +388,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<Bug className="h-6 w-6" />}
-              title="Bug Hotspots"
-              description="Identify components with the most P0/P1 bug fixes to focus quality improvement efforts where they matter most."
-              highlights={[
-                'P0/P1 bug concentration',
-                'Week-over-week trends',
-                'Bug-to-feature ratio',
-                'Historical comparisons',
+              titleKey="marketing:features.bugHotspotsTitle"
+              descriptionKey="marketing:features.bugHotspotsDescription"
+              highlightKeys={[
+                'marketing:features.bugHotspotsFeature1',
+                'marketing:features.bugHotspotsFeature2',
+                'marketing:features.bugHotspotsFeature3',
+                'marketing:features.bugHotspotsFeature4',
               ]}
               gradientFrom="from-red-500"
               gradientTo="to-orange-500"
@@ -390,13 +402,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<Crown className="h-6 w-6" />}
-              title="Feature Ownership"
-              description="Know who owns each area of your codebase. See primary contributors and ownership percentages for every component."
-              highlights={[
-                'Primary owner identification',
-                'Ownership percentage',
-                'Top 3 contributors per area',
-                'Bug fix specialists',
+              titleKey="marketing:features.featureOwnershipTitle"
+              descriptionKey="marketing:features.featureOwnershipDescription"
+              highlightKeys={[
+                'marketing:features.featureOwnershipFeature1',
+                'marketing:features.featureOwnershipFeature2',
+                'marketing:features.featureOwnershipFeature3',
+                'marketing:features.featureOwnershipFeature4',
               ]}
               gradientFrom="from-purple-500"
               gradientTo="to-pink-500"
@@ -404,13 +416,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<AlertTriangle className="h-6 w-6" />}
-              title="Knowledge Silos"
-              description="Spot single-contributor components before they become problems. Proactively manage bus factor risk."
-              highlights={[
-                'Single contributor warnings',
-                'Low diversity alerts',
-                'Risk scoring',
-                'Recommended actions',
+              titleKey="marketing:features.knowledgeSilosTitle"
+              descriptionKey="marketing:features.knowledgeSilosDescription"
+              highlightKeys={[
+                'marketing:features.knowledgeSilosFeature1',
+                'marketing:features.knowledgeSilosFeature2',
+                'marketing:features.knowledgeSilosFeature3',
+                'marketing:features.knowledgeSilosFeature4',
               ]}
               gradientFrom="from-yellow-500"
               gradientTo="to-amber-500"
@@ -418,13 +430,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<TrendingUp className="h-6 w-6" />}
-              title="Severity Trends"
-              description="Track the bug vs feature ratio over time. Understand if your team is in maintenance mode or shipping new value."
-              highlights={[
-                'Weekly trend charts',
-                'Bug/feature split',
-                'Quality metrics',
-                'Development focus analysis',
+              titleKey="marketing:features.severityTrendsTitle"
+              descriptionKey="marketing:features.severityTrendsDescription"
+              highlightKeys={[
+                'marketing:features.severityTrendsFeature1',
+                'marketing:features.severityTrendsFeature2',
+                'marketing:features.severityTrendsFeature3',
+                'marketing:features.severityTrendsFeature4',
               ]}
               gradientFrom="from-blue-500"
               gradientTo="to-indigo-500"
@@ -432,13 +444,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<AlertCircle className="h-6 w-6" />}
-              title="At-Risk Components"
-              description="Combine multiple signals to identify components that need attention: high bugs, low eligibility, and poor quality scores."
-              highlights={[
-                'Composite risk scoring',
-                'Multi-factor analysis',
-                'Prioritized attention list',
-                'Actionable insights',
+              titleKey="marketing:features.atRiskTitle"
+              descriptionKey="marketing:features.atRiskDescription"
+              highlightKeys={[
+                'marketing:features.atRiskFeature1',
+                'marketing:features.atRiskFeature2',
+                'marketing:features.atRiskFeature3',
+                'marketing:features.atRiskFeature4',
               ]}
               gradientFrom="from-rose-500"
               gradientTo="to-red-500"
@@ -450,24 +462,24 @@ async function FeaturesPage() {
             <div className="grid gap-8 lg:grid-cols-2 items-center">
               <div>
                 <h3 className="text-2xl font-bold mb-4">
-                  Make better product decisions
+                  <Trans i18nKey="marketing:features.productInsightsCalloutTitle" />
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Product Insights transforms raw PR data into actionable intelligence. Know where
-                  your team is spending time, identify bottlenecks, and ensure no critical areas
-                  are neglected.
+                  <Trans i18nKey="marketing:features.productInsightsCalloutDesc" />
                 </p>
                 <div className="space-y-3">
                   {[
-                    { icon: <UserCheck className="h-4 w-4" />, text: 'Identify expertise gaps in your team' },
-                    { icon: <TrendingUp className="h-4 w-4" />, text: 'Track product quality over time' },
-                    { icon: <Layers className="h-4 w-4" />, text: 'Balance work across all components' },
+                    { icon: <UserCheck className="h-4 w-4" />, textKey: 'marketing:features.productInsightsCallout1' },
+                    { icon: <TrendingUp className="h-4 w-4" />, textKey: 'marketing:features.productInsightsCallout2' },
+                    { icon: <Layers className="h-4 w-4" />, textKey: 'marketing:features.productInsightsCallout3' },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-600">
                         {item.icon}
                       </div>
-                      <span className="text-sm">{item.text}</span>
+                      <span className="text-sm">
+                        <Trans i18nKey={item.textKey} />
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -475,8 +487,12 @@ async function FeaturesPage() {
               <div className="bg-card rounded-xl border p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b">
-                    <span className="font-semibold">Component Health Score</span>
-                    <Badge className="bg-cyan-500/10 text-cyan-600 border-cyan-500/20">Dashboard</Badge>
+                    <span className="font-semibold">
+                      <Trans i18nKey="marketing:features.componentHealthScore" />
+                    </span>
+                    <Badge className="bg-cyan-500/10 text-cyan-600 border-cyan-500/20">
+                      <Trans i18nKey="marketing:features.dashboard" />
+                    </Badge>
                   </div>
                   {[
                     { name: 'Auth', score: 92, color: 'bg-green-500' },
@@ -507,30 +523,31 @@ async function FeaturesPage() {
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 border-violet-500/30 bg-violet-500/5">
               <ScrollText className="mr-2 h-4 w-4 text-violet-600" />
-              <span className="text-violet-600">NEW</span>
+              <span className="text-violet-600">
+                <Trans i18nKey="marketing:features.changelogBadge" />
+              </span>
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Product Changelog
+              <Trans i18nKey="marketing:features.changelogSectionTitle" />
               <span className="block bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-                Auto-Generated from PRs
+                <Trans i18nKey="marketing:features.changelogSubtitle" />
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Keep your users informed with beautiful, AI-generated changelog pages.
-              Turn merged PRs into user-friendly release notes with a single click.
+              <Trans i18nKey="marketing:features.changelogDescription" />
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={<Zap className="h-6 w-6" />}
-              title="AI-Powered Generation"
-              description="Claude analyzes your PRs and generates user-friendly changelog entries automatically, categorizing them by type."
-              highlights={[
-                'Detects feature vs bug fix vs improvement',
-                'Writes clear, non-technical descriptions',
-                'Extracts key user-facing changes',
-                'Skips internal-only changes',
+              titleKey="marketing:features.aiGenerationTitle"
+              descriptionKey="marketing:features.aiGenerationDescription"
+              highlightKeys={[
+                'marketing:features.aiGenerationFeature1',
+                'marketing:features.aiGenerationFeature2',
+                'marketing:features.aiGenerationFeature3',
+                'marketing:features.aiGenerationFeature4',
               ]}
               gradientFrom="from-violet-500"
               gradientTo="to-purple-500"
@@ -538,13 +555,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<FileText className="h-6 w-6" />}
-              title="Draft & Publish Workflow"
-              description="Generated entries start as drafts. Review, edit, and publish when ready. Full control over what goes public."
-              highlights={[
-                'Draft/published status management',
-                'Bulk selection and actions',
-                'Edit title and description',
-                'Change category anytime',
+              titleKey="marketing:features.draftPublishTitle"
+              descriptionKey="marketing:features.draftPublishDescription"
+              highlightKeys={[
+                'marketing:features.draftPublishFeature1',
+                'marketing:features.draftPublishFeature2',
+                'marketing:features.draftPublishFeature3',
+                'marketing:features.draftPublishFeature4',
               ]}
               gradientFrom="from-blue-500"
               gradientTo="to-indigo-500"
@@ -552,13 +569,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<ExternalLink className="h-6 w-6" />}
-              title="Public Changelog Page"
-              description="Beautiful, hosted changelog page at your custom URL. Share product updates with your users and stakeholders."
-              highlights={[
-                'Clean timeline design',
-                'Category filtering',
-                'Grouped by month',
-                'Smooth animations',
+              titleKey="marketing:features.publicPageTitle"
+              descriptionKey="marketing:features.publicPageDescription"
+              highlightKeys={[
+                'marketing:features.publicPageFeature1',
+                'marketing:features.publicPageFeature2',
+                'marketing:features.publicPageFeature3',
+                'marketing:features.publicPageFeature4',
               ]}
               gradientFrom="from-emerald-500"
               gradientTo="to-teal-500"
@@ -566,13 +583,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<Sparkles className="h-6 w-6" />}
-              title="Smart Categorization"
-              description="Entries are automatically categorized into New Features, Improvements, Bug Fixes, and Breaking Changes."
-              highlights={[
-                'Color-coded badges',
-                'Filter by category',
-                'Visual differentiation',
-                'Intuitive icons',
+              titleKey="marketing:features.smartCategoriesTitle"
+              descriptionKey="marketing:features.smartCategoriesDescription"
+              highlightKeys={[
+                'marketing:features.smartCategoriesFeature1',
+                'marketing:features.smartCategoriesFeature2',
+                'marketing:features.smartCategoriesFeature3',
+                'marketing:features.smartCategoriesFeature4',
               ]}
               gradientFrom="from-amber-500"
               gradientTo="to-orange-500"
@@ -580,13 +597,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<Calendar className="h-6 w-6" />}
-              title="Timeline View"
-              description="Entries are grouped by month with a beautiful timeline design. Users can easily browse your product history."
-              highlights={[
-                'Monthly grouping',
-                'Chronological order',
-                'Animated entry reveals',
-                'Responsive design',
+              titleKey="marketing:features.timelineTitle"
+              descriptionKey="marketing:features.timelineDescription"
+              highlightKeys={[
+                'marketing:features.timelineFeature1',
+                'marketing:features.timelineFeature2',
+                'marketing:features.timelineFeature3',
+                'marketing:features.timelineFeature4',
               ]}
               gradientFrom="from-pink-500"
               gradientTo="to-rose-500"
@@ -594,13 +611,13 @@ async function FeaturesPage() {
 
             <FeatureCard
               icon={<Settings2 className="h-6 w-6" />}
-              title="Customizable Settings"
-              description="Configure your changelog to match your brand. Control what information is displayed and how it appears."
-              highlights={[
-                'Toggle date display',
-                'Custom product name',
-                'Your organization branding',
-                'Public URL per org',
+              titleKey="marketing:features.customSettingsTitle"
+              descriptionKey="marketing:features.customSettingsDescription"
+              highlightKeys={[
+                'marketing:features.customSettingsFeature1',
+                'marketing:features.customSettingsFeature2',
+                'marketing:features.customSettingsFeature3',
+                'marketing:features.customSettingsFeature4',
               ]}
               gradientFrom="from-slate-500"
               gradientTo="to-zinc-500"
@@ -612,24 +629,24 @@ async function FeaturesPage() {
             <div className="grid gap-8 lg:grid-cols-2 items-center">
               <div>
                 <h3 className="text-2xl font-bold mb-4">
-                  From PR to changelog in seconds
+                  <Trans i18nKey="marketing:features.changelogCalloutTitle" />
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Stop manually writing release notes. MergeMint reads your PRs, understands
-                  the changes, and generates polished changelog entries that your users will
-                  actually want to read.
+                  <Trans i18nKey="marketing:features.changelogCalloutDesc" />
                 </p>
                 <div className="space-y-3">
                   {[
-                    { icon: <Zap className="h-4 w-4" />, text: 'Generate entries from multiple PRs at once' },
-                    { icon: <FileText className="h-4 w-4" />, text: 'Review and refine before publishing' },
-                    { icon: <ExternalLink className="h-4 w-4" />, text: 'Share your public changelog URL anywhere' },
+                    { icon: <Zap className="h-4 w-4" />, textKey: 'marketing:features.changelogCallout1' },
+                    { icon: <FileText className="h-4 w-4" />, textKey: 'marketing:features.changelogCallout2' },
+                    { icon: <ExternalLink className="h-4 w-4" />, textKey: 'marketing:features.changelogCallout3' },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-600">
                         {item.icon}
                       </div>
-                      <span className="text-sm">{item.text}</span>
+                      <span className="text-sm">
+                        <Trans i18nKey={item.textKey} />
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -637,18 +654,24 @@ async function FeaturesPage() {
               <div className="bg-card rounded-xl border p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b">
-                    <span className="font-semibold">Recent Updates</span>
-                    <Badge className="bg-violet-500/10 text-violet-600 border-violet-500/20">Public</Badge>
+                    <span className="font-semibold">
+                      <Trans i18nKey="marketing:features.recentUpdates" />
+                    </span>
+                    <Badge className="bg-violet-500/10 text-violet-600 border-violet-500/20">
+                      <Trans i18nKey="marketing:features.public" />
+                    </Badge>
                   </div>
                   {[
-                    { category: 'New Feature', title: 'Dark mode support', color: 'bg-emerald-500' },
-                    { category: 'Improvement', title: 'Faster page load times', color: 'bg-blue-500' },
-                    { category: 'Bug Fix', title: 'Fixed login redirect issue', color: 'bg-amber-500' },
+                    { categoryKey: 'marketing:features.newFeature', title: 'Dark mode support', color: 'bg-emerald-500' },
+                    { categoryKey: 'marketing:features.improvement', title: 'Faster page load times', color: 'bg-blue-500' },
+                    { categoryKey: 'marketing:features.bugFix', title: 'Fixed login redirect issue', color: 'bg-amber-500' },
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                       <div className={`w-2 h-2 rounded-full ${item.color} mt-2`} />
                       <div>
-                        <span className="text-xs text-muted-foreground">{item.category}</span>
+                        <span className="text-xs text-muted-foreground">
+                          <Trans i18nKey={item.categoryKey} />
+                        </span>
                         <p className="text-sm font-medium">{item.title}</p>
                       </div>
                     </div>
@@ -668,23 +691,39 @@ async function FeaturesPage() {
               <div className="grid gap-4 grid-cols-2">
                 <div className="p-6 rounded-xl border bg-card">
                   <Server className="h-8 w-8 text-purple-500 mb-3" />
-                  <h4 className="font-semibold mb-1">Your Infrastructure</h4>
-                  <p className="text-sm text-muted-foreground">Deploy on any cloud or on-premise</p>
+                  <h4 className="font-semibold mb-1">
+                    <Trans i18nKey="marketing:features.yourInfra" />
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    <Trans i18nKey="marketing:features.yourInfraDesc" />
+                  </p>
                 </div>
                 <div className="p-6 rounded-xl border bg-card">
                   <Lock className="h-8 w-8 text-purple-500 mb-3" />
-                  <h4 className="font-semibold mb-1">Data Sovereignty</h4>
-                  <p className="text-sm text-muted-foreground">All data stays behind your firewall</p>
+                  <h4 className="font-semibold mb-1">
+                    <Trans i18nKey="marketing:features.dataSovereignty" />
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    <Trans i18nKey="marketing:features.dataSovereigntyDesc" />
+                  </p>
                 </div>
                 <div className="p-6 rounded-xl border bg-card">
                   <Database className="h-8 w-8 text-purple-500 mb-3" />
-                  <h4 className="font-semibold mb-1">Supabase Backend</h4>
-                  <p className="text-sm text-muted-foreground">PostgreSQL with Row Level Security</p>
+                  <h4 className="font-semibold mb-1">
+                    <Trans i18nKey="marketing:features.supabaseBackend" />
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    <Trans i18nKey="marketing:features.supabaseBackendDesc" />
+                  </p>
                 </div>
                 <div className="p-6 rounded-xl border bg-card">
                   <Code2 className="h-8 w-8 text-purple-500 mb-3" />
-                  <h4 className="font-semibold mb-1">CC BY-NC 4.0</h4>
-                  <p className="text-sm text-muted-foreground">Free for non-commercial use</p>
+                  <h4 className="font-semibold mb-1">
+                    <Trans i18nKey="marketing:features.license" />
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    <Trans i18nKey="marketing:features.licenseDesc" />
+                  </p>
                 </div>
               </div>
             </div>
@@ -692,25 +731,24 @@ async function FeaturesPage() {
             <div className="order-1 lg:order-2">
               <Badge variant="outline" className="mb-4">
                 <Shield className="mr-2 h-4 w-4" />
-                Self-Hosted
+                <Trans i18nKey="marketing:features.selfHostBadge" />
               </Badge>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">
-                Deploy on your own infrastructure
+                <Trans i18nKey="marketing:features.selfHostTitle" />
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                MergeMint is fully open source. Self-host it on your own servers for complete 
-                control over your data and customization options.
+                <Trans i18nKey="marketing:features.selfHostDescription" />
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button asChild>
                   <Link href="https://github.com/MergeMint/mergemint-app" target="_blank">
                     <Github className="mr-2 h-4 w-4" />
-                    View Source
+                    <Trans i18nKey="marketing:features.viewSource" />
                   </Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="https://github.com/MergeMint/mergemint-app#getting-started">
-                    Deployment Guide
+                    <Trans i18nKey="marketing:features.deploymentGuide" />
                     <ArrowRightIcon className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -727,21 +765,21 @@ async function FeaturesPage() {
             <ShineBorder shineColor={['#ffffff', '#a855f7', '#ffffff']} borderRadius={24} />
             <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4 relative">
-              Ready to get started?
+              <Trans i18nKey="marketing:features.ctaTitle" />
             </h2>
             <p className="mx-auto max-w-xl text-lg text-white/80 mb-8 relative">
-              Set up MergeMint in under 5 minutes. Free for open source projects.
+              <Trans i18nKey="marketing:features.ctaDescription" />
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative">
               <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90">
                 <Link href="/auth/sign-up">
-                  Start Free
+                  <Trans i18nKey="marketing:features.ctaCta" />
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
                 <Link href="/how-it-works">
-                  See How It Works
+                  <Trans i18nKey="marketing:features.ctaSecondaryCta" />
                 </Link>
               </Button>
             </div>
@@ -756,16 +794,16 @@ export default withI18n(FeaturesPage);
 
 function FeatureCard({
   icon,
-  title,
-  description,
-  highlights,
+  titleKey,
+  descriptionKey,
+  highlightKeys,
   gradientFrom,
   gradientTo,
 }: {
   icon: React.ReactNode;
-  title: string;
-  description: string;
-  highlights: string[];
+  titleKey: string;
+  descriptionKey: string;
+  highlightKeys: string[];
   gradientFrom?: string;
   gradientTo?: string;
 }) {
@@ -784,17 +822,22 @@ function FeatureCard({
       }`}>
         {icon}
       </div>
-      <h3 className="text-xl font-semibold mb-3">{title}</h3>
-      <p className="text-muted-foreground mb-4">{description}</p>
+      <h3 className="text-xl font-semibold mb-3">
+        <Trans i18nKey={titleKey} />
+      </h3>
+      <p className="text-muted-foreground mb-4">
+        <Trans i18nKey={descriptionKey} />
+      </p>
       <ul className="space-y-2">
-        {highlights.map((item, idx) => (
+        {highlightKeys.map((key, idx) => (
           <li key={idx} className="flex items-center gap-2 text-sm">
             <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-            <span>{item}</span>
+            <span>
+              <Trans i18nKey={key} />
+            </span>
           </li>
         ))}
       </ul>
     </div>
   );
 }
-

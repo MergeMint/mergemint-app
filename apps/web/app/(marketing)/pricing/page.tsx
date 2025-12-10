@@ -17,6 +17,7 @@ import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
 import { ShineBorder } from '@kit/ui/magicui';
+import { Trans } from '@kit/ui/trans';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
@@ -60,17 +61,16 @@ async function PricingPage() {
         <div className="container relative mx-auto px-4 text-center">
           <Badge variant="outline" className="mb-4">
             <Sparkles className="mr-2 h-4 w-4 text-purple-500" />
-            Pricing
+            <Trans i18nKey="marketing:pricing.badge" />
           </Badge>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl mb-6">
-            Simple pricing for
+            <Trans i18nKey="marketing:pricing.heroTitle" />
             <span className="block bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
-              every team
+              <Trans i18nKey="marketing:pricing.heroTitleHighlight" />
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            MergeMint is open source and free to self-host. We also offer a hosted version 
-            with additional features and support.
+            <Trans i18nKey="marketing:pricing.heroDescription" />
           </p>
         </div>
       </section>
@@ -85,39 +85,47 @@ async function PricingPage() {
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
                   <Code2 className="h-5 w-5 text-purple-500" />
-                  <CardTitle className="text-xl">Open Source</CardTitle>
+                  <CardTitle className="text-xl">
+                    <Trans i18nKey="marketing:pricing.openSourceTitle" />
+                  </CardTitle>
                 </div>
                 <CardDescription>
-                  Self-host on your own infrastructure
+                  <Trans i18nKey="marketing:pricing.openSourceDescription" />
                 </CardDescription>
                 <div className="pt-4">
-                  <span className="text-4xl font-bold">Free</span>
-                  <span className="text-muted-foreground ml-2">forever</span>
+                  <span className="text-4xl font-bold">
+                    <Trans i18nKey="marketing:pricing.openSourcePrice" />
+                  </span>
+                  <span className="text-muted-foreground ml-2">
+                    <Trans i18nKey="marketing:pricing.openSourcePriceSuffix" />
+                  </span>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-8">
                   {[
-                    'Unlimited repositories',
-                    'Unlimited PRs',
-                    'Unlimited team members',
-                    'AI-powered evaluation',
-                    'Configurable scoring',
-                    'Leaderboards & dashboards',
-                    'PR comments',
-                    'Community support',
-                    'CC BY-NC 4.0 License',
-                  ].map((feature, idx) => (
+                    'openSourceFeature1',
+                    'openSourceFeature2',
+                    'openSourceFeature3',
+                    'openSourceFeature4',
+                    'openSourceFeature5',
+                    'openSourceFeature6',
+                    'openSourceFeature7',
+                    'openSourceFeature8',
+                    'openSourceFeature9',
+                  ].map((key, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
+                      <span className="text-sm">
+                        <Trans i18nKey={`marketing:pricing.${key}`} />
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <Button asChild variant="outline" className="w-full">
                   <Link href="https://github.com/MergeMint/mergemint-app" target="_blank">
                     <Github className="mr-2 h-4 w-4" />
-                    View on GitHub
+                    <Trans i18nKey="marketing:pricing.openSourceCta" />
                   </Link>
                 </Button>
               </CardContent>
@@ -129,49 +137,57 @@ async function PricingPage() {
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                 <Badge className="bg-purple-500 text-white px-4 py-1">
                   <Star className="mr-1 h-3 w-3" />
-                  Most Popular
+                  <Trans i18nKey="marketing:pricing.proBadge" />
                 </Badge>
               </div>
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
                   <Zap className="h-5 w-5 text-purple-500" />
-                  <CardTitle className="text-xl">Pro</CardTitle>
+                  <CardTitle className="text-xl">
+                    <Trans i18nKey="marketing:pricing.proTitle" />
+                  </CardTitle>
                 </div>
                 <CardDescription>
-                  Hosted solution for growing teams
+                  <Trans i18nKey="marketing:pricing.proDescription" />
                 </CardDescription>
                 <div className="pt-4">
-                  <span className="text-4xl font-bold">$49</span>
-                  <span className="text-muted-foreground ml-2">/month</span>
+                  <span className="text-4xl font-bold">
+                    <Trans i18nKey="marketing:pricing.proPrice" />
+                  </span>
+                  <span className="text-muted-foreground ml-2">
+                    <Trans i18nKey="marketing:pricing.proPriceSuffix" />
+                  </span>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-8">
                   {[
-                    'Everything in Open Source',
-                    'Hosted & managed for you',
-                    'Up to 50 active developers',
-                    'Priority PR processing',
-                    'Advanced analytics',
-                    'Slack/Discord integrations',
-                    'Export data (CSV, JSON)',
-                    'Email support',
-                    'SSO (coming soon)',
-                  ].map((feature, idx) => (
+                    'proFeature1',
+                    'proFeature2',
+                    'proFeature3',
+                    'proFeature4',
+                    'proFeature5',
+                    'proFeature6',
+                    'proFeature7',
+                    'proFeature8',
+                    'proFeature9',
+                  ].map((key, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
+                      <span className="text-sm">
+                        <Trans i18nKey={`marketing:pricing.${key}`} />
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
                   <Link href="/auth/sign-up">
-                    Start Free Trial
+                    <Trans i18nKey="marketing:pricing.proCta" />
                     <ArrowRightIcon className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <p className="text-xs text-center text-muted-foreground mt-3">
-                  14-day free trial. No credit card required.
+                  <Trans i18nKey="marketing:pricing.proTrialNote" />
                 </p>
               </CardContent>
             </Card>
@@ -182,37 +198,43 @@ async function PricingPage() {
               <CardHeader>
                 <div className="flex items-center gap-2 mb-2">
                   <Shield className="h-5 w-5 text-purple-500" />
-                  <CardTitle className="text-xl">Enterprise</CardTitle>
+                  <CardTitle className="text-xl">
+                    <Trans i18nKey="marketing:pricing.enterpriseTitle" />
+                  </CardTitle>
                 </div>
                 <CardDescription>
-                  For large organizations with custom needs
+                  <Trans i18nKey="marketing:pricing.enterpriseDescription" />
                 </CardDescription>
                 <div className="pt-4">
-                  <span className="text-4xl font-bold">Custom</span>
+                  <span className="text-4xl font-bold">
+                    <Trans i18nKey="marketing:pricing.enterprisePrice" />
+                  </span>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 mb-8">
                   {[
-                    'Everything in Pro',
-                    'Unlimited developers',
-                    'Dedicated infrastructure',
-                    'Custom integrations',
-                    'Advanced security (SOC 2)',
-                    'SLA guarantees',
-                    'Dedicated support',
-                    'Custom training',
-                    'Invoice billing',
-                  ].map((feature, idx) => (
+                    'enterpriseFeature1',
+                    'enterpriseFeature2',
+                    'enterpriseFeature3',
+                    'enterpriseFeature4',
+                    'enterpriseFeature5',
+                    'enterpriseFeature6',
+                    'enterpriseFeature7',
+                    'enterpriseFeature8',
+                    'enterpriseFeature9',
+                  ].map((key, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
+                      <span className="text-sm">
+                        <Trans i18nKey={`marketing:pricing.${key}`} />
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <Button asChild variant="outline" className="w-full">
                   <Link href="/contact">
-                    Contact Sales
+                    <Trans i18nKey="marketing:pricing.enterpriseCta" />
                   </Link>
                 </Button>
               </CardContent>
@@ -228,15 +250,14 @@ async function PricingPage() {
             <div className="p-8 rounded-2xl border bg-gradient-to-b from-purple-500/5 to-transparent">
               <Code2 className="h-12 w-12 text-purple-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold mb-4">
-                Free for Open Source Projects
+                <Trans i18nKey="marketing:pricing.ossTitle" />
               </h2>
               <p className="text-muted-foreground mb-6">
-                If you&apos;re maintaining an open source project, MergeMint Pro is completely free. 
-                We believe in giving back to the community that makes our work possible.
+                <Trans i18nKey="marketing:pricing.ossDescription" />
               </p>
               <Button asChild variant="outline">
                 <Link href="/contact">
-                  Apply for OSS Program
+                  <Trans i18nKey="marketing:pricing.ossCta" />
                   <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -250,48 +271,31 @@ async function PricingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tight mb-4">
-              Frequently Asked Questions
+              <Trans i18nKey="marketing:pricing.faqTitle" />
             </h2>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-6">
-            {[
-              {
-                q: 'What counts as an "active developer"?',
-                a: 'An active developer is anyone who has had at least one PR evaluated in the current billing period. Developers who don\'t contribute don\'t count toward your limit.',
-              },
-              {
-                q: 'Can I switch between plans?',
-                a: 'Yes! You can upgrade or downgrade at any time. When upgrading, you\'ll be charged a prorated amount. When downgrading, the new rate applies at your next billing cycle.',
-              },
-              {
-                q: 'Do I need my own Anthropic API key?',
-                a: 'For self-hosted installations, yes—you\'ll need to provide your own API key for Claude. The hosted Pro plan includes AI credits.',
-              },
-              {
-                q: 'Is my code sent to the AI?',
-                a: 'Yes, PR diffs are sent to Claude for evaluation. If this is a concern, you can self-host and use your own API key with enterprise-grade data handling agreements.',
-              },
-              {
-                q: 'What happens if I exceed my developer limit?',
-                a: 'We\'ll notify you when you\'re approaching your limit. New PRs will still be processed, but we\'ll ask you to upgrade to continue.',
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="p-6 rounded-xl border bg-card">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <div key={num} className="p-6 rounded-xl border bg-card">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <HelpCircle className="h-4 w-4 text-purple-500" />
-                  {item.q}
+                  <Trans i18nKey={`marketing:pricing.faq${num}Question`} />
                 </h3>
-                <p className="text-muted-foreground">{item.a}</p>
+                <p className="text-muted-foreground">
+                  <Trans i18nKey={`marketing:pricing.faq${num}Answer`} />
+                </p>
               </div>
             ))}
           </div>
 
           <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">Still have questions?</p>
+            <p className="text-muted-foreground mb-4">
+              <Trans i18nKey="marketing:pricing.faqContactTitle" />
+            </p>
             <Button asChild variant="outline">
               <Link href="/contact">
-                Contact Us
+                <Trans i18nKey="marketing:pricing.faqContactCta" />
               </Link>
             </Button>
           </div>
@@ -304,14 +308,14 @@ async function PricingPage() {
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 to-violet-600 p-12 lg:p-16 text-center text-white">
             <ShineBorder shineColor={['#ffffff', '#a855f7', '#ffffff']} borderRadius={24} />
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-              Start measuring developer impact today
+              <Trans i18nKey="marketing:pricing.ctaTitle" />
             </h2>
             <p className="mx-auto max-w-xl text-lg text-white/80 mb-8">
-              Get started in minutes. No credit card required for the free trial.
+              <Trans i18nKey="marketing:pricing.ctaDescription" />
             </p>
             <Button asChild size="lg" className="bg-white text-purple-600 hover:bg-white/90">
               <Link href="/auth/sign-up">
-                Start Free Trial
+                <Trans i18nKey="marketing:pricing.ctaCta" />
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -323,4 +327,3 @@ async function PricingPage() {
 }
 
 export default withI18n(PricingPage);
-

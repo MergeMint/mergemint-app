@@ -28,6 +28,8 @@ import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { cn } from '@kit/ui/utils';
 
+import { LocalizedLink } from '~/components/localized-link';
+
 export const metadata: Metadata = {
   title: 'Best LinearB Alternatives (2025) - MergeMint & More',
   description:
@@ -469,7 +471,7 @@ export default function LinearBAlternatives() {
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">
-                  <Link href="/compare/linearb">See Full Comparison</Link>
+                  <LocalizedLink href="/mergemint-vs-linearb">See Full Comparison</LocalizedLink>
                 </Button>
               </div>
             </div>

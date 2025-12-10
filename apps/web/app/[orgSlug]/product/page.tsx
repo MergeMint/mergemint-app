@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { PMDashboard } from '~/home/_components/pm-dashboard';
@@ -29,6 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <PageHeader
         title="Product Insights"
         description={`Component analytics and product health for ${org.name}`}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <PageBody>

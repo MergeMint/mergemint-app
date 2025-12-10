@@ -5,6 +5,7 @@ import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { Separator } from '@kit/ui/separator';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 
 export default async function PrDetailPage({
@@ -65,8 +66,9 @@ export default async function PrDetailPage({
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
-        title={`PR #${pr.number} · ${pr.title}`}
-        description={pr.url ?? ''}
+        title={`PR #${pr.number}`}
+        description={pr.title}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name, [prId]: `#${pr.number}` }} />}
       />
 
       {evaluation ? (

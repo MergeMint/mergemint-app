@@ -59,14 +59,14 @@ import {
   TableHeader,
   TableRow,
 } from '@kit/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@kit/ui/select';
 import { Skeleton } from '@kit/ui/skeleton';
+
+import {
+  DateRangePicker,
+  DateRangeValue,
+  createPresetValue,
+  getDateRangeParams,
+} from '~/components/date-range-picker';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@kit/ui/tooltip';
 
 type DashboardData = {
@@ -142,13 +142,24 @@ export function MergeMintDashboard({ orgId, orgName: _orgName }: { orgId: string
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [days, setDays] = useState(30);
+  const [dateRange, setDateRange] = useState<DateRangeValue>(createPresetValue(30));
 
   const fetchDashboard = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/github/dashboard?orgId=${orgId}&days=${days}`);
+      const params = new URLSearchParams({ orgId });
+      const rangeParams = getDateRangeParams(dateRange);
+      if (rangeParams.days) {
+        params.set('days', String(rangeParams.days));
+      }
+      if (rangeParams.from) {
+        params.set('from', rangeParams.from);
+      }
+      if (rangeParams.to) {
+        params.set('to', rangeParams.to);
+      }
+      const res = await fetch(`/api/github/dashboard?${params.toString()}`);
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || 'Failed to fetch dashboard data');
@@ -165,15 +176,29 @@ export function MergeMintDashboard({ orgId, orgName: _orgName }: { orgId: string
   useEffect(() => {
     fetchDashboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgId, days]);
+  }, [orgId, dateRange]);
 
   const hero = data?.hero;
+
+  const getDateRangeDescription = () => {
+    if (dateRange.type === 'preset') {
+      const { days } = dateRange;
+      if (days === 7) return 'this week';
+      if (days === 14) return 'the last 2 weeks';
+      if (days === 30) return 'the last month';
+      if (days === 90) return 'the last 3 months';
+      if (days === 180) return 'the last 6 months';
+      if (days === 365) return 'the last year';
+      return `the last ${days} days`;
+    }
+    return 'the selected date range';
+  };
 
   const renderHeader = () => (
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm text-muted-foreground">
-          Showing data from {days === 7 ? 'this week' : days === 14 ? 'the last 2 weeks' : days === 30 ? 'the last month' : 'the last 3 months'}
+          Showing data from {getDateRangeDescription()}
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -181,17 +206,7 @@ export function MergeMintDashboard({ orgId, orgName: _orgName }: { orgId: string
           <RefreshCcw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
           Refresh
         </Button>
-        <Select value={String(days)} onValueChange={(v) => setDays(parseInt(v, 10))}>
-          <SelectTrigger className="w-40">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7">This week</SelectItem>
-            <SelectItem value="14">Last 2 weeks</SelectItem>
-            <SelectItem value="30">1 Month</SelectItem>
-            <SelectItem value="90">3 Months</SelectItem>
-          </SelectContent>
-        </Select>
+        <DateRangePicker value={dateRange} onChange={setDateRange} />
       </div>
     </div>
   );

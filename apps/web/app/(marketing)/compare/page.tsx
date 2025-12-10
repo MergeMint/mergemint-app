@@ -16,6 +16,8 @@ import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { cn } from '@kit/ui/utils';
 
+import { LocalizedLink } from '~/components/localized-link';
+
 export const metadata: Metadata = {
   title: 'MergeMint Comparisons - See How We Stack Up',
   description:
@@ -44,7 +46,7 @@ const comparisons = [
       'Compare our AI-powered PR evaluation with LinearB\'s DORA-focused approach. See where each excels.',
     icon: Layers,
     color: 'blue',
-    href: '/compare/linearb',
+    href: '/mergemint-vs-linearb',
   },
   {
     competitor: 'Jellyfish',
@@ -53,7 +55,7 @@ const comparisons = [
       'Compare PR-level analytics with enterprise business alignment. Different approaches for different needs.',
     icon: Building2,
     color: 'cyan',
-    href: '/compare/jellyfish',
+    href: '/mergemint-vs-jellyfish',
   },
   {
     competitor: 'GitClear',
@@ -62,7 +64,7 @@ const comparisons = [
       'Compare AI-powered PR scoring with detailed commit-level tracking. Both are developer-friendly.',
     icon: Eye,
     color: 'green',
-    href: '/compare/gitclear',
+    href: '/mergemint-vs-gitclear',
   },
 ];
 
@@ -98,7 +100,7 @@ export default function ComparisonsPage() {
           <div className="mx-auto max-w-4xl">
             <div className="grid gap-8">
               {comparisons.map((comparison, idx) => (
-                <Link
+                <LocalizedLink
                   key={idx}
                   href={comparison.href}
                   className="group"
@@ -135,7 +137,7 @@ export default function ComparisonsPage() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
           </div>
@@ -179,14 +181,14 @@ export default function ComparisonsPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button asChild variant="outline">
-                <Link href="/alternatives/linearb">
+                <LocalizedLink href="/best-linearb-alternatives">
                   LinearB Alternatives
-                </Link>
+                </LocalizedLink>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/alternatives/jellyfish">
+                <LocalizedLink href="/best-jellyfish-alternatives">
                   Jellyfish Alternatives
-                </Link>
+                </LocalizedLink>
               </Button>
             </div>
           </div>

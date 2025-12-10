@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { Badge } from '@kit/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -70,12 +71,13 @@ export default async function MePage({
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
-        title={`My Performance · ${org.name}`}
+        title="My Performance"
         description={
           identities?.length
             ? `GitHub: ${identities.map((i) => i.github_login).join(', ')}`
             : 'Link your GitHub account to see stats.'
         }
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <div className={'grid gap-4 lg:grid-cols-3'}>

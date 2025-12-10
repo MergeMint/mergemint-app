@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
   if (existingInvite) {
     // Return the existing invite URL instead of error
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
-    const inviteUrl = `${baseUrl}/invite?token=${existingInvite.token}`;
+    const inviteUrl = `${baseUrl}/invite/${existingInvite.token}`;
 
     const { data: org } = await admin
       .from('organizations')
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
 
   // Generate invite URL
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
-  const inviteUrl = `${baseUrl}/invite?token=${token}`;
+  const inviteUrl = `${baseUrl}/invite/${token}`;
 
   // Send invitation email if we have a real email address
   let emailSent = false;

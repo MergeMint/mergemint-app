@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Settings, Sparkles } from 'lucide-react';
 
 import { Button } from '@kit/ui/button';
-import { PageHeader } from '@kit/ui/page';
+import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
@@ -66,21 +67,23 @@ export default async function ChangelogPage({
   const existingPrIds = entries?.filter(e => e.pr_id).map(e => e.pr_id) || [];
 
   let availablePrs: any[] = [];
+  let totalAvailablePrs = 0;
   if (isAdmin) {
     const query = admin
       .from('pull_requests')
-      .select('id, number, title, merged_at_gh, additions, deletions')
+      .select('id, number, title, merged_at_gh, additions, deletions', { count: 'exact' })
       .eq('org_id', org.id)
       .eq('is_merged', true)
       .order('merged_at_gh', { ascending: false })
-      .limit(500);
+      .limit(100);
 
     if (existingPrIds.length > 0) {
       query.not('id', 'in', `(${existingPrIds.join(',')})`);
     }
 
-    const { data } = await query;
+    const { data, count } = await query;
     availablePrs = data || [];
+    totalAvailablePrs = count || 0;
   }
 
   // Get stats
@@ -88,10 +91,11 @@ export default async function ChangelogPage({
   const draftCount = entries?.filter(e => e.is_draft).length || 0;
 
   return (
-    <div className="space-y-6">
+    <PageBody className="space-y-6">
       <PageHeader
         title="Changelog"
         description="Manage user-friendly product updates generated from your PRs."
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       >
         {isAdmin && (
           <div className="flex gap-2">
@@ -115,9 +119,10 @@ export default async function ChangelogPage({
         orgSlug={orgSlug}
         isAdmin={isAdmin}
         initialEntries={entries || []}
-        availablePrs={availablePrs}
+        initialAvailablePrs={availablePrs}
+        totalAvailablePrs={totalAvailablePrs}
         stats={{ published: publishedCount, drafts: draftCount }}
       />
-    </div>
+    </PageBody>
   );
 }

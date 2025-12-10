@@ -103,7 +103,7 @@ export async function sendInvitationEmail(params: {
 }): Promise<SendEmailResult> {
   const { to, inviterName, orgName, role, inviteToken, baseUrl = 'https://mergemint.dev' } = params;
   
-  const inviteUrl = `${baseUrl}/invite?token=${inviteToken}`;
+  const inviteUrl = `${baseUrl}/invite/${inviteToken}`;
   
   const roleLabels: Record<string, string> = {
     admin: 'Admin',
@@ -212,6 +212,445 @@ If you didn't expect this invitation, you can safely ignore this email.
     html,
     text,
     tags: ['invitation', 'onboarding'],
+  });
+}
+
+/**
+ * Send email confirmation for signup
+ */
+export async function sendConfirmationEmail(params: {
+  to: string;
+  confirmationUrl: string;
+  baseUrl?: string;
+}): Promise<SendEmailResult> {
+  const { to, confirmationUrl, baseUrl = 'https://mergemint.dev' } = params;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm your email - MergeMint</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); padding: 32px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Confirm Your Email
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Hi there,
+              </p>
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Thanks for signing up for MergeMint! Please confirm your email address by clicking the button below.
+              </p>
+              <p style="margin: 0 0 30px; color: #374151; font-size: 16px; line-height: 1.6;">
+                This helps us ensure you have access to your account and can receive important updates.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" style="width: 100%;">
+                <tr>
+                  <td style="text-align: center; padding: 10px 0 30px;">
+                    <a href="${confirmationUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                      Confirm Email Address
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0 0 20px; color: #7c3aed; font-size: 14px; word-break: break-all;">
+                <a href="${confirmationUrl}" style="color: #7c3aed;">${confirmationUrl}</a>
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+
+              <p style="margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.5;">
+                If you didn't create an account with MergeMint, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 24px 40px; text-align: center;">
+              <p style="margin: 0; color: #9ca3af; font-size: 13px;">
+                © ${new Date().getFullYear()} MergeMint. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  const text = `
+Confirm your email - MergeMint
+
+Hi there,
+
+Thanks for signing up for MergeMint! Please confirm your email address by clicking the link below.
+
+Confirm your email: ${confirmationUrl}
+
+If you didn't create an account with MergeMint, you can safely ignore this email.
+  `.trim();
+
+  return sendEmail({
+    to,
+    subject: 'Confirm your email - MergeMint',
+    html,
+    text,
+    tags: ['confirmation', 'auth'],
+  });
+}
+
+/**
+ * Send password reset email
+ */
+export async function sendPasswordResetEmail(params: {
+  to: string;
+  resetUrl: string;
+  baseUrl?: string;
+}): Promise<SendEmailResult> {
+  const { to, resetUrl, baseUrl = 'https://mergemint.dev' } = params;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset your password - MergeMint</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); padding: 32px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Reset Your Password
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Hi there,
+              </p>
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                We received a request to reset your password for your MergeMint account.
+              </p>
+              <p style="margin: 0 0 30px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Click the button below to choose a new password. This link will expire in 1 hour.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" style="width: 100%;">
+                <tr>
+                  <td style="text-align: center; padding: 10px 0 30px;">
+                    <a href="${resetUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                      Reset Password
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0 0 20px; color: #7c3aed; font-size: 14px; word-break: break-all;">
+                <a href="${resetUrl}" style="color: #7c3aed;">${resetUrl}</a>
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+
+              <p style="margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.5;">
+                If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 24px 40px; text-align: center;">
+              <p style="margin: 0; color: #9ca3af; font-size: 13px;">
+                © ${new Date().getFullYear()} MergeMint. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  const text = `
+Reset your password - MergeMint
+
+Hi there,
+
+We received a request to reset your password for your MergeMint account.
+
+Click the link below to choose a new password. This link will expire in 1 hour.
+
+Reset your password: ${resetUrl}
+
+If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+  `.trim();
+
+  return sendEmail({
+    to,
+    subject: 'Reset your password - MergeMint',
+    html,
+    text,
+    tags: ['password-reset', 'auth'],
+  });
+}
+
+/**
+ * Send email change confirmation
+ */
+export async function sendEmailChangeEmail(params: {
+  to: string;
+  confirmationUrl: string;
+  newEmail: string;
+  baseUrl?: string;
+}): Promise<SendEmailResult> {
+  const { to, confirmationUrl, newEmail, baseUrl = 'https://mergemint.dev' } = params;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm your email change - MergeMint</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); padding: 32px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Confirm Email Change
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Hi there,
+              </p>
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                You requested to change your email address to <strong>${newEmail}</strong>.
+              </p>
+              <p style="margin: 0 0 30px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Please confirm this change by clicking the button below.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" style="width: 100%;">
+                <tr>
+                  <td style="text-align: center; padding: 10px 0 30px;">
+                    <a href="${confirmationUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                      Confirm Email Change
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0 0 20px; color: #7c3aed; font-size: 14px; word-break: break-all;">
+                <a href="${confirmationUrl}" style="color: #7c3aed;">${confirmationUrl}</a>
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+
+              <p style="margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.5;">
+                If you didn't request this change, please secure your account immediately by changing your password.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 24px 40px; text-align: center;">
+              <p style="margin: 0; color: #9ca3af; font-size: 13px;">
+                © ${new Date().getFullYear()} MergeMint. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  const text = `
+Confirm your email change - MergeMint
+
+Hi there,
+
+You requested to change your email address to ${newEmail}.
+
+Please confirm this change by clicking the link below.
+
+Confirm email change: ${confirmationUrl}
+
+If you didn't request this change, please secure your account immediately by changing your password.
+  `.trim();
+
+  return sendEmail({
+    to,
+    subject: 'Confirm your email change - MergeMint',
+    html,
+    text,
+    tags: ['email-change', 'auth'],
+  });
+}
+
+/**
+ * Send magic link email
+ */
+export async function sendMagicLinkEmail(params: {
+  to: string;
+  magicLinkUrl: string;
+  baseUrl?: string;
+}): Promise<SendEmailResult> {
+  const { to, magicLinkUrl, baseUrl = 'https://mergemint.dev' } = params;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in to MergeMint</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5;">
+  <table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 40px 20px;">
+        <table role="presentation" style="max-width: 560px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); padding: 32px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Sign In to MergeMint
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Hi there,
+              </p>
+              <p style="margin: 0 0 20px; color: #374151; font-size: 16px; line-height: 1.6;">
+                Click the button below to securely sign in to your MergeMint account.
+              </p>
+              <p style="margin: 0 0 30px; color: #374151; font-size: 16px; line-height: 1.6;">
+                This magic link will expire in 1 hour for your security.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" style="width: 100%;">
+                <tr>
+                  <td style="text-align: center; padding: 10px 0 30px;">
+                    <a href="${magicLinkUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                      Sign In to MergeMint
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 10px; color: #6b7280; font-size: 14px;">
+                Or copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0 0 20px; color: #7c3aed; font-size: 14px; word-break: break-all;">
+                <a href="${magicLinkUrl}" style="color: #7c3aed;">${magicLinkUrl}</a>
+              </p>
+
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+
+              <p style="margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.5;">
+                If you didn't request this sign-in link, you can safely ignore this email.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 24px 40px; text-align: center;">
+              <p style="margin: 0; color: #9ca3af; font-size: 13px;">
+                © ${new Date().getFullYear()} MergeMint. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  const text = `
+Sign in to MergeMint
+
+Hi there,
+
+Click the link below to securely sign in to your MergeMint account.
+
+Sign in: ${magicLinkUrl}
+
+This magic link will expire in 1 hour for your security.
+
+If you didn't request this sign-in link, you can safely ignore this email.
+  `.trim();
+
+  return sendEmail({
+    to,
+    subject: 'Sign in to MergeMint',
+    html,
+    text,
+    tags: ['magic-link', 'auth'],
   });
 }
 

@@ -12,8 +12,10 @@ import { Button } from '@kit/ui/button';
 import { If } from '@kit/ui/if';
 import { Trans } from '@kit/ui/trans';
 
+import { LanguageSwitcher } from '~/components/language-switcher';
 import featuresFlagConfig from '~/config/feature-flags.config';
 import pathsConfig from '~/config/paths.config';
+import type { Locale } from '~/lib/i18n/locales.config';
 
 const ModeToggle = dynamic(
   () =>
@@ -33,56 +35,72 @@ const features = {
   enableThemeToggle: featuresFlagConfig.enableThemeToggle,
 };
 
-export function SiteHeaderAccountSection({
-  user,
-}: React.PropsWithChildren<{
+interface SiteHeaderAccountSectionProps {
   user: JwtPayload | null;
-}>) {
-  if (!user) {
-    return <AuthButtons />;
-  }
-
-  return <SuspendedPersonalAccountDropdown user={user} />;
+  locale?: Locale;
 }
 
-function SuspendedPersonalAccountDropdown(props: { user: JwtPayload | null }) {
+export function SiteHeaderAccountSection({
+  user,
+  locale,
+}: SiteHeaderAccountSectionProps) {
+  if (!user) {
+    return <AuthButtons locale={locale} />;
+  }
+
+  return <SuspendedPersonalAccountDropdown user={user} locale={locale} />;
+}
+
+function SuspendedPersonalAccountDropdown(props: {
+  user: JwtPayload | null;
+  locale?: Locale;
+}) {
   const signOut = useSignOut();
   const user = useUser(props.user);
   const userData = user.data ?? props.user ?? null;
 
   if (userData) {
     return (
-      <PersonalAccountDropdown
-        showProfileName={false}
-        paths={paths}
-        features={features}
-        user={userData}
-        signOutRequested={() => signOut.mutateAsync()}
-      />
+      <div className="flex items-center gap-2">
+        <LanguageSwitcher currentLocale={props.locale} />
+        <PersonalAccountDropdown
+          showProfileName={false}
+          paths={paths}
+          features={features}
+          user={userData}
+          signOutRequested={() => signOut.mutateAsync()}
+        />
+      </div>
     );
   }
 
-  return <AuthButtons />;
+  return <AuthButtons locale={props.locale} />;
 }
 
-function AuthButtons() {
+function AuthButtons({ locale }: { locale?: Locale }) {
   return (
-    <div className={'flex space-x-2'}>
-      <div className={'hidden space-x-0.5 md:flex'}>
+    <div className="flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-0.5">
+        <LanguageSwitcher currentLocale={locale} />
+
         <If condition={features.enableThemeToggle}>
           <ModeToggle />
         </If>
 
-        <Button asChild variant={'ghost'}>
+        <Button asChild variant="ghost">
           <Link href={pathsConfig.auth.signIn}>
-            <Trans i18nKey={'auth:signIn'} />
+            <Trans i18nKey="auth:signIn" />
           </Link>
         </Button>
       </div>
 
-      <Button asChild className="group" variant={'default'}>
+      <div className="flex md:hidden">
+        <LanguageSwitcher currentLocale={locale} />
+      </div>
+
+      <Button asChild className="group" variant="default">
         <Link href={pathsConfig.auth.signUp}>
-          <Trans i18nKey={'auth:signUp'} />
+          <Trans i18nKey="auth:signUp" />
         </Link>
       </Button>
     </div>

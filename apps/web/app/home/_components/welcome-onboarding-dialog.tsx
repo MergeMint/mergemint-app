@@ -148,19 +148,28 @@ export function WelcomeOnboardingDialog({
       // Final step - save everything
       setLoading(true);
       setError(null);
-      
+
       try {
         const res = await fetch('/api/onboarding/complete', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-        
+
+        const resData = await res.json();
+
         if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Failed to complete onboarding');
+          throw new Error(resData.error || 'Failed to complete onboarding');
         }
-        
+
+        // If user was already a member (e.g., accepted invite while on this page),
+        // redirect to their existing org dashboard
+        if (resData.alreadyMember && resData.org?.slug) {
+          router.refresh();
+          router.push(`/${resData.org.slug}/dashboard`);
+          return;
+        }
+
         // Refresh and redirect to main onboarding (GitHub setup)
         router.refresh();
         router.push('/home/onboarding');

@@ -8,9 +8,15 @@ import { createMiddlewareClient } from '@kit/supabase/middleware-client';
 
 import appConfig from '~/config/app.config';
 import pathsConfig from '~/config/paths.config';
+import {
+  DEFAULT_LOCALE,
+  isValidLocale,
+} from '~/lib/i18n/locales.config';
+import { getCanonicalSlug } from '~/lib/i18n/slug-translations';
 
 const CSRF_SECRET_COOKIE = 'csrfSecret';
 const NEXT_ACTION_HEADER = 'next-action';
+const LOCALE_COOKIE = 'lang'; // Must match I18N_COOKIE_NAME in i18n.settings.ts
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|images|locales|assets|api/*).*)'],
@@ -28,6 +34,12 @@ export async function middleware(request: NextRequest) {
   // set a unique request ID for each request
   // this helps us log and trace requests
   setRequestId(request);
+
+  // handle locale routing for marketing pages
+  const localeResponse = handleLocaleRouting(request, response);
+  if (localeResponse) {
+    return localeResponse;
+  }
 
   // apply CSRF protection for mutating requests
   const csrfResponse = await withCsrfMiddleware(request, response);
@@ -54,6 +66,86 @@ export async function middleware(request: NextRequest) {
   // if no pattern handler returned a response,
   // return the session response
   return csrfResponse;
+}
+
+/**
+ * Handle locale routing for marketing pages.
+ * Rewrites localized URLs to base marketing pages and sets locale cookie.
+ * e.g., /de/funktionen → /features (with locale cookie set to 'de')
+ */
+function handleLocaleRouting(
+  request: NextRequest,
+  response: NextResponse,
+): NextResponse | null {
+  const { pathname } = request.nextUrl;
+
+  // Skip non-marketing routes that don't need locale routing
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/home') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/invite') ||
+    pathname.startsWith('/changelog') ||
+    pathname.startsWith('/update-password') ||
+    pathname.includes('.') // static files
+  ) {
+    return null;
+  }
+
+  // Check if path starts with a locale
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const potentialLocale = pathSegments[0];
+
+  // Handle non-default locale paths (e.g., /de/funktionen)
+  if (
+    potentialLocale &&
+    isValidLocale(potentialLocale) &&
+    potentialLocale !== DEFAULT_LOCALE
+  ) {
+    const locale = potentialLocale;
+    const restOfPath = pathSegments.slice(1).join('/');
+
+    // Home page for this locale - rewrite to /
+    if (restOfPath === '') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/';
+
+      const rewriteResponse = NextResponse.rewrite(url);
+      rewriteResponse.cookies.set(LOCALE_COOKIE, locale, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+      });
+      rewriteResponse.headers.set('x-locale', locale);
+      return rewriteResponse;
+    }
+
+    // Get canonical slug from translated slug
+    const canonicalSlug = getCanonicalSlug(restOfPath, locale);
+
+    if (canonicalSlug !== null) {
+      // Valid locale route - rewrite to canonical path
+      const url = request.nextUrl.clone();
+      url.pathname = `/${canonicalSlug}`;
+
+      const rewriteResponse = NextResponse.rewrite(url);
+      rewriteResponse.cookies.set(LOCALE_COOKIE, locale, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+      });
+      rewriteResponse.headers.set('x-locale', locale);
+      rewriteResponse.headers.set('x-canonical-slug', canonicalSlug);
+      return rewriteResponse;
+    }
+
+    // Invalid translated slug - let Next.js handle 404
+    return null;
+  }
+
+  // For default locale paths, set locale header
+  response.headers.set('x-locale', DEFAULT_LOCALE);
+
+  return null;
 }
 
 async function withCsrfMiddleware(
@@ -113,10 +205,14 @@ function getPatterns() {
         const isVerifyMfa = req.nextUrl.pathname === pathsConfig.auth.verifyMfa;
 
         // If user is logged in and does not need to verify MFA,
-        // redirect to home page.
+        // redirect to the 'next' parameter if present, otherwise home page.
+        // This preserves the redirect destination for invited users after auth.
         if (!isVerifyMfa) {
+          const nextParam = req.nextUrl.searchParams.get('next');
+          const redirectTo = nextParam || pathsConfig.app.home;
+
           return NextResponse.redirect(
-            new URL(pathsConfig.app.home, req.nextUrl.origin).href,
+            new URL(redirectTo, req.nextUrl.origin).href,
           );
         }
       },

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
+import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { columns, type PREvaluation } from './_components/columns';
@@ -74,8 +75,9 @@ export default async function EvaluatedPRsPage({
   return (
     <PageBody className="space-y-6">
       <PageHeader
-        title={`Evaluated PRs`}
+        title="Pull Requests"
         description={`View and track MergeMint evaluations for ${org.name}.`}
+        breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
 
       <Card>

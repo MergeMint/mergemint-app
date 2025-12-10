@@ -51,6 +51,52 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Display name is required' }, { status: 400 });
   }
 
+  // Check if user already has a membership (e.g., invited user)
+  // If so, they should not be creating a new organization
+  const { data: existingMembership } = await admin
+    .from('organization_members')
+    .select('id, org_id, organizations(name, slug)')
+    .eq('user_id', user.id)
+    .limit(1)
+    .maybeSingle();
+
+  if (existingMembership) {
+    // User already belongs to an organization - just complete their profile
+    // and redirect them to their existing org (don't create a new one)
+    const existingOrg = existingMembership.organizations as unknown as { name: string; slug: string } | null;
+
+    // Update profile with onboarding_completed_at
+    await admin
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        display_name: displayName.trim(),
+        occupation: occupation || null,
+        onboarding_completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'id' });
+
+    // Update user metadata
+    await admin.auth.admin.updateUserById(user.id, {
+      user_metadata: {
+        ...user.user_metadata,
+        onboarding_completed_at: new Date().toISOString(),
+        display_name: displayName.trim(),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      alreadyMember: true,
+      org: existingOrg ? {
+        id: existingMembership.org_id,
+        name: existingOrg.name,
+        slug: existingOrg.slug,
+      } : null,
+      invitations: [],
+    });
+  }
+
   if (!orgName?.trim()) {
     return NextResponse.json({ error: 'Organization name is required' }, { status: 400 });
   }

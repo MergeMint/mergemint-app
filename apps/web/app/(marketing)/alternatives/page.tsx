@@ -13,6 +13,8 @@ import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { cn } from '@kit/ui/utils';
 
+import { LocalizedLink } from '~/components/localized-link';
+
 export const metadata: Metadata = {
   title: 'Engineering Analytics Alternatives - MergeMint',
   description:
@@ -40,7 +42,7 @@ const alternatives = [
       'Looking for a LinearB alternative? Compare AI-powered PR scoring vs DORA metrics tracking.',
     icon: Layers,
     color: 'blue',
-    href: '/alternatives/linearb',
+    href: '/best-linearb-alternatives',
     reasons: ['Pricing concerns', 'Want AI PR analysis', 'Need self-hosting'],
   },
   {
@@ -49,7 +51,7 @@ const alternatives = [
       'Looking for a Jellyfish alternative? Compare developer-focused analytics vs enterprise planning.',
     icon: Building2,
     color: 'cyan',
-    href: '/alternatives/jellyfish',
+    href: '/best-jellyfish-alternatives',
     reasons: ['Need developer focus', 'Budget constraints', 'Want open source'],
   },
 ];
@@ -93,7 +95,7 @@ export default function AlternativesPage() {
           <div className="mx-auto max-w-4xl">
             <div className="grid gap-8 md:grid-cols-2">
               {alternatives.map((alt, idx) => (
-                <Link key={idx} href={alt.href} className="group">
+                <LocalizedLink key={idx} href={alt.href} className="group">
                   <div className="h-full rounded-2xl border bg-card p-8 transition-all hover:shadow-lg hover:border-purple-500/50">
                     <div
                       className={cn(
@@ -126,7 +128,7 @@ export default function AlternativesPage() {
                       ))}
                     </div>
                   </div>
-                </Link>
+                </LocalizedLink>
               ))}
             </div>
           </div>
@@ -190,13 +192,13 @@ export default function AlternativesPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Button asChild variant="outline">
-                <Link href="/compare/linearb">MergeMint vs LinearB</Link>
+                <LocalizedLink href="/mergemint-vs-linearb">MergeMint vs LinearB</LocalizedLink>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/compare/jellyfish">MergeMint vs Jellyfish</Link>
+                <LocalizedLink href="/mergemint-vs-jellyfish">MergeMint vs Jellyfish</LocalizedLink>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/compare/gitclear">MergeMint vs GitClear</Link>
+                <LocalizedLink href="/mergemint-vs-gitclear">MergeMint vs GitClear</LocalizedLink>
               </Button>
             </div>
           </div>
