@@ -41,7 +41,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_GITHUB_APP_SLUG: ${{ secrets.NEXT_PUBLIC_GITHUB_APP_SLUG }}
-        run: pnpm exec opennextjs-cloudflare build
+        run: pnpm exec opennextjs-cloudflare build && node scripts/add-cron-handler.js
 
       - name: Debug - Check env vars and build output
         working-directory: apps/web
@@ -78,6 +78,7 @@ jobs:
           echo "🎉 Production deployment complete!"
           echo "🔗 URL: https://mergemint.dev"
           echo "📦 Release: ${{ github.event.release.tag_name }}"
+
 
 
 
