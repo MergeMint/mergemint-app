@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'node:crypto';
 
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
-
-import {
-  GithubClient,
-  getInstallationAccessToken,
-} from '~/lib/mergemint/github';
 
 // Verify webhook signature from GitHub
 function verifyWebhookSignature(payload: string, signature: string | null): boolean {
@@ -23,61 +19,6 @@ function verifyWebhookSignature(payload: string, signature: string | null): bool
     Buffer.from(signature),
     Buffer.from(expectedSignature),
   );
-}
-
-// Format evaluation result as a GitHub comment
-function formatEvaluationComment(evaluation: {
-  component: { key: string; name: string; multiplier: number };
-  severity: { key: string; name: string; base_points: number };
-  eligibility: { issue: boolean; fix_implementation: boolean; pr_linked: boolean; tests: boolean };
-  is_eligible: boolean;
-  final_score: number;
-  impact_summary: string;
-  justification_component: string;
-  justification_severity: string;
-  eligibility_notes: string;
-}): string {
-  const eligibilityIcon = (passed: boolean) => passed ? '✅' : '❌';
-  
-  const scoreEmoji = evaluation.is_eligible 
-    ? (evaluation.final_score >= 100 ? '🏆' : evaluation.final_score >= 50 ? '⭐' : '👍')
-    : '📋';
-
-  return `## ${scoreEmoji} MergeMint PR Analysis
-
-### Score: **${evaluation.final_score} points**${evaluation.is_eligible ? '' : ' (ineligible)'}
-
-| Metric | Value |
-|--------|-------|
-| **Component** | ${evaluation.component.name} (${evaluation.component.multiplier}× multiplier) |
-| **Severity** | ${evaluation.severity.key} - ${evaluation.severity.name} (${evaluation.severity.base_points} base pts) |
-| **Final Score** | ${evaluation.severity.base_points} × ${evaluation.component.multiplier} = **${evaluation.final_score}** |
-
-### Eligibility Checks
-
-| Check | Status |
-|-------|--------|
-| Issue/Bug Fix | ${eligibilityIcon(evaluation.eligibility.issue)} |
-| Fix Implementation | ${eligibilityIcon(evaluation.eligibility.fix_implementation)} |
-| PR Documented | ${eligibilityIcon(evaluation.eligibility.pr_linked)} |
-| Tests Included | ${eligibilityIcon(evaluation.eligibility.tests)} |
-
-### Impact Summary
-${evaluation.impact_summary}
-
-<details>
-<summary>Analysis Details</summary>
-
-**Component Classification:** ${evaluation.justification_component}
-
-**Severity Justification:** ${evaluation.justification_severity}
-
-**Eligibility Notes:** ${evaluation.eligibility_notes}
-
-</details>
-
----
-*Analyzed by [MergeMint](https://mergemint.dev) 🤖*`;
 }
 
 export async function POST(request: Request) {
@@ -148,65 +89,65 @@ export async function POST(request: Request) {
           return NextResponse.json({ message: 'Repository not tracked' });
         }
 
-        // Get installation token
-        const tokenData = await getInstallationAccessToken(installation.id);
-        const client = new GithubClient(tokenData.token);
+        // Trigger async processing using Cloudflare's waitUntil
+        // This keeps the worker alive to complete the request after responding to GitHub
+        const processPayload = {
+          orgId,
+          repoId: repoRecord.id,
+          repoFullName: repo.full_name,
+          prNumber: pr.number,
+          prId: pr.id,
+          prTitle: pr.title,
+          prBody: pr.body,
+          prAuthor: pr.user?.login,
+          prAuthorId: pr.user?.id,
+          prAuthorAvatar: pr.user?.avatar_url,
+          prUrl: pr.html_url,
+          mergedAt: pr.merged_at,
+          createdAt: pr.created_at,
+          additions: pr.additions,
+          deletions: pr.deletions,
+          changedFiles: pr.changed_files,
+          headSha: pr.head?.sha,
+          baseSha: pr.base?.sha,
+          installationId: installation.id,
+          postComment: true, // Tell process-pr to post the comment
+        };
 
-        // Process the PR
-        const processResponse = await fetch(
+        // Use Cloudflare's waitUntil to process in background after responding
+        const processPromise = fetch(
           `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/github/process-pr`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              orgId,
-              repoId: repoRecord.id,
-              repoFullName: repo.full_name,
-              prNumber: pr.number,
-              prId: pr.id,
-              prTitle: pr.title,
-              prBody: pr.body,
-              prAuthor: pr.user?.login,
-              prAuthorId: pr.user?.id,
-              prAuthorAvatar: pr.user?.avatar_url,
-              prUrl: pr.html_url,
-              mergedAt: pr.merged_at,
-              createdAt: pr.created_at,
-              additions: pr.additions,
-              deletions: pr.deletions,
-              changedFiles: pr.changed_files,
-              headSha: pr.head?.sha,
-              baseSha: pr.base?.sha,
-            }),
+            body: JSON.stringify(processPayload),
           },
-        );
-
-        if (!processResponse.ok) {
-          const err = await processResponse.json();
-          console.error('[Webhook] Failed to process PR:', err);
-          return NextResponse.json({ error: 'Failed to process PR' }, { status: 500 });
-        }
-
-        const result = await processResponse.json();
-        console.log(`[Webhook] PR #${pr.number} processed: score=${result.evaluation?.final_score}`);
-
-        // Post comment on the PR with the analysis results
-        if (result.evaluation) {
-          try {
-            const [owner, repoName] = repo.full_name.split('/');
-            const comment = formatEvaluationComment(result.evaluation);
-            const commentResult = await client.postPRComment(owner, repoName, pr.number, comment);
-            console.log(`[Webhook] Posted comment on PR #${pr.number}: ${commentResult.html_url}`);
-          } catch (commentErr) {
-            console.error('[Webhook] Failed to post comment:', commentErr);
-            // Don't fail the webhook if comment fails
+        ).then(async (res) => {
+          if (!res.ok) {
+            const err = await res.text();
+            console.error(`[Webhook] Background process-pr failed: ${err}`);
+          } else {
+            const result = await res.json();
+            console.log(`[Webhook] PR #${pr.number} processed: score=${result.evaluation?.final_score}`);
           }
+        }).catch((err) => {
+          console.error('[Webhook] Background process-pr error:', err);
+        });
+
+        // Use Cloudflare's waitUntil to keep worker alive for background processing
+        try {
+          const { ctx } = await getCloudflareContext();
+          ctx.waitUntil(processPromise);
+          console.log(`[Webhook] Queued PR #${pr.number} for async processing (waitUntil)`);
+        } catch {
+          // Fallback for local dev where Cloudflare context isn't available
+          console.log(`[Webhook] Queued PR #${pr.number} for async processing (no waitUntil)`);
         }
 
+        // Respond immediately to GitHub (within 10s timeout)
         return NextResponse.json({
-          message: 'PR processed successfully',
+          message: 'PR queued for processing',
           pr_number: pr.number,
-          score: result.evaluation?.final_score,
         });
       }
 
