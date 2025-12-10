@@ -34,58 +34,65 @@ import { getSupabaseServerClient } from '@kit/supabase/server-client';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { sendInvitationEmail } from '~/lib/email/mailgun';
+import { InviteSubmitButton } from './invite-submit-button';
 
 async function inviteMemberAction(formData: FormData) {
   'use server';
-  
-  const orgId = formData.get('orgId') as string;
-  const orgName = formData.get('orgName') as string;
-  const slug = formData.get('slug') as string;
-  const email = formData.get('email') as string;
-  const role = formData.get('role') as string;
-  const inviterName = formData.get('inviterName') as string;
 
-  if (!email?.includes('@') || !['admin', 'developer', 'pm', 'viewer'].includes(role)) {
-    throw new Error('Invalid email or role');
-  }
+  try {
+    const orgId = formData.get('orgId') as string;
+    const orgName = formData.get('orgName') as string;
+    const slug = formData.get('slug') as string;
+    const email = formData.get('email') as string;
+    const role = formData.get('role') as string;
+    const inviterName = formData.get('inviterName') as string;
 
-  const admin = getSupabaseServerAdminClient<any>();
-  const client = getSupabaseServerClient<any>();
-  const { data: userData } = await client.auth.getUser();
-  
-  // Create invitation
-  const { data: invitation, error } = await admin
-    .from('organization_invitations')
-    .insert({
-      org_id: orgId,
-      email: email.toLowerCase().trim(),
+    if (!email?.includes('@') || !['admin', 'developer', 'pm', 'viewer'].includes(role)) {
+      throw new Error('Invalid email or role');
+    }
+
+    const admin = getSupabaseServerAdminClient<any>();
+    const client = getSupabaseServerClient<any>();
+    const { data: userData } = await client.auth.getUser();
+
+    // Create invitation
+    const { data: invitation, error } = await admin
+      .from('organization_invitations')
+      .insert({
+        org_id: orgId,
+        email: email.toLowerCase().trim(),
+        role,
+        invited_by: userData?.user?.id,
+      })
+      .select('token')
+      .single();
+
+    if (error) {
+      console.error('Failed to create invitation:', error);
+      throw new Error('Failed to create invitation: ' + error.message);
+    }
+
+    // Send invitation email
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mergemint.dev';
+    const emailResult = await sendInvitationEmail({
+      to: email,
+      inviterName: inviterName || 'A team member',
+      orgName,
       role,
-      invited_by: userData?.user?.id,
-    })
-    .select('token')
-    .single();
+      inviteToken: invitation.token,
+      baseUrl,
+    });
 
-  if (error) {
-    console.error('Failed to create invitation:', error);
-    throw new Error('Failed to create invitation: ' + error.message);
+    if (!emailResult.success) {
+      console.error('Failed to send invitation email:', emailResult.error);
+      throw new Error('Failed to send invitation email: ' + emailResult.error);
+    }
+
+    revalidatePath(`/${slug}/members`);
+  } catch (error) {
+    console.error('Error in inviteMemberAction:', error);
+    throw error;
   }
-
-  // Send invitation email
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mergemint.dev';
-  const emailResult = await sendInvitationEmail({
-    to: email,
-    inviterName: inviterName || 'A team member',
-    orgName,
-    role,
-    inviteToken: invitation.token,
-    baseUrl,
-  });
-
-  if (!emailResult.success) {
-    console.error('Failed to send invitation email:', emailResult.error);
-  }
-
-  revalidatePath(`/${slug}/members`);
 }
 
 async function updateMemberRoleAction(formData: FormData) {
@@ -156,42 +163,47 @@ async function cancelInvitationAction(formData: FormData) {
 
 async function resendInvitationAction(formData: FormData) {
   'use server';
-  
-  const invitationId = formData.get('invitationId') as string;
-  const slug = formData.get('slug') as string;
-  const orgName = formData.get('orgName') as string;
-  const inviterName = formData.get('inviterName') as string;
 
-  const admin = getSupabaseServerAdminClient<any>();
-  
-  // Get invitation details
-  const { data: invitation, error } = await admin
-    .from('organization_invitations')
-    .select('email, role, token')
-    .eq('id', invitationId)
-    .single();
+  try {
+    const invitationId = formData.get('invitationId') as string;
+    const slug = formData.get('slug') as string;
+    const orgName = formData.get('orgName') as string;
+    const inviterName = formData.get('inviterName') as string;
 
-  if (error || !invitation) {
-    throw new Error('Invitation not found');
+    const admin = getSupabaseServerAdminClient<any>();
+
+    // Get invitation details
+    const { data: invitation, error } = await admin
+      .from('organization_invitations')
+      .select('email, role, token')
+      .eq('id', invitationId)
+      .single();
+
+    if (error || !invitation) {
+      throw new Error('Invitation not found');
+    }
+
+    // Send email
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mergemint.dev';
+    const emailResult = await sendInvitationEmail({
+      to: invitation.email,
+      inviterName: inviterName || 'A team member',
+      orgName,
+      role: invitation.role,
+      inviteToken: invitation.token,
+      baseUrl,
+    });
+
+    if (!emailResult.success) {
+      console.error('Failed to resend invitation email:', emailResult.error);
+      throw new Error('Failed to send invitation email: ' + emailResult.error);
+    }
+
+    revalidatePath(`/${slug}/members`);
+  } catch (error) {
+    console.error('Error in resendInvitationAction:', error);
+    throw error;
   }
-
-  // Send email
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mergemint.dev';
-  const emailResult = await sendInvitationEmail({
-    to: invitation.email,
-    inviterName: inviterName || 'A team member',
-    orgName,
-    role: invitation.role,
-    inviteToken: invitation.token,
-    baseUrl,
-  });
-
-  if (!emailResult.success) {
-    console.error('Failed to resend invitation email:', emailResult.error);
-    throw new Error('Failed to send invitation email');
-  }
-
-  revalidatePath(`/${slug}/members`);
 }
 
 export default async function MembersPage({
@@ -341,8 +353,8 @@ export default async function MembersPage({
                   </SelectContent>
                 </Select>
               </div>
-              
-              <Button type="submit">Send Invitation</Button>
+
+              <InviteSubmitButton />
             </form>
           </CardContent>
         </Card>
