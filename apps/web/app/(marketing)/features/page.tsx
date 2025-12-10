@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import {
@@ -43,11 +44,36 @@ import { ShineBorder } from '@kit/ui/magicui';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
-export const generateMetadata = async () => {
-  return {
-    title: 'Features - MergeMint',
-    description: 'Discover all the features that make MergeMint the best AI-powered PR scoring platform for engineering teams.',
-  };
+export const metadata: Metadata = {
+  title: 'Features - AI PR Scoring, Developer Leaderboards & More',
+  description:
+    'Explore MergeMint features: AI-powered PR evaluation with Claude, developer leaderboards, bug bounty automation, configurable scoring, GitHub integration, and self-hosting options.',
+  keywords: [
+    'PR scoring features',
+    'AI code review',
+    'developer leaderboards',
+    'GitHub PR analytics',
+    'engineering metrics',
+    'bug bounty automation',
+    'Claude AI evaluation',
+    'developer recognition platform',
+  ],
+  openGraph: {
+    title: 'MergeMint Features - AI PR Scoring & Developer Recognition',
+    description:
+      'Explore all features: AI-powered PR evaluation, developer leaderboards, bug bounty automation, and more.',
+    type: 'website',
+    url: 'https://mergemint.dev/features',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MergeMint Features - AI PR Scoring & Developer Recognition',
+    description:
+      'Explore all features: AI-powered PR evaluation, developer leaderboards, bug bounty automation.',
+  },
+  alternates: {
+    canonical: 'https://mergemint.dev/features',
+  },
 };
 
 async function FeaturesPage() {

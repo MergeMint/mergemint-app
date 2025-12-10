@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import {
@@ -22,11 +23,35 @@ import { ShineBorder } from '@kit/ui/magicui';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
-export const generateMetadata = async () => {
-  return {
-    title: 'How It Works - MergeMint',
-    description: 'Learn how MergeMint automatically evaluates pull requests and scores developer contributions using AI.',
-  };
+export const metadata: Metadata = {
+  title: 'How MergeMint Works - AI PR Scoring in 4 Steps',
+  description:
+    'Learn how MergeMint works: Connect GitHub, merge PRs, let Claude AI evaluate the code, and see scores on leaderboards. Setup takes under 5 minutes.',
+  keywords: [
+    'how MergeMint works',
+    'AI PR evaluation process',
+    'GitHub integration setup',
+    'automatic PR scoring',
+    'Claude AI code review',
+    'developer scoring workflow',
+    'engineering metrics automation',
+  ],
+  openGraph: {
+    title: 'How MergeMint Works - AI PR Scoring in 4 Steps',
+    description:
+      'From PR merge to developer recognition in seconds. Learn how MergeMint automates engineering metrics.',
+    type: 'website',
+    url: 'https://mergemint.dev/how-it-works',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How MergeMint Works - AI PR Scoring',
+    description:
+      'From PR merge to developer recognition in seconds. Setup takes under 5 minutes.',
+  },
+  alternates: {
+    canonical: 'https://mergemint.dev/how-it-works',
+  },
 };
 
 async function HowItWorksPage() {

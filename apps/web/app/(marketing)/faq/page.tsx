@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { ArrowRight, ChevronDown, Github, HelpCircle } from 'lucide-react';
@@ -7,11 +8,36 @@ import { Button } from '@kit/ui/button';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
-export const generateMetadata = async () => {
-  return {
-    title: 'FAQ - MergeMint',
-    description: 'Frequently asked questions about MergeMint, the AI-powered PR scoring platform.',
-  };
+export const metadata: Metadata = {
+  title: 'FAQ - Frequently Asked Questions About MergeMint',
+  description:
+    'Find answers to common questions about MergeMint: AI-powered PR scoring, GitHub integration, pricing, self-hosting, privacy, and more.',
+  keywords: [
+    'MergeMint FAQ',
+    'PR scoring questions',
+    'AI code review FAQ',
+    'GitHub integration help',
+    'developer analytics questions',
+    'self-hosted PR scoring',
+    'MergeMint pricing FAQ',
+    'Claude AI PR evaluation',
+  ],
+  openGraph: {
+    title: 'FAQ - Frequently Asked Questions About MergeMint',
+    description:
+      'Find answers to common questions about MergeMint: AI-powered PR scoring, GitHub integration, pricing, self-hosting, and privacy.',
+    type: 'website',
+    url: 'https://mergemint.dev/faq',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MergeMint FAQ - Your Questions Answered',
+    description:
+      'Everything you need to know about AI-powered PR scoring with MergeMint.',
+  },
+  alternates: {
+    canonical: 'https://mergemint.dev/faq',
+  },
 };
 
 async function FAQPage() {

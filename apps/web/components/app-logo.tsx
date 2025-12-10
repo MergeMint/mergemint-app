@@ -5,9 +5,24 @@ import { cn } from '@kit/ui/utils';
 
 function LogoImage({
   className,
+  collapsed,
 }: {
   className?: string;
+  collapsed?: boolean;
 }) {
+  if (collapsed) {
+    return (
+      <Image
+        src="/images/mergemint-icon.png"
+        alt="MergeMint"
+        width={32}
+        height={32}
+        className={cn('h-8 w-8', className)}
+        priority
+      />
+    );
+  }
+
   return (
     <Image
       src="/images/mergemint-logo.png"
@@ -24,18 +39,20 @@ export function AppLogo({
   href,
   label,
   className,
+  collapsed,
 }: {
   href?: string | null;
   className?: string;
   label?: string;
+  collapsed?: boolean;
 }) {
   if (href === null) {
-    return <LogoImage className={className} />;
+    return <LogoImage className={className} collapsed={collapsed} />;
   }
 
   return (
     <Link aria-label={label ?? 'Home Page'} href={href ?? '/'}>
-      <LogoImage className={className} />
+      <LogoImage className={className} collapsed={collapsed} />
     </Link>
   );
 }

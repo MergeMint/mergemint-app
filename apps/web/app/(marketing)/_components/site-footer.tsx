@@ -65,6 +65,31 @@ export function SiteFooter() {
           ],
         },
         {
+          heading: 'Compare',
+          links: [
+            {
+              href: '/compare/linearb',
+              label: 'MergeMint vs LinearB',
+            },
+            {
+              href: '/compare/jellyfish',
+              label: 'MergeMint vs Jellyfish',
+            },
+            {
+              href: '/compare/gitclear',
+              label: 'MergeMint vs GitClear',
+            },
+            {
+              href: '/alternatives/linearb',
+              label: 'LinearB Alternatives',
+            },
+            {
+              href: '/alternatives/jellyfish',
+              label: 'Jellyfish Alternatives',
+            },
+          ],
+        },
+        {
           heading: 'Resources',
           links: [
             {

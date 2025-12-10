@@ -1,3 +1,5 @@
+'use client';
+
 import type { JwtPayload } from '@supabase/supabase-js';
 
 import {
@@ -6,12 +8,22 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarNavigation,
+  useSidebar,
 } from '@kit/ui/shadcn-sidebar';
 
 import { AppLogo } from '~/components/app-logo';
 import { ProfileAccountDropdownContainer } from '~/components/personal-account-dropdown-container';
 import { getOrgRoutes, navigationConfig } from '~/config/navigation.config';
 import { Tables } from '~/lib/database.types';
+
+function SidebarLogo() {
+  const { open } = useSidebar();
+  return (
+    <div className={open ? '' : 'flex justify-center w-full'}>
+      <AppLogo className={'max-w-full'} collapsed={!open} />
+    </div>
+  );
+}
 
 export function HomeSidebar(props: {
   account?: Tables<'accounts'>;
@@ -29,11 +41,7 @@ export function HomeSidebar(props: {
   return (
     <Sidebar collapsible={'icon'}>
       <SidebarHeader className={'h-16 justify-center'}>
-        <div className={'flex items-center justify-between space-x-2'}>
-          <div>
-            <AppLogo className={'max-w-full'} />
-          </div>
-        </div>
+        <SidebarLogo />
       </SidebarHeader>
 
       <SidebarContent>

@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import {
@@ -19,11 +20,35 @@ import { ShineBorder } from '@kit/ui/magicui';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
-export const generateMetadata = async () => {
-  return {
-    title: 'Pricing - MergeMint',
-    description: 'Simple, transparent pricing for teams of all sizes. Free for open source projects.',
-  };
+export const metadata: Metadata = {
+  title: 'Pricing - Free Open Source & Enterprise Plans',
+  description:
+    'MergeMint pricing: Free forever for open source and non-commercial use. Self-host unlimited repos, PRs, and team members. Enterprise plans available for commercial use.',
+  keywords: [
+    'MergeMint pricing',
+    'free PR scoring tool',
+    'open source developer analytics',
+    'engineering metrics pricing',
+    'self-hosted PR analytics',
+    'free GitHub analytics',
+    'developer recognition pricing',
+  ],
+  openGraph: {
+    title: 'MergeMint Pricing - Free Open Source & Enterprise Plans',
+    description:
+      'Free forever for non-commercial use. Self-host with unlimited repos, PRs, and team members.',
+    type: 'website',
+    url: 'https://mergemint.dev/pricing',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MergeMint Pricing - Free Open Source',
+    description:
+      'Free forever for non-commercial use. Self-host with unlimited features.',
+  },
+  alternates: {
+    canonical: 'https://mergemint.dev/pricing',
+  },
 };
 
 async function PricingPage() {

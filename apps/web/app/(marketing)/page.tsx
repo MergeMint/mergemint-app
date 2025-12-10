@@ -138,9 +138,50 @@ const testimonials = [
 const firstRow = testimonials.slice(0, testimonials.length / 2);
 const secondRow = testimonials.slice(testimonials.length / 2);
 
+// JSON-LD structured data for SEO
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'MergeMint',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Web',
+  description:
+    'AI-powered PR scoring and developer recognition platform. Turn merged pull requests into objective developer recognition with Claude AI evaluation.',
+  url: 'https://mergemint.dev',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    description: 'Free for non-commercial use under CC BY-NC 4.0',
+  },
+  featureList: [
+    'AI-powered PR evaluation with Claude',
+    'Automatic severity and component classification',
+    'Real-time developer leaderboards',
+    'GitHub integration with PR comments',
+    'Configurable scoring rules',
+    'Self-hosted option available',
+    'Team analytics and dashboards',
+  ],
+  creator: {
+    '@type': 'Person',
+    name: 'Jay Derinbogaz',
+    url: 'https://github.com/cderinbogaz',
+  },
+  sourceOrganization: {
+    '@type': 'Organization',
+    name: 'TextCortex AI',
+  },
+};
+
 export default function Home() {
   return (
-    <div className="flex flex-col">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient */}
@@ -1451,6 +1492,7 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   );
 }
 

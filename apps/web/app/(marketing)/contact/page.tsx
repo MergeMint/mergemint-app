@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import {
@@ -16,11 +17,34 @@ import { Textarea } from '@kit/ui/textarea';
 
 import { withI18n } from '~/lib/i18n/with-i18n';
 
-export const generateMetadata = async () => {
-  return {
-    title: 'Contact - MergeMint',
-    description: 'Get in touch with the MergeMint team. We\'d love to hear from you.',
-  };
+export const metadata: Metadata = {
+  title: 'Contact Us - MergeMint Support & Sales',
+  description:
+    'Get in touch with the MergeMint team. Contact us for support, enterprise sales, partnerships, or general inquiries about AI-powered PR scoring.',
+  keywords: [
+    'contact MergeMint',
+    'MergeMint support',
+    'MergeMint sales',
+    'PR scoring help',
+    'developer analytics support',
+    'MergeMint enterprise',
+  ],
+  openGraph: {
+    title: 'Contact Us - MergeMint Support & Sales',
+    description:
+      'Get in touch with the MergeMint team for support, enterprise sales, or general inquiries.',
+    type: 'website',
+    url: 'https://mergemint.dev/contact',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Contact MergeMint',
+    description:
+      'Reach out to the MergeMint team for support, sales, or partnerships.',
+  },
+  alternates: {
+    canonical: 'https://mergemint.dev/contact',
+  },
 };
 
 async function ContactPage() {

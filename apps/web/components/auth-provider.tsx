@@ -21,9 +21,12 @@ export function AuthProvider(props: React.PropsWithChildren) {
     appHomePath: pathsConfig.app.home,
     onEvent: (event, session) => {
       // Handle successful sign-in from magic link (token in URL hash)
-      if (event === 'SIGNED_IN' && session && !hasHandledHash.current) {
+      // Only redirect if there's actually an access token in the hash (magic link sign-in)
+      const hasAccessToken = typeof window !== 'undefined' && window.location.hash.includes('access_token');
+
+      if (event === 'SIGNED_IN' && session && !hasHandledHash.current && hasAccessToken) {
         // Check if we're on a public route (marketing pages, root, etc.)
-        const isPublicRoute = 
+        const isPublicRoute =
           pathname === '/' ||
           pathname.startsWith('/auth') ||
           pathname.startsWith('/features') ||
@@ -34,13 +37,13 @@ export function AuthProvider(props: React.PropsWithChildren) {
 
         if (isPublicRoute) {
           hasHandledHash.current = true;
-          
+
           // Clear the hash from URL to prevent re-processing
-          if (typeof window !== 'undefined' && window.location.hash) {
+          if (window.location.hash) {
             // Use replaceState to clean the URL without triggering navigation
             window.history.replaceState(null, '', window.location.pathname);
           }
-          
+
           // Redirect to 'next' URL if present (e.g., invite link), otherwise home
           const redirectTo = nextUrl || pathsConfig.app.home;
           router.replace(redirectTo);
