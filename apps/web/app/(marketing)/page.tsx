@@ -14,16 +14,19 @@ import {
   CheckCircle2,
   Code2,
   Crown,
+  Globe,
   GitBranch,
   GitMerge,
   GitPullRequest,
   Github,
   Layers,
   Linkedin,
+  Lock,
   Medal,
   PieChart,
   Rocket,
   Shield,
+  ShieldCheck,
   Sparkles,
   Star,
   Target,
@@ -246,18 +249,22 @@ export default function Home() {
 
             {/* Trust badges */}
             <BlurFade delay={0.5} inView>
-              <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-green-500" />
-                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge1" /></span>
+              <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-muted-foreground">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
+                  <Shield className="h-4 w-4 text-blue-500" />
+                  <span className="text-sm font-medium text-blue-600"><Trans i18nKey="marketing:home.trustEuInfra" /></span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge2" /></span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <span className="text-sm font-medium text-green-600"><Trans i18nKey="marketing:home.trustGdpr" /></span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Code2 className="h-5 w-5 text-purple-500" />
-                  <span className="text-sm"><Trans i18nKey="marketing:home.trustBadge3" /></span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+                  <Shield className="h-4 w-4 text-purple-500" />
+                  <span className="text-sm font-medium text-purple-600"><Trans i18nKey="marketing:home.trustSoc2" /></span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20">
+                  <Shield className="h-4 w-4 text-orange-500" />
+                  <span className="text-sm font-medium text-orange-600"><Trans i18nKey="marketing:home.trustIso27001" /></span>
                 </div>
               </div>
             </BlurFade>
@@ -1410,6 +1417,108 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
+      {/* Security & Compliance Section */}
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-muted/50 to-transparent relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-green-500/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-4 relative">
+          <BlurFade delay={0.1} inView>
+            <div className="text-center mb-16">
+              <Badge variant="outline" className="mb-4 px-4 py-2 border-blue-500/30 bg-blue-500/5">
+                <ShieldCheck className="mr-2 h-4 w-4 text-blue-600" />
+                <span className="text-blue-600"><Trans i18nKey="marketing:home.securityBadge" /></span>
+              </Badge>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl mb-4">
+                <Trans i18nKey="marketing:home.securityTitle" /> <span className="block bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                  <Trans i18nKey="marketing:home.securityTitleHighlight" />
+                </span>
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+                <Trans i18nKey="marketing:home.securityDescription" />
+              </p>
+            </div>
+          </BlurFade>
+
+          <BlurFade delay={0.2} inView>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* EU Infrastructure */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#3b82f6', '#06b6d4', '#3b82f6']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Globe className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securityEuInfraTitle" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securityEuInfraDesc" />
+                </p>
+              </div>
+
+              {/* GDPR Compliant */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#22c55e', '#10b981', '#22c55e']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <ShieldCheck className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securityGdprTitle" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securityGdprDesc" />
+                </p>
+              </div>
+
+              {/* SOC 2 Type II */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#8b5cf6', '#a855f7', '#8b5cf6']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Shield className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securitySoc2Title" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securitySoc2Desc" />
+                </p>
+              </div>
+
+              {/* ISO 27001 */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#f97316', '#fb923c', '#f97316']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Medal className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securityIso27001Title" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securityIso27001Desc" />
+                </p>
+              </div>
+
+              {/* End-to-End Encryption */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#ec4899', '#f472b6', '#ec4899']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <Lock className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securityEncryptionTitle" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securityEncryptionDesc" />
+                </p>
+              </div>
+
+              {/* Privacy First */}
+              <div className="relative p-6 rounded-2xl border bg-card hover:shadow-xl transition-all overflow-hidden group">
+                <ShineBorder shineColor={['#0ea5e9', '#38bdf8', '#0ea5e9']} borderRadius={16} />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg group-hover:scale-110 transition-transform">
+                  <UserCheck className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-2"><Trans i18nKey="marketing:home.securityPrivacyTitle" /></h3>
+                <p className="text-muted-foreground text-sm">
+                  <Trans i18nKey="marketing:home.securityPrivacyDesc" />
+                </p>
               </div>
             </div>
           </BlurFade>

@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const appSlug = process.env.NEXT_PUBLIC_GITHUB_APP_SLUG;
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
+function getSiteUrl(request: NextRequest): string {
+  // Derive from request for environment-awareness
+  const url = new URL(request.url);
+  return `${url.protocol}//${url.host}`;
+}
 
 export async function GET(request: NextRequest) {
   if (!appSlug) {
@@ -11,6 +16,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  const siteUrl = getSiteUrl(request);
   const { searchParams } = new URL(request.url);
   const orgId = searchParams.get('orgId');
   const orgSlug = searchParams.get('orgSlug');

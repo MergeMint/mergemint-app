@@ -51,13 +51,13 @@
   "planPickerAlertErrorDescription": "Es gab einen Fehler beim Abrufen der Kasse. Bitte versuche es später erneut.",
   "subscriptionCancelled": "Abonnement gekündigt",
   "cancelSubscriptionDate": "Dein Abonnement wird am Ende des Zeitraums gekündigt",
-  "noPlanChosen": "Bitte wähle einen Plan aus",
-  "noIntervalPlanChosen": "Bitte wähle ein Abrechnungsintervall aus",
+  "noPlanChosen": "Bitte wähle einen Plan",
+  "noIntervalPlanChosen": "Bitte wähle ein Abrechnungsintervall",
   "status": {
     "free": {
-      "badge": "Kostenloser Plan",
-      "heading": "Du nutzt gerade den kostenlosen Plan",
-      "description": "Du bist im kostenlosen Plan. Du kannst jederzeit auf einen bezahlten Plan upgraden."
+      "badge": "Kostenlos Plan",
+      "heading": "Du bist derzeit im kostenlosen Plan",
+      "description": "Du nutzt einen kostenlosen Plan. Du kannst jederzeit auf einen bezahlten Plan upgraden."
     },
     "active": {
       "badge": "Aktiv",
@@ -87,7 +87,7 @@
     "incomplete": {
       "badge": "Unvollständig",
       "heading": "Wir warten auf deine Zahlung",
-      "description": "Wir warten darauf, dass deine Zahlung verarbeitet wird. Bitte hab noch etwas Geduld."
+      "description": "Wir warten darauf, dass deine Zahlung verarbeitet wird. Bitte hab noch ein bisschen Geduld."
     },
     "incomplete_expired": {
       "badge": "Abgelaufen",
@@ -107,7 +107,7 @@
     "pending": {
       "badge": "Ausstehend",
       "heading": "Deine Zahlung ist ausstehend",
-      "description": "Deine Zahlung ist ausstehend. Bitte hab noch etwas Geduld."
+      "description": "Deine Zahlung ist ausstehend. Bitte hab noch ein bisschen Geduld."
     },
     "failed": {
       "badge": "Fehlgeschlagen",

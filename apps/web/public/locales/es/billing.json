@@ -80,7 +80,7 @@
       "description": "Tu suscripción está cancelada. Está programada para terminar al final del período de facturación."
     },
     "unpaid": {
-      "badge": "No Pagado",
+      "badge": "Sin Pagar",
       "heading": "Tu factura no está pagada",
       "description": "Tu factura no está pagada. Por favor actualiza tu método de pago."
     },

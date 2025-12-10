@@ -52,8 +52,8 @@
   "noNotifications": "Aucune notification",
   "justNow": "À l'instant",
   "newVersionAvailable": "Une nouvelle version est disponible",
-  "newVersionAvailableDescription": "Une nouvelle version de l'app est disponible. On te recommande de rafraîchir la page pour obtenir les dernières mises à jour et éviter tout souci.",
-  "newVersionSubmitButton": "Recharger et mettre à jour",
+  "newVersionAvailableDescription": "Une nouvelle version de l'app est disponible. On te recommande de rafraîchir la page pour avoir les dernières mises à jour et éviter tout souci.",
+  "newVersionSubmitButton": "Recharger et Mettre à jour",
   "back": "Retour",
   "routes": {
     "home": "Accueil",
@@ -81,7 +81,7 @@
   },
   "cookieBanner": {
     "title": "Hé, on utilise des cookies 🍪",
-    "description": "Ce site utilise des cookies pour te garantir la meilleure expérience.",
+    "description": "Ce site utilise des cookies pour te garantir la meilleure expérience possible.",
     "reject": "Refuser",
     "accept": "Accepter"
   }

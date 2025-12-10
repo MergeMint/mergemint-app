@@ -14,8 +14,13 @@ function parseState(state?: string | null) {
   }
 }
 
-function absoluteRedirect(path: string) {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+function getSiteUrl(request: NextRequest): string {
+  // Derive from request for environment-awareness
+  const url = new URL(request.url);
+  return `${url.protocol}//${url.host}`;
+}
+
+function absoluteRedirect(path: string, base: string) {
   // If already absolute, return as-is
   try {
     return new URL(path).toString();
@@ -25,6 +30,7 @@ function absoluteRedirect(path: string) {
 }
 
 export async function GET(request: NextRequest) {
+  const siteUrl = getSiteUrl(request);
   const { searchParams } = new URL(request.url);
   const installationId = searchParams.get('installation_id');
   const stateParam = searchParams.get('state');
@@ -33,7 +39,7 @@ export async function GET(request: NextRequest) {
 
   if (!installationId) {
     return NextResponse.redirect(
-      absoluteRedirect(`${redirectBase}?github=error&reason=missing_installation_id`),
+      absoluteRedirect(`${redirectBase}?github=error&reason=missing_installation_id`, siteUrl),
       { status: 302 },
     );
   }
@@ -45,7 +51,7 @@ export async function GET(request: NextRequest) {
   const orgId = state?.orgId;
   if (!orgId) {
     return NextResponse.redirect(
-      absoluteRedirect(`${redirectBase}?github=error&reason=missing_org_context`),
+      absoluteRedirect(`${redirectBase}?github=error&reason=missing_org_context`, siteUrl),
       { status: 302 },
     );
   }
@@ -95,7 +101,7 @@ export async function GET(request: NextRequest) {
 
   if (!membership) {
     return NextResponse.redirect(
-      absoluteRedirect(`${redirectBase}?github=error&reason=not_authorized`),
+      absoluteRedirect(`${redirectBase}?github=error&reason=not_authorized`, siteUrl),
       { status: 302 },
     );
   }
@@ -112,7 +118,7 @@ export async function GET(request: NextRequest) {
   console.log('[GitHub Callback] Upsert github_connections:', { orgId, installationId, error: upsertError });
 
   return NextResponse.redirect(
-    absoluteRedirect(`${redirectBase}?github=success&installation=${installationId}`),
+    absoluteRedirect(`${redirectBase}?github=success&installation=${installationId}`, siteUrl),
     { status: 302 },
   );
 }

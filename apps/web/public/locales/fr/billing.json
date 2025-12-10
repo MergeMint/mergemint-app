@@ -13,7 +13,7 @@
   "renewAtPeriodEndDescription": "Votre abonnement est prévu pour être renouvelé le {{- endDate }}",
   "noPermissionsAlertHeading": "Vous n'avez pas les permissions pour modifier les paramètres de facturation",
   "noPermissionsAlertBody": "Veuillez contacter le propriétaire de votre compte pour modifier les paramètres de facturation.",
-  "checkoutSuccessTitle": "C'est fait ! Vous êtes prêt.",
+  "checkoutSuccessTitle": "C'est bon ! Vous êtes prêt.",
   "checkoutSuccessDescription": "Merci de vous être abonné, nous avons traité votre abonnement avec succès ! Un email de confirmation sera envoyé à {{ customerEmail }}.",
   "checkoutSuccessBackButton": "Retourner à l'application",
   "cannotManageBillingAlertTitle": "Vous ne pouvez pas gérer la facturation",
@@ -51,18 +51,18 @@
   "planPickerAlertErrorDescription": "Une erreur s'est produite lors de la demande de paiement. Veuillez réessayer plus tard.",
   "subscriptionCancelled": "Abonnement annulé",
   "cancelSubscriptionDate": "Votre abonnement sera annulé à la fin de la période",
-  "noPlanChosen": "Choisis un plan, s'il te plaît",
-  "noIntervalPlanChosen": "Choisis un intervalle de facturation, s'il te plaît",
+  "noPlanChosen": "Veuillez choisir un plan",
+  "noIntervalPlanChosen": "Veuillez choisir un intervalle de facturation",
   "status": {
     "free": {
-      "badge": "Plan Gratuit",
-      "heading": "Tu es actuellement sur le Plan Gratuit",
+      "badge": "Plan gratuit",
+      "heading": "Vous êtes actuellement sur le plan gratuit",
       "description": "T'es sur un plan gratuit. Tu peux passer à un plan payant quand tu veux."
     },
     "active": {
       "badge": "Actif",
       "heading": "Ton abonnement est actif",
-      "description": "Ton abonnement est actif. Tu peux gérer ton abonnement et ta facturation dans le Portail Client."
+      "description": "Ton abonnement est actif. Tu peux gérer ton abonnement et ta facturation dans le portail client."
     },
     "trialing": {
       "badge": "Essai",
@@ -70,9 +70,9 @@
       "description": "Tu peux profiter des avantages du plan jusqu'à la fin de l'essai"
     },
     "past_due": {
-      "badge": "En Retard",
-      "heading": "Ton facture est en retard",
-      "description": "Ton facture est en retard. Mets à jour ta méthode de paiement, s'il te plaît."
+      "badge": "En retard",
+      "heading": "Ta facture est en retard",
+      "description": "Ta facture est en retard. Mets à jour ta méthode de paiement, s'il te plaît."
     },
     "canceled": {
       "badge": "Annulé",
@@ -80,9 +80,9 @@
       "description": "Ton abonnement est annulé. Il est prévu de se terminer à la fin de la période de facturation."
     },
     "unpaid": {
-      "badge": "Non Payé",
-      "heading": "Ton facture n'est pas payée",
-      "description": "Ton facture n'est pas payée. Mets à jour ta méthode de paiement, s'il te plaît."
+      "badge": "Non payé",
+      "heading": "Ta facture n'est pas payée",
+      "description": "Ta facture n'est pas payée. Mets à jour ta méthode de paiement, s'il te plaît."
     },
     "incomplete": {
       "badge": "Incomplet",
@@ -95,17 +95,17 @@
       "description": "Ton paiement a expiré. Mets à jour ta méthode de paiement, s'il te plaît."
     },
     "paused": {
-      "badge": "En Pause",
+      "badge": "En pause",
       "heading": "Ton abonnement est en pause",
       "description": "Ton abonnement est en pause. Tu peux le reprendre quand tu veux."
     },
     "succeeded": {
       "badge": "Réussi",
       "heading": "Ton paiement a réussi",
-      "description": "Ton paiement a réussi. Merci de t'être abonné!"
+      "description": "Ton paiement a réussi. Merci de t'être abonné !"
     },
     "pending": {
-      "badge": "En Attente",
+      "badge": "En attente",
       "heading": "Ton paiement est en attente",
       "description": "Ton paiement est en attente. Sois patient avec nous."
     },

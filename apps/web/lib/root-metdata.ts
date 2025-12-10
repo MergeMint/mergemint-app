@@ -87,9 +87,14 @@ export const generateRootMetadata = async (): Promise<Metadata> => {
       images: [`${appConfig.url}/images/og-image.png`],
     },
     icons: {
-      icon: '/images/favicon/favicon.ico',
+      icon: [
+        { url: '/images/favicon/favicon.ico', sizes: 'any' },
+        { url: '/images/favicon/favicon.svg', type: 'image/svg+xml' },
+        { url: '/images/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      ],
       apple: '/images/favicon/apple-touch-icon.png',
     },
+    manifest: '/images/favicon/site.webmanifest',
     verification: {
       // Add your verification codes here when you have them
       // google: 'your-google-verification-code',
