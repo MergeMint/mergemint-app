@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'node:crypto';
 
-import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
@@ -89,65 +88,79 @@ export async function POST(request: Request) {
           return NextResponse.json({ message: 'Repository not tracked' });
         }
 
-        // Trigger async processing using Cloudflare's waitUntil
-        // This keeps the worker alive to complete the request after responding to GitHub
-        const processPayload = {
-          orgId,
-          repoId: repoRecord.id,
-          repoFullName: repo.full_name,
-          prNumber: pr.number,
-          prId: pr.id,
-          prTitle: pr.title,
-          prBody: pr.body,
-          prAuthor: pr.user?.login,
-          prAuthorId: pr.user?.id,
-          prAuthorAvatar: pr.user?.avatar_url,
-          prUrl: pr.html_url,
-          mergedAt: pr.merged_at,
-          createdAt: pr.created_at,
-          additions: pr.additions,
-          deletions: pr.deletions,
-          changedFiles: pr.changed_files,
-          headSha: pr.head?.sha,
-          baseSha: pr.base?.sha,
-          installationId: installation.id,
-          postComment: true, // Tell process-pr to post the comment
-        };
+        // Save the PR to the database immediately (no AI evaluation yet)
+        // The AI evaluation will be triggered by a separate process
 
-        // Use Cloudflare's waitUntil to process in background after responding
-        const processPromise = fetch(
-          `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/github/process-pr`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(processPayload),
-          },
-        ).then(async (res) => {
-          if (!res.ok) {
-            const err = await res.text();
-            console.error(`[Webhook] Background process-pr failed: ${err}`);
+        // Ensure GitHub identity exists
+        let githubIdentityId = null;
+        if (pr.user?.login) {
+          const { data: existingIdentity } = await admin
+            .from('github_identities')
+            .select('id')
+            .eq('github_login', pr.user.login)
+            .maybeSingle();
+
+          if (existingIdentity) {
+            githubIdentityId = existingIdentity.id;
           } else {
-            const result = await res.json();
-            console.log(`[Webhook] PR #${pr.number} processed: score=${result.evaluation?.final_score}`);
+            const { data: newIdentity } = await admin
+              .from('github_identities')
+              .insert({
+                github_user_id: pr.user.id,
+                github_login: pr.user.login,
+                avatar_url: pr.user.avatar_url,
+              })
+              .select('id')
+              .single();
+            githubIdentityId = newIdentity?.id;
           }
-        }).catch((err) => {
-          console.error('[Webhook] Background process-pr error:', err);
-        });
-
-        // Use Cloudflare's waitUntil to keep worker alive for background processing
-        try {
-          const { ctx } = await getCloudflareContext();
-          ctx.waitUntil(processPromise);
-          console.log(`[Webhook] Queued PR #${pr.number} for async processing (waitUntil)`);
-        } catch {
-          // Fallback for local dev where Cloudflare context isn't available
-          console.log(`[Webhook] Queued PR #${pr.number} for async processing (no waitUntil)`);
         }
+
+        // Upsert PR record - it will be processed by /api/github/process-unprocessed
+        const { data: prRecord, error: prError } = await admin
+          .from('pull_requests')
+          .upsert(
+            {
+              org_id: orgId,
+              repo_id: repoRecord.id,
+              github_pr_id: pr.id,
+              number: pr.number,
+              title: pr.title,
+              body: pr.body,
+              state: 'closed',
+              is_merged: true,
+              merged_at_gh: pr.merged_at,
+              github_author_id: githubIdentityId,
+              head_sha: pr.head?.sha,
+              base_sha: pr.base?.sha,
+              url: pr.html_url,
+              additions: pr.additions,
+              deletions: pr.deletions,
+              changed_files_count: pr.changed_files,
+              created_at_gh: pr.created_at,
+              updated_at_gh: new Date().toISOString(),
+              last_synced_at: new Date().toISOString(),
+            },
+            { onConflict: 'org_id,github_pr_id' },
+          )
+          .select('id')
+          .single();
+
+        if (prError) {
+          console.error('[Webhook] Failed to save PR:', prError);
+          return NextResponse.json(
+            { error: 'Failed to save PR', details: prError.message },
+            { status: 500 },
+          );
+        }
+
+        console.log(`[Webhook] Saved PR #${pr.number} (id: ${prRecord.id}) - pending evaluation`);
 
         // Respond immediately to GitHub (within 10s timeout)
         return NextResponse.json({
-          message: 'PR queued for processing',
+          message: 'PR saved for processing',
           pr_number: pr.number,
+          pr_id: prRecord.id,
         });
       }
 

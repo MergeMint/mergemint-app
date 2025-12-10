@@ -3,19 +3,20 @@ import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
-import {
-  GithubClient,
-  getInstallationAccessToken,
-} from '~/lib/mergemint/github';
-
 /**
  * Process PRs that exist in the database but don't have evaluations.
  * This will NOT overwrite existing evaluations.
+ *
+ * Body params:
+ * - orgId: Required. Organization to process
+ * - repoId: Optional. Filter to specific repo
+ * - limit: Optional. Max PRs to process (default: 50)
+ * - postComment: Optional. Whether to post GitHub comments (default: true)
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { orgId, repoId, limit = 50 } = body;
+    const { orgId, repoId, limit = 50, postComment = true } = body;
 
     if (!orgId) {
       return NextResponse.json(
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log(`[ProcessUnprocessed] Starting for org ${orgId}, limit: ${limit}`);
+    console.log(`[ProcessUnprocessed] Starting for org ${orgId}, limit: ${limit}, postComment: ${postComment}`);
 
     const admin = getSupabaseServerAdminClient<any>();
 
@@ -141,10 +142,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Get installation token
-    const tokenData = await getInstallationAccessToken(connection.github_installation_id);
-    const client = new GithubClient(tokenData.token);
-
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const results = {
       total: unprocessedPRs.length,
@@ -188,8 +185,9 @@ export async function POST(request: Request) {
             changedFiles: pr.changed_files_count,
             headSha: pr.head_sha,
             baseSha: pr.base_sha,
-            // Don't post comments for batch processing
-            skipComment: true,
+            // Control comment posting via postComment flag
+            skipComment: !postComment,
+            postComment: postComment,
           }),
         });
 

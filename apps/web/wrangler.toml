@@ -14,6 +14,12 @@ routes = [
 # Static assets configuration
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
 
+# Cron triggers - process 1 unprocessed PR every minute
+# This processes ~60 PRs/hour, ~1440 PRs/day
+# Each invocation only makes 1 Claude API call, avoiding timeout
+[triggers]
+crons = ["* * * * *"]
+
 # Environment variables
 [vars]
 MAILGUN_DOMAIN = "mergemint.dev"
