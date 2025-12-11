@@ -1,4 +1,4 @@
-import { BarChart3, Building2, FileText, Home, Layers, Settings, Users } from 'lucide-react';
+import { BarChart3, Building2, FileText, Home, Layers, Settings, Trophy, Users } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -28,6 +28,11 @@ export function getOrgRoutes(orgSlug: string) {
           label: 'Leaderboard',
           path: `/${orgSlug}/leaderboard`,
           Icon: <BarChart3 className={iconClasses} />,
+        },
+        {
+          label: 'Bug Bounty',
+          path: `/${orgSlug}/bounty`,
+          Icon: <Trophy className={iconClasses} />,
         },
         {
           label: 'Team Members',

@@ -25,6 +25,8 @@ import { Badge } from '@kit/ui/badge';
 import { Button } from '@kit/ui/button';
 import { cn } from '@kit/ui/utils';
 
+import { LocalizedLink } from '~/components/localized-link';
+
 export const metadata: Metadata = {
   title: 'MergeMint vs LinearB: Compare Developer Analytics Platforms (2025)',
   description:

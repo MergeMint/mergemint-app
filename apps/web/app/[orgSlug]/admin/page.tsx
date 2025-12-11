@@ -81,6 +81,16 @@ export default async function AdminPage({
     .eq('org_id', org.id)
     .maybeSingle();
 
+  // Fetch bounty program stats
+  const { data: bountyStats } = await admin
+    .from('bounty_programs')
+    .select('status, id')
+    .eq('org_id', org.id);
+
+  const activePrograms =
+    bountyStats?.filter((p) => p.status === 'active').length || 0;
+  const totalPrograms = bountyStats?.length || 0;
+
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
@@ -90,6 +100,28 @@ export default async function AdminPage({
         }
         breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
+
+      {/* Bounty Programs Quick Access */}
+      {totalPrograms > 0 && (
+        <Card className={'border-primary'}>
+          <CardHeader className={'pb-3'}>
+            <div className={'flex items-center justify-between'}>
+              <div>
+                <CardTitle>Bug Bounty Programs</CardTitle>
+                <CardDescription>
+                  {activePrograms} active program{activePrograms !== 1 ? 's' : ''} •{' '}
+                  {totalPrograms} total
+                </CardDescription>
+              </div>
+              <div className={'flex gap-2'}>
+                <Button variant={'outline'} asChild>
+                  <a href={`/${orgSlug}/admin/bounty`}>Manage Programs</a>
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
 
       <div className={'grid gap-4 lg:grid-cols-2'}>
         <Card>

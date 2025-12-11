@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
+import { Badge } from '@kit/ui/badge';
+import { Button } from '@kit/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import {
   Table,
@@ -38,6 +41,14 @@ export default async function LeaderboardPage({
     .eq('org_id', org.id)
     .order('total_score', { ascending: false });
 
+  // Fetch active bounty programs
+  const { data: activeBountyPrograms } = await admin
+    .from('bounty_programs')
+    .select('id, name, program_type, end_date')
+    .eq('org_id', org.id)
+    .eq('status', 'active')
+    .order('end_date', { ascending: true });
+
   return (
     <PageBody className={'space-y-6'}>
       <PageHeader
@@ -45,6 +56,41 @@ export default async function LeaderboardPage({
         description={'Top contributors over the last 30 days.'}
         breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
       />
+
+      {/* Active Bounty Programs Notice */}
+      {activeBountyPrograms && activeBountyPrograms.length > 0 && (
+        <Card className={'border-primary bg-primary/5'}>
+          <CardHeader className={'pb-3'}>
+            <div className={'flex items-center justify-between'}>
+              <div>
+                <CardTitle className={'text-lg'}>
+                  🏆 Active Bug Bounty Programs
+                </CardTitle>
+                <p className={'text-sm text-muted-foreground mt-1'}>
+                  {activeBountyPrograms.length} active program
+                  {activeBountyPrograms.length > 1 ? 's' : ''} with rewards!
+                </p>
+              </div>
+              <Link href={`/${orgSlug}/bounty`}>
+                <Button>View Programs</Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className={'flex flex-wrap gap-2'}>
+              {activeBountyPrograms.map((program: any) => (
+                <Badge key={program.id} variant={'secondary'}>
+                  {program.name} • Ends{' '}
+                  {new Date(program.end_date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
