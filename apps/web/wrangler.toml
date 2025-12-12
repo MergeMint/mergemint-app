@@ -5,6 +5,14 @@ main = ".open-next/worker.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Observability configuration
+[observability]
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
+
 # Production routes (default environment)
 routes = [
   { pattern = "mergemint.dev/*", zone_name = "mergemint.dev" },

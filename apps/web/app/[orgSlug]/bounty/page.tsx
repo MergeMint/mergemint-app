@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
+import Link from 'next/link';
+import { Plus, Settings } from 'lucide-react';
+
+import { Button } from '@kit/ui/button';
+import { Card, CardContent } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
 import { AppBreadcrumbs } from '@kit/ui/app-breadcrumbs';
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
@@ -9,6 +13,9 @@ import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client'
 
 import { ProgramCard } from './_components/program-card';
 import { MyRewards } from './_components/my-rewards';
+
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
 
 export default async function BountyPage({
   params,
@@ -26,31 +33,62 @@ export default async function BountyPage({
     .maybeSingle();
 
   if (orgError) throw orgError;
-  if (!org) redirect('/home/mergemint');
+  if (!org) notFound();
 
-  // Verify user is org member
+  // Get current user and their GitHub login from auth metadata
   const { data: userData } = await client.auth.getUser();
-  const userId = userData.user?.id;
+  const user = userData.user;
 
-  if (!userId) redirect('/auth/sign-in');
+  // Find GitHub provider identity
+  const githubProvider = (user?.identities as any[])?.find(
+    (i) => i.provider === 'github',
+  );
 
-  const { data: membership } = await client
-    .from('organization_members')
-    .select('role')
-    .eq('org_id', org.id)
-    .eq('user_id', userId)
-    .maybeSingle();
+  // Get GitHub login - prefer from GitHub identity, fallback to user_metadata
+  const userGithubLogin =
+    githubProvider?.identity_data?.user_name ||
+    githubProvider?.identity_data?.preferred_username ||
+    user?.user_metadata?.user_name ||
+    user?.user_metadata?.preferred_username;
 
-  if (!membership) {
-    redirect(`/home`);
+  // Get GitHub user ID (numeric ID used by GitHub API)
+  const githubUserId = githubProvider?.provider_id || githubProvider?.id;
+
+  // Get user's GitHub identity by their GitHub login
+  // If not found, create one so the user can participate in bounty programs
+  let githubIdentity = null;
+  if (userGithubLogin) {
+    const { data: existingIdentity } = await admin
+      .from('github_identities')
+      .select('id, github_login, linked_user_id')
+      .ilike('github_login', userGithubLogin)
+      .maybeSingle();
+
+    if (existingIdentity) {
+      githubIdentity = existingIdentity;
+      // Also link the user if not already linked
+      if (!existingIdentity.linked_user_id && user?.id) {
+        await admin
+          .from('github_identities')
+          .update({ linked_user_id: user.id })
+          .eq('id', existingIdentity.id);
+      }
+    } else if (githubUserId) {
+      // Create the github_identities entry
+      const { data: newIdentity } = await admin
+        .from('github_identities')
+        .insert({
+          github_user_id: parseInt(githubUserId, 10),
+          github_login: userGithubLogin,
+          avatar_url: githubProvider?.identity_data?.avatar_url || user?.user_metadata?.avatar_url,
+          linked_user_id: user?.id,
+        })
+        .select('id, github_login')
+        .single();
+
+      githubIdentity = newIdentity;
+    }
   }
-
-  // Get user's GitHub identity
-  const { data: githubIdentity } = await admin
-    .from('github_identities')
-    .select('id, github_login')
-    .eq('user_id', userId)
-    .maybeSingle();
 
   // Fetch active and completed programs
   const { data: programs, error: programsError } = await admin
@@ -64,6 +102,16 @@ export default async function BountyPage({
     console.error('Error fetching bounty programs:', programsError);
     // If view doesn't exist, show empty state instead of crashing
   }
+
+  // Check if user is an admin
+  const { data: membership } = await admin
+    .from('organization_members')
+    .select('role')
+    .eq('org_id', org.id)
+    .eq('user_id', user?.id)
+    .maybeSingle();
+
+  const isAdmin = membership?.role === 'admin';
 
   // Fetch user's rewards (if they have a GitHub identity)
   const { data: myRewards } = githubIdentity
@@ -146,14 +194,33 @@ export default async function BountyPage({
         title="Bug Bounty Programs"
         description={'Active reward programs and your standings'}
         breadcrumbs={<AppBreadcrumbs values={{ [orgSlug]: org.name }} />}
-      />
+      >
+        {isAdmin && (
+          <Button asChild variant="outline">
+            <Link href={`/${orgSlug}/admin/bounty`}>
+              <Settings className={'mr-2 h-4 w-4'} />
+              Manage Programs
+            </Link>
+          </Button>
+        )}
+      </PageHeader>
 
       {!githubIdentity && (
         <Card className={'border-warning bg-warning/5'}>
           <CardContent className={'py-4'}>
             <p className={'text-sm text-warning-foreground'}>
-              You don't have a GitHub account linked yet. Connect your GitHub
-              account to participate in bounty programs.
+              {!userGithubLogin ? (
+                <>
+                  You're not signed in with GitHub. Sign in with your GitHub
+                  account to participate in bounty programs.
+                </>
+              ) : (
+                <>
+                  Your GitHub account (@{userGithubLogin}) hasn't authored any
+                  PRs in this organization yet. Submit a PR to appear on the
+                  leaderboard and participate in bounty programs.
+                </>
+              )}
             </p>
           </CardContent>
         </Card>
@@ -194,8 +261,18 @@ export default async function BountyPage({
       {/* No Programs */}
       {(!programs || programs.length === 0) && (
         <Card>
-          <CardContent className={'py-12 text-center text-muted-foreground'}>
-            No active bounty programs at this time.
+          <CardContent className={'py-12 text-center'}>
+            <p className={'text-muted-foreground'}>
+              No active bounty programs at this time.
+            </p>
+            {isAdmin && (
+              <Button asChild className={'mt-4'}>
+                <Link href={`/${orgSlug}/admin/bounty/new`}>
+                  <Plus className={'mr-2 h-4 w-4'} />
+                  Create Bounty Program
+                </Link>
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}

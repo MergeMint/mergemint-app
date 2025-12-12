@@ -210,7 +210,9 @@ export function ProgramForm({
               name="name"
               placeholder="Q1 2025 Bug Bounty"
               required
+              minLength={3}
             />
+            <p className="text-xs text-muted-foreground">Minimum 3 characters</p>
           </div>
 
           <div className={'space-y-2'}>

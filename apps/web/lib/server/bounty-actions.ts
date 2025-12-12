@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { getSupabaseServerClient } from '@kit/supabase/server-client';
+import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import type {
   CalculatedReward,
@@ -74,6 +75,7 @@ const markPaidSchema = z.object({
 // Helper function to check if user is org admin
 async function assertOrgAdmin(orgId: string) {
   const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
   const { data: authData } = await client.auth.getUser();
   const userId = authData.user?.id;
 
@@ -81,7 +83,8 @@ async function assertOrgAdmin(orgId: string) {
     throw new Error('Not authenticated');
   }
 
-  const { data: membership, error } = await client
+  // Use admin client to bypass RLS for membership check
+  const { data: membership, error } = await admin
     .from('organization_members')
     .select('role')
     .eq('org_id', orgId)
@@ -132,10 +135,10 @@ export async function createBountyProgramAction(formData: FormData) {
   } = parsed.data;
 
   const userId = await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Create the program
-  const { data: program, error: programError } = await client
+  const { data: program, error: programError } = await admin
     .from('bounty_programs')
     .insert({
       org_id: orgId,
@@ -158,7 +161,7 @@ export async function createBountyProgramAction(formData: FormData) {
   if (program_type === 'ranking' && rankingRewardsStr) {
     const rankingRewards = JSON.parse(rankingRewardsStr);
     if (Array.isArray(rankingRewards) && rankingRewards.length > 0) {
-      const { error: rankingError } = await client
+      const { error: rankingError } = await admin
         .from('bounty_ranking_config')
         .insert(
           rankingRewards.map((r: any) => ({
@@ -177,7 +180,7 @@ export async function createBountyProgramAction(formData: FormData) {
   if (program_type === 'tier' && tierRewardsStr) {
     const tierRewards = JSON.parse(tierRewardsStr);
     if (Array.isArray(tierRewards) && tierRewards.length > 0) {
-      const { error: tierError } = await client
+      const { error: tierError } = await admin
         .from('bounty_tier_config')
         .insert(
           tierRewards.map((t: any, index: number) => ({
@@ -218,14 +221,14 @@ export async function updateBountyProgramAction(formData: FormData) {
 
   const { programId, orgId, slug, ...updates } = parsed.data;
   await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Remove undefined values
   const cleanUpdates = Object.fromEntries(
     Object.entries(updates).filter(([_, v]) => v !== undefined),
   );
 
-  const { error } = await client
+  const { error } = await admin
     .from('bounty_programs')
     .update(cleanUpdates)
     .eq('id', programId)
@@ -252,9 +255,9 @@ export async function updateProgramStatusAction(formData: FormData) {
 
   const { programId, orgId, status, slug } = parsed.data;
   await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
-  const { error } = await client
+  const { error } = await admin
     .from('bounty_programs')
     .update({ status })
     .eq('id', programId)
@@ -280,10 +283,10 @@ export async function calculateProgramRewardsAction(formData: FormData) {
 
   const { programId, orgId, slug } = parsed.data;
   await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Call the database function to calculate rewards
-  const { data: calculatedRewards, error: calcError } = await client.rpc(
+  const { data: calculatedRewards, error: calcError } = await admin.rpc(
     'calculate_bounty_rewards',
     { program_uuid: programId },
   );
@@ -309,7 +312,7 @@ export async function calculateProgramRewardsAction(formData: FormData) {
     }),
   );
 
-  const { error: insertError } = await client
+  const { error: insertError } = await admin
     .from('bounty_rewards')
     .upsert(rewardsToInsert, {
       onConflict: 'program_id,github_user_id',
@@ -318,7 +321,7 @@ export async function calculateProgramRewardsAction(formData: FormData) {
   if (insertError) throw insertError;
 
   // Send email notifications if auto_notify is enabled
-  const { data: program } = await client
+  const { data: program } = await admin
     .from('bounty_programs')
     .select('name, auto_notify, org_id')
     .eq('id', programId)
@@ -326,7 +329,7 @@ export async function calculateProgramRewardsAction(formData: FormData) {
 
   if (program?.auto_notify) {
     // Get org details for email
-    const { data: org } = await client
+    const { data: org } = await admin
       .from('organizations')
       .select('name, slug')
       .eq('id', orgId)
@@ -335,14 +338,14 @@ export async function calculateProgramRewardsAction(formData: FormData) {
     // Send emails to each recipient (background process, don't wait)
     for (const reward of calculatedRewards as CalculatedReward[]) {
       // Get developer's email from GitHub identity
-      const { data: githubIdentity } = await client
+      const { data: githubIdentity } = await admin
         .from('github_identities')
         .select('user_id')
         .eq('id', reward.github_user_id)
         .single();
 
       if (githubIdentity?.user_id) {
-        const { data: userData } = await client.auth.admin.getUserById(
+        const { data: userData } = await admin.auth.admin.getUserById(
           githubIdentity.user_id,
         );
 
@@ -396,10 +399,10 @@ export async function approveRewardAction(formData: FormData) {
 
   const { rewardId, orgId, notes, slug } = parsed.data;
   const userId = await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Get reward details before updating
-  const { data: rewardData } = await client
+  const { data: rewardData } = await admin
     .from('bounty_rewards')
     .select(
       `
@@ -411,7 +414,7 @@ export async function approveRewardAction(formData: FormData) {
     .eq('id', rewardId)
     .single();
 
-  const { error } = await client
+  const { error } = await admin
     .from('bounty_rewards')
     .update({
       payout_status: 'approved',
@@ -426,13 +429,13 @@ export async function approveRewardAction(formData: FormData) {
 
   // Send approval email
   if (rewardData) {
-    const { data: org } = await client
+    const { data: org } = await admin
       .from('organizations')
       .select('name, slug')
       .eq('id', orgId)
       .single();
 
-    const { data: userData } = await client.auth.admin.getUserById(
+    const { data: userData } = await admin.auth.admin.getUserById(
       (rewardData as any).github_identities.user_id,
     );
 
@@ -476,10 +479,10 @@ export async function markRewardPaidAction(formData: FormData) {
   const { rewardId, orgId, payout_method, payout_reference, payout_notes, slug } =
     parsed.data;
   await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Get reward details before updating
-  const { data: rewardData } = await client
+  const { data: rewardData } = await admin
     .from('bounty_rewards')
     .select(
       `
@@ -491,7 +494,7 @@ export async function markRewardPaidAction(formData: FormData) {
     .eq('id', rewardId)
     .single();
 
-  const { error } = await client
+  const { error } = await admin
     .from('bounty_rewards')
     .update({
       payout_status: 'paid',
@@ -507,13 +510,13 @@ export async function markRewardPaidAction(formData: FormData) {
 
   // Send payment confirmation email
   if (rewardData) {
-    const { data: org } = await client
+    const { data: org } = await admin
       .from('organizations')
       .select('name, slug')
       .eq('id', orgId)
       .single();
 
-    const { data: userData } = await client.auth.admin.getUserById(
+    const { data: userData } = await admin.auth.admin.getUserById(
       (rewardData as any).github_identities.user_id,
     );
 
@@ -548,10 +551,10 @@ export async function deleteBountyProgramAction(formData: FormData) {
   const slug = formData.get('slug')?.toString();
 
   await assertOrgAdmin(orgId);
-  const client = getSupabaseServerClient<any>();
+  const admin = getSupabaseServerAdminClient<any>();
 
   // Only allow deleting draft programs
-  const { data: program } = await client
+  const { data: program } = await admin
     .from('bounty_programs')
     .select('status')
     .eq('id', programId)
@@ -562,7 +565,7 @@ export async function deleteBountyProgramAction(formData: FormData) {
     throw new Error('Only draft programs can be deleted');
   }
 
-  const { error } = await client
+  const { error } = await admin
     .from('bounty_programs')
     .delete()
     .eq('id', programId)

@@ -290,6 +290,7 @@ Analyze this PR and determine:
 
     const anthropic = new Anthropic({
       apiKey: anthropicApiKey,
+      timeout: 25000, // 25 seconds - must complete before Cloudflare's 30s limit
     });
 
     // Always use Claude model (ignore legacy OpenAI model names from database)

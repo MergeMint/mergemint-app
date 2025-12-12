@@ -100,10 +100,15 @@ export async function GET(request: Request) {
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
+    // Add timeout to prevent Cloudflare 522 errors
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 28000); // 28s timeout
+
     try {
       const response = await fetch(`${baseUrl}/api/github/process-pr`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           orgId: pr.org_id,
           repoId: pr.repo_id,
@@ -126,6 +131,7 @@ export async function GET(request: Request) {
           postComment,
         }),
       });
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
@@ -155,13 +161,15 @@ export async function GET(request: Request) {
         }, { status: 500 });
       }
     } catch (err) {
-      console.error(`[Cron] PR #${pr.number} error:`, err);
+      clearTimeout(timeoutId);
+      const isTimeout = (err as Error).name === 'AbortError';
+      console.error(`[Cron] PR #${pr.number} ${isTimeout ? 'timeout' : 'error'}:`, err);
       return NextResponse.json({
-        message: 'PR processing error',
+        message: isTimeout ? 'PR processing timeout' : 'PR processing error',
         processed: 0,
-        error: (err as Error).message,
+        error: isTimeout ? 'Request timed out after 28s' : (err as Error).message,
         pr: { number: pr.number, repo: repo?.full_name },
-      }, { status: 500 });
+      }, { status: isTimeout ? 504 : 500 });
     }
   } catch (err) {
     console.error('[Cron] Error:', err);

@@ -43,7 +43,7 @@ export default async function ProgramDetailsPage({
 
   if (!userId) redirect('/auth/sign-in');
 
-  const { data: membership } = await client
+  const { data: membership } = await admin
     .from('organization_members')
     .select('role')
     .eq('org_id', org.id)
