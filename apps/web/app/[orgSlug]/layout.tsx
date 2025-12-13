@@ -12,6 +12,7 @@ import { SidebarProvider } from '@kit/ui/shadcn-sidebar';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { AppLogo } from '~/components/app-logo';
+import { FeedbackWidget } from '~/components/feedback-widget';
 import { navigationConfig } from '~/config/navigation.config';
 import { withI18n } from '~/lib/i18n/with-i18n';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
@@ -98,6 +99,7 @@ function SidebarLayout({
 
         {children}
       </Page>
+      <FeedbackWidget />
     </SidebarProvider>
   );
 }
@@ -110,13 +112,16 @@ function HeaderLayout({
   orgSlug: string;
 }) {
   return (
-    <Page style={'header'}>
-      <PageMobileNavigation className={'flex items-center justify-between'}>
-        <MobileNavigation orgSlug={orgSlug} />
-      </PageMobileNavigation>
+    <>
+      <Page style={'header'}>
+        <PageMobileNavigation className={'flex items-center justify-between'}>
+          <MobileNavigation orgSlug={orgSlug} />
+        </PageMobileNavigation>
 
-      {children}
-    </Page>
+        {children}
+      </Page>
+      <FeedbackWidget />
+    </>
   );
 }
 

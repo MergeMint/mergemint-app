@@ -12,6 +12,7 @@ import { SidebarProvider } from '@kit/ui/shadcn-sidebar';
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
 import { AppLogo } from '~/components/app-logo';
+import { FeedbackWidget } from '~/components/feedback-widget';
 import { navigationConfig } from '~/config/navigation.config';
 import { withI18n } from '~/lib/i18n/with-i18n';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
@@ -73,23 +74,27 @@ function SidebarLayout({ children }: React.PropsWithChildren) {
 
         {children}
       </Page>
+      <FeedbackWidget />
     </SidebarProvider>
   );
 }
 
 function HeaderLayout({ children }: React.PropsWithChildren) {
   return (
-    <Page style={'header'}>
-      <PageNavigation>
-        <HomeMenuNavigation />
-      </PageNavigation>
+    <>
+      <Page style={'header'}>
+        <PageNavigation>
+          <HomeMenuNavigation />
+        </PageNavigation>
 
-      <PageMobileNavigation className={'flex items-center justify-between'}>
-        <MobileNavigation />
-      </PageMobileNavigation>
+        <PageMobileNavigation className={'flex items-center justify-between'}>
+          <MobileNavigation />
+        </PageMobileNavigation>
 
-      {children}
-    </Page>
+        {children}
+      </Page>
+      <FeedbackWidget />
+    </>
   );
 }
 
