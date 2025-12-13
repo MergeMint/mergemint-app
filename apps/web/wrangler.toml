@@ -5,14 +5,6 @@ main = ".open-next/worker.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Observability configuration
-[observability]
-[observability.logs]
-enabled = true
-head_sampling_rate = 1
-invocation_logs = true
-persist = true
-
 # Production routes (default environment)
 routes = [
   { pattern = "mergemint.dev/*", zone_name = "mergemint.dev" },
@@ -22,11 +14,17 @@ routes = [
 # Static assets configuration
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
 
-# Cron triggers - process 1 unprocessed PR every minute
-# This processes ~60 PRs/hour, ~1440 PRs/day
-# Each invocation only makes 1 Claude API call, avoiding timeout
+# Cron triggers
 [triggers]
 crons = ["* * * * *"]
+
+# Observability configuration
+[observability]
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
 
 # Environment variables
 [vars]
