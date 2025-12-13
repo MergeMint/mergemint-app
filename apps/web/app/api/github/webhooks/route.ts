@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
+import { processPR } from '~/lib/mergemint/pr-processor';
+
 // Verify webhook signature from GitHub
 function verifyWebhookSignature(payload: string, signature: string | null): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
@@ -88,80 +90,49 @@ export async function POST(request: Request) {
           return NextResponse.json({ message: 'Repository not tracked' });
         }
 
-        // Save the PR to the database immediately (no AI evaluation yet)
-        // The AI evaluation will be triggered by a separate process
+        // Process the PR immediately - evaluate with AI and post comment
+        console.log(`[Webhook] Evaluating PR #${pr.number} with AI...`);
 
-        // Ensure GitHub identity exists
-        let githubIdentityId = null;
-        if (pr.user?.login) {
-          const { data: existingIdentity } = await admin
-            .from('github_identities')
-            .select('id')
-            .eq('github_login', pr.user.login)
-            .maybeSingle();
-
-          if (existingIdentity) {
-            githubIdentityId = existingIdentity.id;
-          } else {
-            const { data: newIdentity } = await admin
-              .from('github_identities')
-              .insert({
-                github_user_id: pr.user.id,
-                github_login: pr.user.login,
-                avatar_url: pr.user.avatar_url,
-              })
-              .select('id')
-              .single();
-            githubIdentityId = newIdentity?.id;
-          }
-        }
-
-        // Upsert PR record - it will be processed by /api/github/process-unprocessed
-        const { data: prRecord, error: prError } = await admin
-          .from('pull_requests')
-          .upsert(
-            {
-              org_id: orgId,
-              repo_id: repoRecord.id,
-              github_pr_id: pr.id,
-              number: pr.number,
-              title: pr.title,
-              body: pr.body,
-              state: 'closed',
-              is_merged: true,
-              merged_at_gh: pr.merged_at,
-              github_author_id: githubIdentityId,
-              head_sha: pr.head?.sha,
-              base_sha: pr.base?.sha,
-              url: pr.html_url,
-              additions: pr.additions,
-              deletions: pr.deletions,
-              changed_files_count: pr.changed_files,
-              created_at_gh: pr.created_at,
-              updated_at_gh: new Date().toISOString(),
-              last_synced_at: new Date().toISOString(),
-            },
-            { onConflict: 'org_id,github_pr_id' },
-          )
-          .select('id')
-          .single();
-
-        if (prError) {
-          console.error('[Webhook] Failed to save PR:', prError);
-          return NextResponse.json(
-            { error: 'Failed to save PR', details: prError.message },
-            { status: 500 },
-          );
-        }
-
-        console.log(`[Webhook] Saved PR #${pr.number} (id: ${prRecord.id}) - pending evaluation`);
-
-        // Respond immediately to GitHub (within 10s timeout)
-        return NextResponse.json({
-          message: 'PR saved for processing',
-          pr_number: pr.number,
-          pr_id: prRecord.id,
+        const result = await processPR({
+          orgId,
+          repoId: repoRecord.id,
+          repoFullName: repo.full_name,
+          prNumber: pr.number,
+          prId: pr.id,
+          prTitle: pr.title,
+          prBody: pr.body,
+          prAuthor: pr.user?.login,
+          prAuthorId: pr.user?.id,
+          prAuthorAvatar: pr.user?.avatar_url,
+          prUrl: pr.html_url,
+          mergedAt: pr.merged_at,
+          createdAt: pr.created_at,
+          additions: pr.additions,
+          deletions: pr.deletions,
+          changedFiles: pr.changed_files,
+          headSha: pr.head?.sha,
+          baseSha: pr.base?.sha,
+          postComment: true, // Always post comment on webhook
         });
+
+        if (result.success) {
+          console.log(`[Webhook] PR #${pr.number} evaluated: score=${result.evaluation?.final_score}, comment=${result.commentPosted}`);
+          return NextResponse.json({
+            message: 'PR processed successfully',
+            pr_number: pr.number,
+            score: result.evaluation?.final_score,
+            is_eligible: result.evaluation?.is_eligible,
+            comment_posted: result.commentPosted,
+          });
+        } else {
+          console.error(`[Webhook] PR #${pr.number} evaluation failed: ${result.error}`);
+          // Still return 200 to GitHub so it doesn't retry
+          return NextResponse.json({
+            message: 'PR saved but evaluation failed',
+            pr_number: pr.number,
+            error: result.error,
+          });
+        }
       }
 
       return NextResponse.json({ message: 'PR event ignored (not a merge)' });
@@ -188,4 +159,3 @@ export async function POST(request: Request) {
 export async function GET() {
   return NextResponse.json({ message: 'GitHub webhook endpoint active' });
 }
-

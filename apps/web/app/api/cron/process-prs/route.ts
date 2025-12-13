@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 
 import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client';
 
+import { processPR } from '~/lib/mergemint/pr-processor';
+
 /**
  * Cron endpoint to process ONE unprocessed PR at a time.
  *
@@ -10,7 +12,7 @@ import { getSupabaseServerAdminClient } from '@kit/supabase/server-admin-client'
  * - Each cron invocation processes exactly 1 PR
  * - Runs every 1 minute = ~60 PRs/hour = ~1440 PRs/day
  * - Queue naturally drains over time
- * - No timeout risk (single Claude API call ~30-60s)
+ * - Calls processPR directly (no HTTP self-fetch) for reliability
  *
  * Security: Protected via optional CRON_SECRET header.
  */
@@ -98,43 +100,31 @@ export async function GET(request: Request) {
 
     console.log(`[Cron] Processing PR #${pr.number} in ${repo?.full_name}`);
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-
-    // Add timeout to prevent Cloudflare 522 errors
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 28000); // 28s timeout
-
     try {
-      const response = await fetch(`${baseUrl}/api/github/process-pr`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal,
-        body: JSON.stringify({
-          orgId: pr.org_id,
-          repoId: pr.repo_id,
-          repoFullName: repo?.full_name,
-          prNumber: pr.number,
-          prId: pr.github_pr_id,
-          prTitle: pr.title,
-          prBody: pr.body,
-          prAuthor: identity?.github_login,
-          prAuthorId: identity?.github_user_id,
-          prAuthorAvatar: identity?.avatar_url,
-          prUrl: pr.url,
-          mergedAt: pr.merged_at_gh,
-          createdAt: pr.created_at_gh,
-          additions: pr.additions,
-          deletions: pr.deletions,
-          changedFiles: pr.changed_files_count,
-          headSha: pr.head_sha,
-          baseSha: pr.base_sha,
-          postComment,
-        }),
+      // Call processPR directly instead of HTTP fetch
+      const result = await processPR({
+        orgId: pr.org_id,
+        repoId: pr.repo_id,
+        repoFullName: repo?.full_name,
+        prNumber: pr.number,
+        prId: pr.github_pr_id,
+        prTitle: pr.title,
+        prBody: pr.body,
+        prAuthor: identity?.github_login,
+        prAuthorId: identity?.github_user_id,
+        prAuthorAvatar: identity?.avatar_url,
+        prUrl: pr.url,
+        mergedAt: pr.merged_at_gh,
+        createdAt: pr.created_at_gh,
+        additions: pr.additions,
+        deletions: pr.deletions,
+        changedFiles: pr.changed_files_count,
+        headSha: pr.head_sha,
+        baseSha: pr.base_sha,
+        postComment,
       });
-      clearTimeout(timeoutId);
 
-      if (response.ok) {
-        const result = await response.json();
+      if (result.success) {
         console.log(`[Cron] PR #${pr.number} processed: score=${result.evaluation?.final_score}`);
 
         // Count remaining unprocessed PRs (approximate)
@@ -151,25 +141,22 @@ export async function GET(request: Request) {
           remainingEstimate: Math.max(0, remainingCount),
         });
       } else {
-        const errText = await response.text();
-        console.error(`[Cron] PR #${pr.number} failed: ${errText}`);
+        console.error(`[Cron] PR #${pr.number} failed: ${result.error}`);
         return NextResponse.json({
           message: 'PR processing failed',
           processed: 0,
-          error: errText.slice(0, 200),
+          error: result.error,
           pr: { number: pr.number, repo: repo?.full_name },
         }, { status: 500 });
       }
     } catch (err) {
-      clearTimeout(timeoutId);
-      const isTimeout = (err as Error).name === 'AbortError';
-      console.error(`[Cron] PR #${pr.number} ${isTimeout ? 'timeout' : 'error'}:`, err);
+      console.error(`[Cron] PR #${pr.number} error:`, err);
       return NextResponse.json({
-        message: isTimeout ? 'PR processing timeout' : 'PR processing error',
+        message: 'PR processing error',
         processed: 0,
-        error: isTimeout ? 'Request timed out after 28s' : (err as Error).message,
+        error: (err as Error).message,
         pr: { number: pr.number, repo: repo?.full_name },
-      }, { status: isTimeout ? 504 : 500 });
+      }, { status: 500 });
     }
   } catch (err) {
     console.error('[Cron] Error:', err);
